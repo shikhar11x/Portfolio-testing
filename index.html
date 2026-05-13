@@ -1,2307 +1,1030 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shikhar Bajpai — Flutter Developer</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="icon" type="image/png" href="preview/logo.png">
-    <link
-        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-    <style>
-        :root {
-            --bg: #050507;
-            --bg2: #0a0a10;
-            --bg3: #0f0f18;
-            --border: rgba(255, 255, 255, 0.07);
-            --border2: rgba(255, 255, 255, 0.14);
-            --text: #e8e8f0;
-            --muted: rgba(232, 232, 240, 0.38);
-            --dim: rgba(232, 232, 240, 0.15);
-            --flutter: #54c5f8;
-            --dart: #0175c2;
-            --green: #4ade80;
-            --amber: #fbbf24;
-            --pink: #f472b6;
-            --purple: #a78bfa;
-            --mono: 'JetBrains Mono', monospace;
-            --sans: 'Space Grotesk', sans-serif;
-            --red: #f87171;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box
-        }
-
-        html {
-            scroll-behavior: smooth
-        }
-
-        body {
-            font-family: var(--sans);
-            background: var(--bg);
-            color: var(--text);
-            overflow-x: hidden;
-            min-height: 100vh;
-            cursor: none
-        }
-
-        /* CUSTOM CURSOR */
-        #cursor {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            background: var(--flutter);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: width .15s, height .15s, opacity .2s;
-            mix-blend-mode: screen
-        }
-
-        #cursor-ring {
-            position: fixed;
-            width: 32px;
-            height: 32px;
-            border: 1px solid rgba(84, 197, 248, 0.4);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9998;
-            transform: translate(-50%, -50%);
-            transition: transform .08s ease, width .2s, height .2s;
-            mix-blend-mode: screen
-        }
-
-        /* SCANLINE OVERLAY */
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.04) 2px, rgba(0, 0, 0, 0.04) 4px);
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* GRID LINES BG */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: linear-gradient(rgba(84, 197, 248, 0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(84, 197, 248, 0.025) 1px, transparent 1px);
-            background-size: 60px 60px;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .wrap {
-            position: relative;
-            z-index: 2;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 24px 32px
-        }
-
-        /* ── NAV ── */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 20px;
-            background: rgba(10, 10, 16, 0.9);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            backdrop-filter: blur(20px);
-            margin-bottom: 48px;
-            position: sticky;
-            top: 16px;
-            z-index: 50;
-            animation: fadeIn .5s ease both;
-        }
-
-        .nav-logo {
-            font-family: var(--mono);
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--flutter);
-            letter-spacing: .5px;
-        }
-
-        .nav-logo span {
-            color: var(--muted)
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 6px
-        }
-
-        .nav-links a {
-            color: var(--muted);
-            text-decoration: none;
-            font-size: 12px;
-            letter-spacing: .3px;
-            transition: .2s;
-            font-family: var(--mono);
-            padding: 6px 12px;
-            border-radius: 6px;
-            border: 1px solid transparent;
-        }
-
-        .nav-links a:hover {
-            color: var(--flutter);
-            border-color: rgba(84, 197, 248, 0.2);
-            background: rgba(84, 197, 248, 0.05)
-        }
-
-        .nav-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--green);
-            animation: blink 2s infinite;
-            margin-right: 8px;
-            display: inline-block
-        }
-
-        /* ── HERO ── */
-        .hero {
-            display: grid;
-            grid-template-columns: 1fr 320px;
-            gap: 32px;
-            align-items: start;
-            margin-bottom: 32px;
-        }
-
-        .hero-left {
-            animation: fadeUp .6s ease .1s both
-        }
-
-        .hero-eyebrow {
-            font-family: var(--mono);
-            font-size: 11px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: rgba(84, 197, 248, 0.6);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .hero-eyebrow::before {
-            content: '// ';
-            color: rgba(148, 163, 184, 0.3)
-        }
-
-        h1.name {
-            font-family: var(--sans);
-            font-size: 80px;
-            font-weight: 700;
-            line-height: .95;
-            letter-spacing: -4px;
-            margin-bottom: 20px;
-        }
-
-        h1.name .first {
-            color: var(--text)
-        }
-
-        h1.name .last {
-            color: transparent;
-            -webkit-text-stroke: 1px rgba(84, 197, 248, 0.4);
-            display: block;
-        }
-
-        .hero-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 28px;
-        }
-
-        .htag {
-            font-family: var(--mono);
-            font-size: 11px;
-            padding: 5px 12px;
-            border-radius: 4px;
-            border: 1px solid var(--border2);
-            color: var(--muted);
-            letter-spacing: .5px;
-        }
-
-        .htag.active {
-            border-color: rgba(84, 197, 248, 0.35);
-            color: var(--flutter);
-            background: rgba(84, 197, 248, 0.07);
-        }
-
-        .hero-desc {
-            font-size: 15px;
-            line-height: 1.85;
-            color: rgba(232, 232, 240, 0.45);
-            max-width: 500px;
-            margin-bottom: 36px;
-            font-weight: 300;
-        }
-
-        .hero-btns {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap
-        }
-
-        .hbtn {
-            font-family: var(--mono);
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: .2s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            letter-spacing: .3px;
-        }
-
-        .hbtn-primary {
-            background: var(--flutter);
-            color: #050507;
-            border: 1px solid var(--flutter);
-        }
-
-        .hbtn-primary:hover {
-            background: #7dd8fb;
-            transform: translateY(-1px)
-        }
-
-        .hbtn-ghost {
-            background: transparent;
-            color: var(--muted);
-            border: 1px solid var(--border2);
-        }
-
-        .hbtn-ghost:hover {
-            border-color: var(--flutter);
-            color: var(--flutter);
-            background: rgba(84, 197, 248, 0.05)
-        }
-
-        /* STAT ROW */
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1px;
-            background: var(--border);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 48px;
-            animation: fadeUp .6s ease .25s both;
-        }
-
-        .stat-item {
-            background: var(--bg2);
-            padding: 20px 24px;
-            transition: .2s;
-        }
-
-        .stat-item:hover {
-            background: var(--bg3)
-        }
-
-        .stat-val {
-            font-family: var(--mono);
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--flutter);
-            margin-bottom: 4px;
-            letter-spacing: -1px;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: var(--muted);
-            letter-spacing: .5px
-        }
-
-        /* ── SKILLS ── */
-        .skills-section {
-            margin-bottom: 48px;
-            animation: fadeUp .6s ease .3s both;
-        }
-
-        .sec-header {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 16px;
-        }
-
-        .sec-tag {
-            font-family: var(--mono);
-            font-size: 10px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: rgba(84, 197, 248, 0.5);
-            white-space: nowrap;
-        }
-
-        .sec-line {
-            flex: 1;
-            height: 1px;
-            background: var(--border)
-        }
-
-        .sec-num {
-            font-family: var(--mono);
-            font-size: 10px;
-            color: var(--dim);
-            letter-spacing: 2px
-        }
-
-        .skills-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .sk {
-            font-family: var(--mono);
-            font-size: 11.5px;
-            padding: 7px 14px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            color: var(--muted);
-            transition: .25s;
-            cursor: default;
-        }
-
-        .sk:hover {
-            transform: translateY(-2px)
-        }
-
-        .sk.flutter {
-            border-color: rgba(84, 197, 248, 0.3);
-            color: var(--flutter)
-        }
-
-        .sk.flutter:hover {
-            background: rgba(84, 197, 248, 0.08)
-        }
-
-        .sk.firebase {
-            border-color: rgba(251, 191, 36, 0.3);
-            color: var(--amber)
-        }
-
-        .sk.firebase:hover {
-            background: rgba(251, 191, 36, 0.08)
-        }
-
-        .sk.ui {
-            border-color: rgba(244, 114, 182, 0.3);
-            color: var(--pink)
-        }
-
-        .sk.ui:hover {
-            background: rgba(244, 114, 182, 0.08)
-        }
-
-        .sk.iot {
-            border-color: rgba(74, 222, 128, 0.3);
-            color: var(--green)
-        }
-
-        .sk.iot:hover {
-            background: rgba(74, 222, 128, 0.08)
-        }
-
-        .sk.other {
-            border-color: var(--border);
-            color: var(--muted)
-        }
-
-        .sk.other:hover {
-            border-color: var(--border2);
-            color: var(--text)
-        }
-
-        /* ── PROJECTS ── */
-        .projects-section {
-            margin-bottom: 48px;
-            animation: fadeUp .6s ease .35s both
-        }
-
-        .proj-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-        }
-
-        .pcard {
-            background: var(--bg2);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: border-color .25s, transform .2s, box-shadow .25s;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .pcard:hover {
-            border-color: rgba(84, 197, 248, 0.35);
-            transform: translateY(-4px);
-            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), 0 0 24px rgba(84, 197, 248, 0.05);
-        }
-
-        /* ── CARD PHONE FRAME AREA ── */
-        .pcard-phone-area {
-            background: #060609;
-            padding: 14px 14px 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            border-bottom: 1px solid var(--border);
-        }
-
-        /* mini phone for app/design type */
-        .pcard-phone {
-            width: 100%;
-            max-width: 130px;
-            background: #0c0c14;
-            border-radius: 22px;
-            border: 1.5px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.4), 0 12px 32px rgba(0, 0, 0, 0.7);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .pcard-phone::before {
-            content: '';
-            position: absolute;
-            top: 7px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 4px;
-            background: #060609;
-            border-radius: 6px;
-            z-index: 10;
-        }
-
-        .pcard-pscreen {
-            width: 100%;
-            aspect-ratio: 9/19.5;
-            position: relative;
-            overflow: hidden;
-            background: #000;
-        }
-
-        /* mini browser for web/iot type */
-        .pcard-browser {
-            width: 100%;
-            background: #0c0c14;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-            overflow: hidden;
-        }
-
-        .pcard-browser-bar {
-            padding: 5px 8px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            background: rgba(255, 255, 255, 0.04);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .pcd-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%
-        }
-
-        .pcard-bscreen {
-            width: 100%;
-            aspect-ratio: 16/10;
-            position: relative;
-            overflow: hidden;
-            background: #000;
-        }
-
-        /* shared sliding strip */
-        .pcard-slides {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            transition: transform .35s cubic-bezier(.4, 0, .2, 1);
-            will-change: transform;
-        }
-
-        .pcard-slide {
-            min-width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            flex-shrink: 0;
-            user-select: none;
-            -webkit-user-drag: none;
-            pointer-events: none;
-        }
-
-        .pcard-slide.contain {
-            object-fit: contain;
-            background: #060609
-        }
-
-        /* dot indicators below frame */
-        .pcard-frame-dots {
-            display: flex;
-            gap: 4px;
-            justify-content: center;
-            margin-top: 8px;
-            min-height: 8px;
-        }
-
-        .pcdot {
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-            transition: all .2s;
-            cursor: pointer;
-        }
-
-        .pcdot.on {
-            background: var(--flutter);
-            width: 12px;
-            border-radius: 3px
-        }
-
-        /* type badge */
-        .type-badge {
-            position: absolute;
-            top: 9px;
-            left: 9px;
-            font-family: var(--mono);
-            font-size: 8px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            padding: 3px 7px;
-            border-radius: 3px;
-            backdrop-filter: blur(8px);
-            z-index: 5;
-        }
-
-        .type-badge.app {
-            background: rgba(84, 197, 248, 0.15);
-            color: var(--flutter);
-            border: 1px solid rgba(84, 197, 248, 0.2)
-        }
-
-        .type-badge.web {
-            background: rgba(74, 222, 128, 0.1);
-            color: var(--green);
-            border: 1px solid rgba(74, 222, 128, 0.2)
-        }
-
-        .type-badge.design {
-            background: rgba(244, 114, 182, 0.1);
-            color: var(--pink);
-            border: 1px solid rgba(244, 114, 182, 0.2)
-        }
-
-        .type-badge.iot {
-            background: rgba(251, 191, 36, 0.1);
-            color: var(--amber);
-            border: 1px solid rgba(251, 191, 36, 0.2)
-        }
-
-        /* ss counter top-right */
-        .ss-count {
-            position: absolute;
-            top: 9px;
-            right: 9px;
-            z-index: 5;
-            background: rgba(5, 5, 7, 0.85);
-            border: 1px solid var(--border2);
-            border-radius: 20px;
-            padding: 3px 7px;
-            font-family: var(--mono);
-            font-size: 8px;
-            color: var(--muted);
-            backdrop-filter: blur(6px);
-        }
-
-        /* card info */
-        .pcard-info {
-            padding: 12px 14px 14px;
-            flex: 1;
-            display: flex;
-            flex-direction: column
-        }
-
-        .pcard-num {
-            font-family: var(--mono);
-            font-size: 9px;
-            letter-spacing: 3px;
-            color: var(--dim);
-            margin-bottom: 4px;
-        }
-
-        .pcard h3 {
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 5px;
-            line-height: 1.3;
-            letter-spacing: -.2px;
-        }
-
-        .pcard p {
-            font-size: 11.5px;
-            line-height: 1.65;
-            color: var(--muted);
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            flex: 1;
-        }
-
-        .pcard-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            margin-top: 9px
-        }
-
-        .pcard-chip {
-            font-family: var(--mono);
-            padding: 2px 7px;
-            border-radius: 3px;
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            font-size: 9px;
-            color: rgba(232, 232, 240, 0.3);
-            letter-spacing: .3px;
-        }
-
-        /* ── CONTACT + RESUME ── */
-        .bottom-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 40px;
-            animation: fadeUp .6s ease .5s both;
-        }
-
-        .bcard {
-            padding: 40px 44px;
-            border-radius: 14px;
-            background: var(--bg2);
-            border: 1px solid var(--border);
-            position: relative;
-            overflow: hidden;
-            transition: .2s;
-        }
-
-        .bcard:hover {
-            border-color: var(--border2)
-        }
-
-        .bcard-glow {
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            filter: blur(80px);
-            pointer-events: none;
-        }
-
-        .bcard-glow.teal {
-            background: rgba(84, 197, 248, 0.05);
-            bottom: -80px;
-            left: -60px
-        }
-
-        .bcard-glow.purple {
-            background: rgba(167, 139, 250, 0.06);
-            top: -80px;
-            right: -60px
-        }
-
-        .bcard h2 {
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: -1px;
-            margin-bottom: 8px;
-        }
-
-        .bcard p {
-            font-size: 13.5px;
-            color: var(--muted);
-            line-height: 1.7;
-            margin-bottom: 24px;
-            font-weight: 300;
-        }
-
-        .bcard-links {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap
-        }
-
-        .bl {
-            font-family: var(--mono);
-            padding: 9px 16px;
-            border-radius: 7px;
-            border: 1px solid var(--border2);
-            text-decoration: none;
-            color: var(--muted);
-            font-size: 12px;
-            transition: .2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .bl:hover {
-            border-color: rgba(84, 197, 248, 0.35);
-            color: var(--flutter);
-            background: rgba(84, 197, 248, 0.06)
-        }
-
-        footer {
-            text-align: center;
-            padding: 24px;
-            font-family: var(--mono);
-            font-size: 11px;
-            color: var(--dim);
-            letter-spacing: 1.5px;
-            animation: fadeUp .6s ease .6s both;
-        }
-
-        .footer-line {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-        }
-
-        .footer-line::before,
-        .footer-line::after {
-            content: '';
-            flex: 1;
-            max-width: 120px;
-            height: 1px;
-            background: var(--border);
-        }
-
-        /* ═══ MODAL ═══ */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.92);
-            backdrop-filter: blur(24px);
-            z-index: 200;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity .25s ease;
-        }
-
-        .modal-overlay.open {
-            opacity: 1;
-            pointer-events: all
-        }
-
-        .modal {
-            background: var(--bg2);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 18px;
-            width: 100%;
-            max-width: 480px;
-            max-height: 90vh;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
-            display: flex;
-            flex-direction: column;
-            transform: scale(.96) translateY(12px);
-            transition: transform .3s cubic-bezier(.34, 1.4, .64, 1);
-        }
-
-        .modal-overlay.open .modal {
-            transform: scale(1) translateY(0)
-        }
-
-        .m-phone-wrap {
-            display: flex;
-            justify-content: center;
-            padding: 24px 24px 0;
-        }
-
-        .m-phone {
-            width: 220px;
-            background: #0d0d14;
-            border-radius: 36px;
-            border: 1.5px solid rgba(255, 255, 255, 0.1);
-            overflow: hidden;
-            box-shadow: 0 0 0 8px rgba(0, 0, 0, 0.4), 0 30px 60px rgba(0, 0, 0, 0.7);
-            position: relative;
-        }
-
-        .m-phone::before {
-            content: '';
-            position: absolute;
-            top: 12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 72px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
-            z-index: 10;
-        }
-
-        .m-screen {
-            width: 100%;
-            aspect-ratio: 9/19.5;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .m-screen img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block
-        }
-
-        .m-web-wrap {
-            margin: 24px 24px 0;
-            background: #0d0d14;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .m-web-bar {
-            padding: 8px 12px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            background: rgba(255, 255, 255, 0.04);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .m-web-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%
-        }
-
-        .m-web-img {
-            width: 100%;
-            display: block;
-            max-height: 240px;
-            object-fit: cover
-        }
-
-        .m-controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 14px 0 4px;
-        }
-
-        .m-btn {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--muted);
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: .2s;
-            font-family: var(--mono);
-        }
-
-        .m-btn:hover {
-            background: rgba(84, 197, 248, 0.12);
-            color: var(--flutter);
-            border-color: rgba(84, 197, 248, 0.3)
-        }
-
-        .m-counter {
-            font-family: var(--mono);
-            font-size: 11px;
-            color: var(--muted);
-            min-width: 44px;
-            text-align: center;
-            letter-spacing: 1px;
-        }
-
-        .m-dots {
-            display: flex;
-            gap: 5px;
-            justify-content: center;
-            padding-bottom: 4px
-        }
-
-        .mdot {
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transition: .2s;
-            cursor: pointer;
-        }
-
-        .mdot.on {
-            background: var(--flutter);
-            width: 14px;
-            border-radius: 3px
-        }
-
-        .m-info {
-            padding: 20px 24px 24px
-        }
-
-        .m-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 14px
-        }
-
-        .m-n {
-            font-family: var(--mono);
-            font-size: 9px;
-            letter-spacing: 3px;
-            color: var(--dim);
-            margin-bottom: 3px
-        }
-
-        .m-title {
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: -.4px
-        }
-
-        .m-close {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--muted);
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: .2s;
-            flex-shrink: 0;
-            font-family: var(--mono);
-        }
-
-        .m-close:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text)
-        }
-
-        .m-desc {
-            font-size: 13px;
-            line-height: 1.8;
-            color: rgba(232, 232, 240, 0.45);
-            margin-bottom: 14px;
-            font-weight: 300
-        }
-
-        .m-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-bottom: 16px
-        }
-
-        .mtag {
-            font-family: var(--mono);
-            padding: 3px 10px;
-            border-radius: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            font-size: 10px;
-            color: rgba(232, 232, 240, 0.35);
-            letter-spacing: .3px;
-        }
-
-        .m-acts {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            padding-top: 14px;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .mact {
-            font-family: var(--mono);
-            padding: 9px 16px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            text-decoration: none;
-            color: var(--muted);
-            font-size: 12px;
-            font-weight: 500;
-            transition: .2s;
-        }
-
-        .mact:hover {
-            border-color: rgba(84, 197, 248, 0.3);
-            color: var(--flutter);
-            background: rgba(84, 197, 248, 0.07)
-        }
-
-        .mact.primary {
-            background: var(--flutter);
-            color: #050507;
-            border-color: var(--flutter)
-        }
-
-        .mact.primary:hover {
-            background: #7dd8fb
-        }
-
-        /* ── HERO PHONE MOCKUP ── */
-        .hero-right {
-            animation: fadeUp .6s ease .2s both
-        }
-
-        .hero-phone-wrap {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 16px;
-        }
-
-        .hp-glow {
-            position: absolute;
-            width: 260px;
-            height: 420px;
-            background: radial-gradient(ellipse at center, rgba(84, 197, 248, 0.12) 0%, transparent 70%);
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            pointer-events: none;
-            filter: blur(30px);
-            animation: hpPulse 4s ease-in-out infinite;
-        }
-
-        @keyframes hpPulse {
-
-            0%,
-            100% {
-                opacity: .6
-            }
-
-            50% {
-                opacity: 1
-            }
-        }
-
-        @keyframes hpFloat {
-
-            0%,
-            100% {
-                transform: translateY(0)
-            }
-
-            50% {
-                transform: translateY(-10px)
-            }
-        }
-
-        .hp-frame {
-            width: 220px;
-            background: linear-gradient(160deg, #1a1a2e 0%, #0d0d16 100%);
-            border-radius: 40px;
-            border: 1.5px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.5), 0 0 0 7px rgba(84, 197, 248, 0.06), 0 40px 80px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-            position: relative;
-            overflow: hidden;
-            animation: hpFloat 6s ease-in-out infinite;
-        }
-
-        .hp-notch {
-            position: absolute;
-            top: 11px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 70px;
-            height: 5px;
-            background: #0a0a10;
-            border-radius: 10px;
-            z-index: 20;
-        }
-
-        .hp-frame::before {
-            content: '';
-            position: absolute;
-            right: -3px;
-            top: 90px;
-            width: 3px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 0 3px 3px 0;
-        }
-
-        .hp-screen {
-            margin: 10px 6px 0;
-            border-radius: 32px;
-            overflow: hidden;
-            aspect-ratio: 9/19.5;
-            position: relative;
-            background: #000;
-            -webkit-mask-image: -webkit-radial-gradient(white, black);
-        }
-
-        .hp-slides {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            transition: transform .4s cubic-bezier(.4, 0, .2, 1);
-            will-change: transform;
-        }
-
-        .hp-slide {
-            min-width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            flex-shrink: 0;
-            user-select: none;
-            -webkit-user-drag: none;
-        }
-
-        .hp-hint {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: var(--mono);
-            font-size: 9px;
-            letter-spacing: 2px;
-            color: rgba(84, 197, 248, 0.7);
-            text-transform: uppercase;
-            background: rgba(5, 5, 7, 0.7);
-            padding: 4px 10px;
-            border-radius: 20px;
-            border: 1px solid rgba(84, 197, 248, 0.2);
-            backdrop-filter: blur(6px);
-            opacity: 1;
-            transition: opacity .5s;
-            pointer-events: none;
-        }
-
-        .hp-hint.hidden {
-            opacity: 0
-        }
-
-        .hp-bottom {
-            padding: 10px 0 14px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .hp-dots {
-            display: flex;
-            gap: 5px;
-            align-items: center
-        }
-
-        .hpdot {
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.18);
-            transition: all .25s;
-            cursor: pointer;
-        }
-
-        .hpdot.on {
-            background: var(--flutter);
-            width: 16px;
-            border-radius: 3px;
-        }
-
-        .hp-label {
-            margin-top: 14px;
-            font-family: var(--mono);
-            font-size: 10px;
-            color: rgba(84, 197, 248, 0.5);
-            letter-spacing: 1px;
-            text-align: center;
-            min-height: 16px;
-            transition: opacity .3s;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0
-            }
-
-            to {
-                opacity: 1
-            }
-        }
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px)
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0)
-            }
-        }
-
-        @keyframes blink {
-
-            0%,
-            100% {
-                opacity: 1
-            }
-
-            50% {
-                opacity: 0
-            }
-        }
-
-        @keyframes glitch {
-
-            0%,
-            90%,
-            100% {
-                transform: translate(0)
-            }
-
-            91% {
-                transform: translate(-2px, 1px)
-            }
-
-            93% {
-                transform: translate(2px, -1px)
-            }
-
-            95% {
-                transform: translate(-1px, 0)
-            }
-
-            97% {
-                transform: translate(1px, 0)
-            }
-        }
-
-        .glitch {
-            animation: glitch 8s infinite
-        }
-
-        /* ── RESPONSIVE ── */
-        @media(max-width:1100px) {
-            .proj-grid {
-                grid-template-columns: repeat(3, 1fr)
-            }
-        }
-
-        /* Tablet */
-        @media(max-width:860px) {
-            .wrap {
-                padding: 20px 20px
-            }
-
-            .hero {
-                grid-template-columns: 1fr;
-                gap: 0
-            }
-
-            .hero-right {
-                display: none
-            }
-
-            .proj-grid {
-                grid-template-columns: 1fr 1fr
-            }
-
-            .bottom-grid {
-                grid-template-columns: 1fr
-            }
-
-            h1.name {
-                font-size: 64px;
-                letter-spacing: -3px
-            }
-
-            nav {
-                margin-bottom: 32px
-            }
-        }
-
-        /* Mobile */
-        @media(max-width:600px) {
-
-            /* hide cursor on touch */
-            #cursor,
-            #cursor-ring {
-                display: none
-            }
-
-            body {
-                cursor: auto
-            }
-
-            .wrap {
-                padding: 12px 14px
-            }
-
-            /* nav */
-            nav {
-                padding: 10px 14px;
-                margin-bottom: 20px;
-                top: 10px;
-                border-radius: 8px;
-            }
-
-            .nav-logo {
-                font-size: 12px
-            }
-
-            .nav-links {
-                display: none
-            }
-
-            /* hero */
-            .hero {
-                grid-template-columns: 1fr;
-                gap: 0;
-                margin-bottom: 20px
-            }
-
-            .hero-right {
-                display: none
-            }
-
-            .hero-left {
-                animation: none
-            }
-
-            .hero-eyebrow {
-                font-size: 10px;
-                letter-spacing: 2px;
-                margin-bottom: 14px
-            }
-
-            h1.name {
-                font-size: 46px;
-                letter-spacing: -2px;
-                margin-bottom: 16px
-            }
-
-            .hero-tags {
-                gap: 6px;
-                margin-bottom: 18px
-            }
-
-            .htag {
-                font-size: 10px;
-                padding: 4px 10px
-            }
-
-            .hero-desc {
-                font-size: 13px;
-                line-height: 1.7;
-                margin-bottom: 24px
-            }
-
-            .hbtn {
-                font-size: 12px;
-                padding: 11px 20px
-            }
-
-            .hero-btns {
-                gap: 8px
-            }
-
-            /* stats */
-            .stats-row {
-                grid-template-columns: 1fr 1fr;
-                margin-bottom: 28px;
-                gap: 1px;
-            }
-
-            .stat-item:last-child {
-                grid-column: span 2
-            }
-
-            .stat-val {
-                font-size: 22px
-            }
-
-            .stat-label {
-                font-size: 11px
-            }
-
-            /* skills */
-            .skills-section {
-                margin-bottom: 28px
-            }
-
-            .sk {
-                font-size: 10.5px;
-                padding: 6px 11px
-            }
-
-            /* projects */
-            .projects-section {
-                margin-bottom: 28px
-            }
-
-            .proj-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-            }
-
-            .pcard {
-                border-radius: 12px
-            }
-
-            .pcard-phone-area {
-                padding: 10px 10px 8px
-            }
-
-            .pcard-phone {
-                max-width: 90px
-            }
-
-            .pcard-info {
-                padding: 9px 10px 11px
-            }
-
-            .pcard h3 {
-                font-size: 11px
-            }
-
-            .pcard p {
-                font-size: 10px;
-                -webkit-line-clamp: 2
-            }
-
-            .pcard-chip {
-                font-size: 8px;
-                padding: 2px 5px
-            }
-
-            .pcard-num {
-                font-size: 8px
-            }
-
-            .type-badge {
-                font-size: 7px;
-                padding: 2px 5px
-            }
-
-            .ss-count {
-                font-size: 7px;
-                padding: 2px 5px
-            }
-
-            /* contact / resume */
-            .bottom-grid {
-                grid-template-columns: 1fr;
-                gap: 10px;
-                margin-bottom: 24px
-            }
-
-            .bcard {
-                padding: 22px 20px
-            }
-
-            .bcard h2 {
-                font-size: 20px
-            }
-
-            .bcard p {
-                font-size: 12.5px;
-                margin-bottom: 16px
-            }
-
-            .bl {
-                font-size: 11px;
-                padding: 8px 13px
-            }
-
-            /* footer */
-            footer {
-                padding: 16px;
-                font-size: 10px
-            }
-
-            /* modal */
-            .modal {
-                border-radius: 14px;
-                max-height: 95vh
-            }
-
-            .m-phone {
-                width: 160px
-            }
-
-            .m-info {
-                padding: 14px 16px 18px
-            }
-
-            .m-title {
-                font-size: 17px
-            }
-
-            .m-desc {
-                font-size: 12px
-            }
-        }
-
-        /* Very small phones (iPhone SE etc) */
-        @media(max-width:380px) {
-            h1.name {
-                font-size: 38px;
-                letter-spacing: -1.5px
-            }
-
-            .proj-grid {
-                grid-template-columns: 1fr
-            }
-
-            .stats-row {
-                grid-template-columns: 1fr
-            }
-
-            .stat-item:last-child {
-                grid-column: span 1
-            }
-
-            .pcard-phone {
-                max-width: 110px
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shikhar Bajpai — Flutter Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050507;
+  --bg2:#0a0a10;
+  --bg3:#0f0f18;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.14);
+  --text:#e8e8f0;
+  --muted:rgba(232,232,240,0.38);
+  --dim:rgba(232,232,240,0.15);
+  --flutter:#54c5f8;
+  --dart:#0175c2;
+  --green:#4ade80;
+  --amber:#fbbf24;
+  --pink:#f472b6;
+  --purple:#a78bfa;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Space Grotesk',sans-serif;
+  --red:#f87171;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh;cursor:none}
+
+/* CUSTOM CURSOR */
+#cursor{position:fixed;width:10px;height:10px;background:var(--flutter);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s,opacity .2s;mix-blend-mode:screen}
+#cursor-ring{position:fixed;width:32px;height:32px;border:1px solid rgba(84,197,248,0.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .08s ease,width .2s,height .2s;mix-blend-mode:screen}
+
+/* SCANLINE OVERLAY */
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px);pointer-events:none;z-index:1;}
+
+/* GRID LINES BG */
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(84,197,248,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(84,197,248,0.025) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+
+.wrap{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:24px 32px}
+
+/* ── NAV ── */
+nav{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:rgba(10,10,16,0.9);border:1px solid var(--border);border-radius:10px;backdrop-filter:blur(20px);margin-bottom:48px;position:sticky;top:16px;z-index:50;animation:fadeIn .5s ease both;}
+.nav-logo{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--flutter);letter-spacing:.5px;}
+.nav-logo span{color:var(--muted)}
+.nav-links{display:flex;gap:6px}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:12px;letter-spacing:.3px;transition:.2s;font-family:var(--mono);padding:6px 12px;border-radius:6px;border:1px solid transparent;}
+.nav-links a:hover{color:var(--flutter);border-color:rgba(84,197,248,0.2);background:rgba(84,197,248,0.05)}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite;margin-right:8px;display:inline-block}
+
+/* ── HERO ── */
+.hero{display:grid;grid-template-columns:1fr 320px;gap:32px;align-items:start;margin-bottom:32px;}
+.hero-left{animation:fadeUp .6s ease .1s both}
+
+.hero-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(84,197,248,0.6);margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+.hero-eyebrow::before{content:'// ';color:rgba(148,163,184,0.3)}
+
+h1.name{font-family:var(--sans);font-size:80px;font-weight:700;line-height:.95;letter-spacing:-4px;margin-bottom:20px;}
+h1.name .first{color:var(--text)}
+h1.name .last{color:transparent;-webkit-text-stroke:1px rgba(84,197,248,0.4);display:block;}
+
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;}
+.htag{font-family:var(--mono);font-size:11px;padding:5px 12px;border-radius:4px;border:1px solid var(--border2);color:var(--muted);letter-spacing:.5px;}
+.htag.active{border-color:rgba(84,197,248,0.35);color:var(--flutter);background:rgba(84,197,248,0.07);}
+
+.hero-desc{font-size:15px;line-height:1.85;color:rgba(232,232,240,0.45);max-width:500px;margin-bottom:36px;font-weight:300;}
+
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap}
+.hbtn{font-family:var(--mono);padding:12px 24px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;transition:.2s;text-decoration:none;display:inline-flex;align-items:center;gap:8px;letter-spacing:.3px;}
+.hbtn-primary{background:var(--flutter);color:#050507;border:1px solid var(--flutter);}
+.hbtn-primary:hover{background:#7dd8fb;transform:translateY(-1px)}
+.hbtn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border2);}
+.hbtn-ghost:hover{border-color:var(--flutter);color:var(--flutter);background:rgba(84,197,248,0.05)}
+
+/* STAT ROW */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:48px;animation:fadeUp .6s ease .25s both;}
+.stat-item{background:var(--bg2);padding:20px 24px;transition:.2s;}
+.stat-item:hover{background:var(--bg3)}
+.stat-val{font-family:var(--mono);font-size:28px;font-weight:700;color:var(--flutter);margin-bottom:4px;letter-spacing:-1px;}
+.stat-label{font-size:12px;color:var(--muted);letter-spacing:.5px}
+
+/* ── SKILLS ── */
+.skills-section{margin-bottom:48px;animation:fadeUp .6s ease .3s both;}
+.sec-header{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
+.sec-tag{font-family:var(--mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(84,197,248,0.5);white-space:nowrap;}
+.sec-line{flex:1;height:1px;background:var(--border)}
+.sec-num{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:2px}
+
+.skills-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.sk{font-family:var(--mono);font-size:11.5px;padding:7px 14px;border-radius:6px;border:1px solid var(--border);color:var(--muted);transition:.25s;cursor:default;}
+.sk:hover{transform:translateY(-2px)}
+.sk.flutter{border-color:rgba(84,197,248,0.3);color:var(--flutter)}
+.sk.flutter:hover{background:rgba(84,197,248,0.08)}
+.sk.firebase{border-color:rgba(251,191,36,0.3);color:var(--amber)}
+.sk.firebase:hover{background:rgba(251,191,36,0.08)}
+.sk.ui{border-color:rgba(244,114,182,0.3);color:var(--pink)}
+.sk.ui:hover{background:rgba(244,114,182,0.08)}
+.sk.iot{border-color:rgba(74,222,128,0.3);color:var(--green)}
+.sk.iot:hover{background:rgba(74,222,128,0.08)}
+.sk.other{border-color:var(--border);color:var(--muted)}
+.sk.other:hover{border-color:var(--border2);color:var(--text)}
+
+/* ── PROJECTS ── */
+.projects-section{margin-bottom:48px;animation:fadeUp .6s ease .35s both}
+.proj-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+
+.pcard{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;cursor:pointer;transition:border-color .25s, transform .2s, box-shadow .25s;position:relative;display:flex;flex-direction:column;}
+.pcard:hover{border-color:rgba(84,197,248,0.35);transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.5), 0 0 24px rgba(84,197,248,0.05);}
+
+/* ── CARD PHONE FRAME AREA ── */
+.pcard-phone-area{background:#060609;padding:14px 14px 10px;display:flex;flex-direction:column;align-items:center;position:relative;border-bottom:1px solid var(--border);}
+
+/* mini phone for app/design type */
+.pcard-phone{width:100%;max-width:130px;background:#0c0c14;border-radius:22px;border:1.5px solid rgba(255,255,255,0.12);box-shadow:0 0 0 4px rgba(0,0,0,0.4), 0 12px 32px rgba(0,0,0,0.7);position:relative;overflow:hidden;}
+.pcard-phone::before{content:'';position:absolute;top:7px;left:50%;transform:translateX(-50%);width:40px;height:4px;background:#060609;border-radius:6px;z-index:10;}
+.pcard-pscreen{width:100%;aspect-ratio:9/19.5;position:relative;overflow:hidden;background:#000;}
+
+/* mini browser for web/iot type */
+.pcard-browser{width:100%;background:#0c0c14;border-radius:10px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 8px 24px rgba(0,0,0,0.6);overflow:hidden;}
+.pcard-browser-bar{padding:5px 8px;display:flex;align-items:center;gap:4px;background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.06);}
+.pcd-dot{width:6px;height:6px;border-radius:50%}
+.pcard-bscreen{width:100%;aspect-ratio:16/10;position:relative;overflow:hidden;background:#000;}
+
+/* shared sliding strip */
+.pcard-slides{display:flex;width:100%;height:100%;transition:transform .35s cubic-bezier(.4,0,.2,1);will-change:transform;}
+.pcard-slide{min-width:100%;height:100%;object-fit:cover;display:block;flex-shrink:0;user-select:none;-webkit-user-drag:none;pointer-events:none;}
+.pcard-slide.contain{object-fit:contain;background:#060609}
+
+/* dot indicators below frame */
+.pcard-frame-dots{display:flex;gap:4px;justify-content:center;margin-top:8px;min-height:8px;}
+.pcdot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all .2s;cursor:pointer;}
+.pcdot.on{background:var(--flutter);width:12px;border-radius:3px}
+
+/* type badge */
+.type-badge{position:absolute;top:9px;left:9px;font-family:var(--mono);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 7px;border-radius:3px;backdrop-filter:blur(8px);z-index:5;}
+.type-badge.app{background:rgba(84,197,248,0.15);color:var(--flutter);border:1px solid rgba(84,197,248,0.2)}
+.type-badge.web{background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.2)}
+.type-badge.design{background:rgba(244,114,182,0.1);color:var(--pink);border:1px solid rgba(244,114,182,0.2)}
+.type-badge.iot{background:rgba(251,191,36,0.1);color:var(--amber);border:1px solid rgba(251,191,36,0.2)}
+
+/* ss counter top-right */
+.ss-count{position:absolute;top:9px;right:9px;z-index:5;background:rgba(5,5,7,0.85);border:1px solid var(--border2);border-radius:20px;padding:3px 7px;font-family:var(--mono);font-size:8px;color:var(--muted);backdrop-filter:blur(6px);}
+
+/* card info */
+.pcard-info{padding:12px 14px 14px;flex:1;display:flex;flex-direction:column}
+.pcard-num{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--dim);margin-bottom:4px;}
+.pcard h3{font-size:13px;font-weight:600;margin-bottom:5px;line-height:1.3;letter-spacing:-.2px;}
+.pcard p{font-size:11.5px;line-height:1.65;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1;}
+.pcard-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:9px}
+.pcard-chip{font-family:var(--mono);padding:2px 7px;border-radius:3px;border:1px solid rgba(255,255,255,0.07);font-size:9px;color:rgba(232,232,240,0.3);letter-spacing:.3px;}
+
+/* ── CONTACT + RESUME ── */
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:40px;animation:fadeUp .6s ease .5s both;}
+.bcard{padding:40px 44px;border-radius:14px;background:var(--bg2);border:1px solid var(--border);position:relative;overflow:hidden;transition:.2s;}
+.bcard:hover{border-color:var(--border2)}
+.bcard-glow{position:absolute;width:300px;height:300px;border-radius:50%;filter:blur(80px);pointer-events:none;}
+.bcard-glow.teal{background:rgba(84,197,248,0.05);bottom:-80px;left:-60px}
+.bcard-glow.purple{background:rgba(167,139,250,0.06);top:-80px;right:-60px}
+.bcard h2{font-size:26px;font-weight:700;letter-spacing:-1px;margin-bottom:8px;}
+.bcard p{font-size:13.5px;color:var(--muted);line-height:1.7;margin-bottom:24px;font-weight:300;}
+.bcard-links{display:flex;gap:8px;flex-wrap:wrap}
+.bl{font-family:var(--mono);padding:9px 16px;border-radius:7px;border:1px solid var(--border2);text-decoration:none;color:var(--muted);font-size:12px;transition:.2s;display:flex;align-items:center;gap:6px;}
+.bl:hover{border-color:rgba(84,197,248,0.35);color:var(--flutter);background:rgba(84,197,248,0.06)}
+
+footer{text-align:center;padding:24px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:1.5px;animation:fadeUp .6s ease .6s both;}
+.footer-line{display:flex;align-items:center;justify-content:center;gap:16px;}
+.footer-line::before,.footer-line::after{content:'';flex:1;max-width:120px;height:1px;background:var(--border);}
+
+/* ═══ MODAL ═══ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.92);backdrop-filter:blur(24px);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .25s ease;}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg2);border:1px solid rgba(255,255,255,0.12);border-radius:18px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.1) transparent;display:flex;flex-direction:column;transform:scale(.96) translateY(12px);transition:transform .3s cubic-bezier(.34,1.4,.64,1);}
+.modal-overlay.open .modal{transform:scale(1) translateY(0)}
+
+.m-phone-wrap{display:flex;justify-content:center;padding:24px 24px 0;}
+.m-phone{width:220px;background:#0d0d14;border-radius:36px;border:1.5px solid rgba(255,255,255,0.1);overflow:hidden;box-shadow:0 0 0 8px rgba(0,0,0,0.4),0 30px 60px rgba(0,0,0,0.7);position:relative;}
+.m-phone::before{content:'';position:absolute;top:12px;left:50%;transform:translateX(-50%);width:72px;height:5px;background:rgba(255,255,255,0.08);border-radius:10px;z-index:10;}
+.m-screen{width:100%;aspect-ratio:9/19.5;position:relative;overflow:hidden;}
+.m-screen img{width:100%;height:100%;object-fit:cover;display:block}
+
+.m-web-wrap{margin:24px 24px 0;background:#0d0d14;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);}
+.m-web-bar{padding:8px 12px;display:flex;align-items:center;gap:5px;background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.06);}
+.m-web-dot{width:8px;height:8px;border-radius:50%}
+.m-web-img{width:100%;display:block;max-height:240px;object-fit:cover}
+
+.m-controls{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 0 4px;}
+.m-btn{width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.04);color:var(--muted);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;font-family:var(--mono);}
+.m-btn:hover{background:rgba(84,197,248,0.12);color:var(--flutter);border-color:rgba(84,197,248,0.3)}
+.m-counter{font-family:var(--mono);font-size:11px;color:var(--muted);min-width:44px;text-align:center;letter-spacing:1px;}
+.m-dots{display:flex;gap:5px;justify-content:center;padding-bottom:4px}
+.mdot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.2);transition:.2s;cursor:pointer;}
+.mdot.on{background:var(--flutter);width:14px;border-radius:3px}
+
+.m-info{padding:20px 24px 24px}
+.m-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.m-n{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--dim);margin-bottom:3px}
+.m-title{font-size:20px;font-weight:700;letter-spacing:-.4px}
+.m-close{width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.04);color:var(--muted);font-size:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;flex-shrink:0;font-family:var(--mono);}
+.m-close:hover{background:rgba(255,255,255,0.1);color:var(--text)}
+.m-desc{font-size:13px;line-height:1.8;color:rgba(232,232,240,0.45);margin-bottom:14px;font-weight:300}
+.m-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
+.mtag{font-family:var(--mono);padding:3px 10px;border-radius:4px;border:1px solid rgba(255,255,255,0.08);font-size:10px;color:rgba(232,232,240,0.35);letter-spacing:.3px;}
+.m-acts{display:flex;gap:8px;flex-wrap:wrap;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);}
+.mact{font-family:var(--mono);padding:9px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);text-decoration:none;color:var(--muted);font-size:12px;font-weight:500;transition:.2s;}
+.mact:hover{border-color:rgba(84,197,248,0.3);color:var(--flutter);background:rgba(84,197,248,0.07)}
+.mact.primary{background:var(--flutter);color:#050507;border-color:var(--flutter)}
+.mact.primary:hover{background:#7dd8fb}
+
+/* ── HERO PHONE MOCKUP ── */
+.hero-right{animation:fadeUp .6s ease .2s both}
+.hero-phone-wrap{position:relative;display:flex;flex-direction:column;align-items:center;padding-top:16px;}
+.hp-glow{position:absolute;width:260px;height:420px;background:radial-gradient(ellipse at center, rgba(84,197,248,0.12) 0%, transparent 70%);top:0;left:50%;transform:translateX(-50%);pointer-events:none;filter:blur(30px);animation:hpPulse 4s ease-in-out infinite;}
+@keyframes hpPulse{0%,100%{opacity:.6}50%{opacity:1}}
+@keyframes hpFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+.hp-frame{width:220px;background:linear-gradient(160deg,#1a1a2e 0%,#0d0d16 100%);border-radius:40px;border:1.5px solid rgba(255,255,255,0.12);box-shadow:0 0 0 6px rgba(0,0,0,0.5),0 0 0 7px rgba(84,197,248,0.06),0 40px 80px rgba(0,0,0,0.8),inset 0 1px 0 rgba(255,255,255,0.08);position:relative;overflow:hidden;animation:hpFloat 6s ease-in-out infinite;}
+.hp-notch{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:70px;height:5px;background:#0a0a10;border-radius:10px;z-index:20;}
+.hp-frame::before{content:'';position:absolute;right:-3px;top:90px;width:3px;height:60px;background:rgba(255,255,255,0.08);border-radius:0 3px 3px 0;}
+.hp-screen{margin:10px 6px 0;border-radius:32px;overflow:hidden;aspect-ratio:9/19.5;position:relative;background:#000;-webkit-mask-image:-webkit-radial-gradient(white,black);}
+.hp-slides{display:flex;width:100%;height:100%;transition:transform .4s cubic-bezier(.4,0,.2,1);will-change:transform;}
+.hp-slide{min-width:100%;height:100%;object-fit:cover;display:block;flex-shrink:0;user-select:none;-webkit-user-drag:none;}
+
+.hp-hint{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:9px;letter-spacing:2px;color:rgba(84,197,248,0.7);text-transform:uppercase;background:rgba(5,5,7,0.7);padding:4px 10px;border-radius:20px;border:1px solid rgba(84,197,248,0.2);backdrop-filter:blur(6px);opacity:1;transition:opacity .5s;pointer-events:none;}
+.hp-hint.hidden{opacity:0}
+
+.hp-bottom{padding:10px 0 14px;display:flex;justify-content:center;}
+.hp-dots{display:flex;gap:5px;align-items:center}
+.hpdot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.18);transition:all .25s;cursor:pointer;}
+.hpdot.on{background:var(--flutter);width:16px;border-radius:3px;}
+.hp-label{margin-top:14px;font-family:var(--mono);font-size:10px;color:rgba(84,197,248,0.5);letter-spacing:1px;text-align:center;min-height:16px;transition:opacity .3s;}
+
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes glitch{0%,90%,100%{transform:translate(0)}91%{transform:translate(-2px,1px)}93%{transform:translate(2px,-1px)}95%{transform:translate(-1px,0)}97%{transform:translate(1px,0)}}
+.glitch{animation:glitch 8s infinite}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .proj-grid{grid-template-columns:repeat(3,1fr)}
+}
+
+/* Tablet */
+@media(max-width:860px){
+  .wrap{padding:20px 20px}
+  .hero{grid-template-columns:1fr;gap:0}
+  .hero-right{display:none}
+  .proj-grid{grid-template-columns:1fr 1fr}
+  .bottom-grid{grid-template-columns:1fr}
+  h1.name{font-size:64px;letter-spacing:-3px}
+  nav{margin-bottom:32px}
+}
+
+/* Mobile */
+@media(max-width:600px){
+  /* hide cursor on touch */
+  #cursor,#cursor-ring{display:none}
+  body{cursor:auto}
+
+  .wrap{padding:12px 14px}
+
+  /* nav */
+  nav{
+    padding:10px 14px;
+    margin-bottom:20px;
+    top:10px;
+    border-radius:8px;
+  }
+  .nav-logo{font-size:12px}
+  .nav-links{display:none}
+
+  /* hero */
+  .hero{grid-template-columns:1fr;gap:0;margin-bottom:20px}
+  .hero-right{display:none}
+  .hero-left{animation:none}
+  .hero-eyebrow{font-size:10px;letter-spacing:2px;margin-bottom:14px}
+  h1.name{font-size:46px;letter-spacing:-2px;margin-bottom:16px}
+  .hero-tags{gap:6px;margin-bottom:18px}
+  .htag{font-size:10px;padding:4px 10px}
+  .hero-desc{font-size:13px;line-height:1.7;margin-bottom:24px}
+  .hbtn{font-size:12px;padding:11px 20px}
+  .hero-btns{gap:8px}
+
+  /* stats */
+  .stats-row{
+    grid-template-columns:1fr 1fr;
+    margin-bottom:28px;
+    gap:1px;
+  }
+  .stat-item:last-child{grid-column:span 2}
+  .stat-val{font-size:22px}
+  .stat-label{font-size:11px}
+
+  /* skills */
+  .skills-section{margin-bottom:28px}
+  .sk{font-size:10.5px;padding:6px 11px}
+
+  /* projects */
+  .projects-section{margin-bottom:28px}
+  .proj-grid{
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+  .pcard{border-radius:12px}
+  .pcard-phone-area{padding:10px 10px 8px}
+  .pcard-phone{max-width:90px}
+  .pcard-info{padding:9px 10px 11px}
+  .pcard h3{font-size:11px}
+  .pcard p{font-size:10px;-webkit-line-clamp:2}
+  .pcard-chip{font-size:8px;padding:2px 5px}
+  .pcard-num{font-size:8px}
+  .type-badge{font-size:7px;padding:2px 5px}
+  .ss-count{font-size:7px;padding:2px 5px}
+
+  /* contact / resume */
+  .bottom-grid{grid-template-columns:1fr;gap:10px;margin-bottom:24px}
+  .bcard{padding:22px 20px}
+  .bcard h2{font-size:20px}
+  .bcard p{font-size:12.5px;margin-bottom:16px}
+  .bl{font-size:11px;padding:8px 13px}
+
+  /* footer */
+  footer{padding:16px;font-size:10px}
+
+  /* modal */
+  .modal{border-radius:14px;max-height:95vh}
+  .m-phone{width:160px}
+  .m-info{padding:14px 16px 18px}
+  .m-title{font-size:17px}
+  .m-desc{font-size:12px}
+}
+
+/* Very small phones (iPhone SE etc) */
+@media(max-width:380px){
+  h1.name{font-size:38px;letter-spacing:-1.5px}
+  .proj-grid{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:1fr}
+  .stat-item:last-child{grid-column:span 1}
+  .pcard-phone{max-width:110px}
+}
+</style>
 </head>
-
 <body>
 
-    <div id="cursor"></div>
-    <div id="cursor-ring"></div>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
 
-    <div class="wrap">
+<div class="wrap">
 
-        <!-- NAV -->
-        <nav>
-            <div class="nav-logo">
-                <span>~/</span>shikhar<span style="color:var(--flutter)">_</span>bajpai
-                <span class="nav-dot"></span>
-            </div>
-            <div class="nav-links">
-                <a href="#">home</a>
-                <a href="#projects">projects</a>
-                <a href="#contact">contact</a>
-                <a href="#resume">resume</a>
-            </div>
-        </nav>
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">
+      <span>~/</span>shikhar<span style="color:var(--flutter)">_</span>bajpai
+      <span class="nav-dot"></span>
+    </div>
+    <div class="nav-links">
+      <a href="#">home</a>
+      <a href="#projects">projects</a>
+      <a href="#contact">contact</a>
+      <a href="#resume">resume</a>
+    </div>
+  </nav>
 
-        <!-- HERO -->
-        <div class="hero">
-            <div class="hero-left">
-                <div class="hero-eyebrow">Flutter Developer · B.Tech 2027</div>
-                <h1 class="name glitch">
-                    <span class="first">Shikhar</span>
-                    <span class="last">Bajpai</span>
-                </h1>
-                <div class="hero-tags">
-                    <span class="htag active">Flutter</span>
-                    <span class="htag active">Dart</span>
-                    <span class="htag active">Firebase</span>
-                    <span class="htag">GetX</span>
-                    <span class="htag">REST APIs</span>
-                    <span class="htag">IoT</span>
-                    <span class="htag">Figma</span>
-                    <span class="htag">UI/UX</span>
-                </div>
-                <p class="hero-desc">Building production-grade Flutter apps with clean architecture, smooth animations &
-                    real-world integrations. KR Mangalam University · Class of 2027.</p>
-                <div class="hero-btns">
-                    <a href="#projects" class="hbtn hbtn-primary">view_projects() →</a>
-                    <a href="#contact" class="hbtn hbtn-ghost">contact_me()</a>
-                </div>
-            </div>
-
-            <!-- HERO PHONE -->
-            <div class="hero-right">
-                <div class="hero-phone-wrap">
-                    <div class="hp-glow"></div>
-                    <div class="hp-frame">
-                        <div class="hp-notch"></div>
-                        <div class="hp-screen" id="hpScreen">
-                            <div class="hp-slides" id="hpSlides">
-                                <img class="hp-slide" src="preview/mvp/home.jpeg" alt="Vanguard home">
-                                <img class="hp-slide" src="preview/mvp/sos.jpeg" alt="Vanguard SOS">
-                                <img class="hp-slide" src="preview/mvp/gps.jpeg" alt="Vanguard GPS">
-                                <img class="hp-slide" src="preview/task/1.jpeg" alt="Task Manager">
-                                <img class="hp-slide" src="preview/task/3.jpeg" alt="Task Manager 2">
-                                <img class="hp-slide" src="preview/hackerNewsReader/1.jpeg" alt="HackerNews">
-                            </div>
-                            <div class="hp-hint" id="hpHint"><span>swipe</span></div>
-                        </div>
-                        <div class="hp-bottom">
-                            <div class="hp-dots" id="hpDots"></div>
-                        </div>
-                    </div>
-                    <div class="hp-label" id="hpLabel">Vanguard · home</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- STATS -->
-        <div class="stats-row">
-            <div class="stat-item">
-                <div class="stat-val">8+</div>
-                <div class="stat-label">Projects Shipped</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-val">2027</div>
-                <div class="stat-label">Graduating · B.Tech CSE</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-val" style="color:var(--green)">Open</div>
-                <div class="stat-label">For Internships & Freelance</div>
-            </div>
-        </div>
-
-        <!-- SKILLS -->
-        <div class="skills-section">
-            <div class="sec-header">
-                <span class="sec-tag">// tech_stack</span>
-                <div class="sec-line"></div>
-                <span class="sec-num">11 skills</span>
-            </div>
-            <div class="skills-grid">
-                <span class="sk flutter">Flutter</span>
-                <span class="sk flutter">Dart</span>
-                <span class="sk firebase">Firebase</span>
-                <span class="sk firebase">Firestore</span>
-                <span class="sk flutter">GetX</span>
-                <span class="sk other">REST APIs</span>
-                <span class="sk other">State Mgmt</span>
-                <span class="sk iot">IoT · Arduino</span>
-                <span class="sk ui">Figma</span>
-                <span class="sk ui">UI/UX</span>
-                <span class="sk other">Web Dev</span>
-            </div>
-        </div>
-
-        <!-- PROJECTS -->
-        <div class="projects-section" id="projects">
-            <div class="sec-header">
-                <span class="sec-tag">// selected_projects</span>
-                <div class="sec-line"></div>
-                <span class="sec-num">08 works</span>
-            </div>
-
-            <div class="proj-grid" id="projGrid">
-
-                <!-- 01 Vanguard -->
-                <div class="pcard" data-num="01" data-type="app" data-title="Vanguard Safety App"
-                    data-desc="A Flutter-based personal safety MVP featuring SOS emergency alerts with GPS location capture, real-time incident reporting, OTP-based authentication, and a live admin monitoring panel powered by Firebase Firestore streams."
-                    data-tags="Flutter,Firebase,GetX,GPS,Firestore,OTP Auth"
-                    data-preview="preview/mvp/login.jpeg,preview/mvp/home.jpeg,preview/mvp/sos.jpeg,preview/mvp/gps.jpeg,preview/mvp/incident.jpeg,preview/mvp/admin1.jpeg"
-                    data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/Flutter-Vanguard-Safety","primary":true},{"label":"Download APK","url":"https://github.com/shikhar11x/Flutter-Vanguard-Safety/releases/tag/v1.0","primary":false}]'>
-                    <div class="pcard-phone-area">
-                        <div class="type-badge app">app</div>
-                        <div class="ss-count">1/6</div>
-                        <div class="pcard-phone">
-                            <div class="pcard-pscreen">
-                                <div class="pcard-slides">
-                                    <img class="pcard-slide" src="preview/mvp/login.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/mvp/home.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/mvp/sos.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/mvp/gps.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/mvp/incident.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/mvp/admin1.jpeg" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pcard-frame-dots"></div>
-                    </div>
-                    <div class="pcard-info">
-                        <p class="pcard-num">PROJECT_01</p>
-                        <h3>Vanguard Safety App</h3>
-                        <p>SOS alerts + GPS tracking + incident reporting + real-time admin panel.</p>
-                        <div class="pcard-chips"><span class="pcard-chip">Flutter</span><span
-                                class="pcard-chip">Firebase</span><span class="pcard-chip">GetX</span><span
-                                class="pcard-chip">GPS</span></div>
-                    </div>
-                </div>
-
-                <!-- 02 Task Manager -->
-                <div class="pcard" data-num="02" data-type="app" data-title="Flutter Task Manager"
-                    data-desc="A full-stack Task Manager app built with Flutter featuring Firebase Authentication, real-time Cloud Firestore sync, and REST API integration for motivational quotes."
-                    data-tags="Flutter,Dart,Firebase,Firestore,REST API"
-                    data-preview="preview/task/1.jpeg,preview/task/2.jpeg,preview/task/3.jpeg,preview/task/4.jpeg"
-                    data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/flutter-Task-Manager-App","primary":true},{"label":"Download APK","url":"https://github.com/shikhar11x/flutter-Task-Manager-App/releases/tag/v1.0","primary":false}]'>
-                    <div class="pcard-phone-area">
-                        <div class="type-badge app">app</div>
-                        <div class="ss-count">1/4</div>
-                        <div class="pcard-phone">
-                            <div class="pcard-pscreen">
-                                <div class="pcard-slides">
-                                    <img class="pcard-slide" src="preview/task/1.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/task/2.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/task/3.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/task/4.jpeg" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pcard-frame-dots"></div>
-                    </div>
-                    <div class="pcard-info">
-                        <p class="pcard-num">PROJECT_02</p>
-                        <h3>Flutter Task Manager</h3>
-                        <p>Firebase auth, Firestore sync & motivational quotes API.</p>
-                        <div class="pcard-chips"><span class="pcard-chip">Flutter</span><span
-                                class="pcard-chip">Firebase</span><span class="pcard-chip">Firestore</span></div>
-                    </div>
-                </div>
-
-                <!-- 03 HackerNews -->
-                <div class="pcard" data-num="03" data-type="app" data-title="HackerNews Reader"
-                    data-desc="A Hacker News reader app built with Flutter featuring a terminal-style neon green dark UI with shimmer loading animations."
-                    data-tags="Flutter,Dart,REST API,Firebase,Shimmer"
-                    data-preview="preview/hackerNewsReader/1.jpeg,preview/hackerNewsReader/2.jpeg"
-                    data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/Flutter-HackerNews-Reader","primary":true},{"label":"Download APK","url":"https://github.com/shikhar11x/Flutter-HackerNews-Reader/releases/tag/v1.0","primary":false}]'>
-                    <div class="pcard-phone-area">
-                        <div class="type-badge app">app</div>
-                        <div class="ss-count">1/2</div>
-                        <div class="pcard-phone">
-                            <div class="pcard-pscreen">
-                                <div class="pcard-slides">
-                                    <img class="pcard-slide" src="preview/hackerNewsReader/1.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/hackerNewsReader/2.jpeg" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pcard-frame-dots"></div>
-                    </div>
-                    <div class="pcard-info">
-                        <p class="pcard-num">PROJECT_03</p>
-                        <h3>HackerNews Reader</h3>
-                        <p>Terminal-style HN client with live stories & shimmer.</p>
-                        <div class="pcard-chips"><span class="pcard-chip">Flutter</span><span class="pcard-chip">REST
-                                API</span></div>
-                    </div>
-                </div>
-
-                <!-- 04 Todo -->
-                <div class="pcard" data-num="04" data-type="app" data-title="Flutter Todo App"
-                    data-desc="Clean minimal Todo app with dark glass UI, priority levels, and persistent local storage using Hive."
-                    data-tags="Flutter,Dart,Hive,Local Storage,Animation"
-                    data-preview="preview/todomain.jpeg,preview/todo1.jpeg,preview/todo2.jpeg"
-                    data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/Flutter-TodoApp","primary":true},{"label":"Download APK","url":"https://github.com/shikhar11x/Flutter-TodoApp/releases","primary":false}]'>
-                    <div class="pcard-phone-area">
-                        <div class="type-badge app">app</div>
-                        <div class="ss-count">1/3</div>
-                        <div class="pcard-phone">
-                            <div class="pcard-pscreen">
-                                <div class="pcard-slides">
-                                    <img class="pcard-slide" src="preview/todomain.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/todo1.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/todo2.jpeg" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pcard-frame-dots"></div>
-                    </div>
-                    <div class="pcard-info">
-                        <p class="pcard-num">PROJECT_04</p>
-                        <h3>Flutter Todo App</h3>
-                        <p>Dark glass UI + priority tasks + Hive storage.</p>
-                        <div class="pcard-chips"><span class="pcard-chip">Flutter</span><span
-                                class="pcard-chip">Hive</span></div>
-                    </div>
-                </div>
-
-                <!-- 05 Dice -->
-                <div class="pcard" data-num="05" data-type="app" data-title="Flutter Dice App"
-                    data-desc="Flutter dice app with smooth roll animations, Provider state management and fully responsive UI."
-                    data-tags="Flutter,Dart,Animation,Provider,Responsive" data-preview="preview/dice.jpeg"
-                    data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/Flutter-Dice","primary":true},{"label":"Live Demo","url":"https://flutter-dice-blazestack.vercel.app/","primary":false}]'>
-                    <div class="pcard-phone-area">
-                        <div class="type-badge app">app</div>
-                        <div class="ss-count">1/1</div>
-                        <div class="pcard-phone">
-                            <div class="pcard-pscreen">
-                                <div class="pcard-slides">
-                                    <img class="pcard-slide contain" src="preview/dice.jpeg" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pcard-frame-dots"></div>
-                    </div>
-                    <div class="pcard-info">
-                        <p class="pcard-num">PROJECT_05</p>
-                        <h3>Flutter Dice App</h3>
-                        <p>Roll animations + Provider state management.</p>
-                        <div class="pcard-chips"><span class="pcard-chip">Flutter</span><span
-                                class="pcard-chip">Provider</span><span class="pcard-chip">Animation</span></div>
-                    </div>
-                </div>
-
-                <!-- 06 IoT -->
-                <div class="pcard" data-num="06" data-type="iot" data-title="Smart Classroom IoT"
-                    data-desc="IoT classroom environment monitoring — temperature, humidity, CO2, occupancy with live web dashboard and alert thresholds."
-                    data-tags="IoT,Arduino,Dashboard,Real-time,Firebase,Charts"
-                    data-preview="preview/iot/1.png,preview/iot/2.png"
-                    data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/IoT-Based-Smart-Classroom-Environment-Monitoring-System-6th-SEM","primary":true},{"label":"Live Demo","url":"https://smartclassroomk.vercel.app/","primary":false}]'>
-                    <div class="pcard-phone-area">
-                        <div class="type-badge iot">iot</div>
-                        <div class="ss-count">1/2</div>
-                        <div class="pcard-browser">
-                            <div class="pcard-browser-bar">
-                                <div class="pcd-dot" style="background:#ff5f57"></div>
-                                <div class="pcd-dot" style="background:#febc2e"></div>
-                                <div class="pcd-dot" style="background:#28c840"></div>
-                            </div>
-                            <div class="pcard-bscreen">
-                                <div class="pcard-slides">
-                                    <img class="pcard-slide contain" src="preview/iot/1.png" alt="">
-                                    <img class="pcard-slide contain" src="preview/iot/2.png" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pcard-frame-dots"></div>
-                    </div>
-                    <div class="pcard-info">
-                        <p class="pcard-num">PROJECT_06</p>
-                        <h3>Smart Classroom IoT</h3>
-                        <p>Real-time temp, CO2, occupancy monitoring dashboard.</p>
-                        <div class="pcard-chips"><span class="pcard-chip">IoT</span><span
-                                class="pcard-chip">Arduino</span><span class="pcard-chip">Real-time</span></div>
-                    </div>
-                </div>
-
-                <!-- 07 Coding Platform -->
-                <div class="pcard" data-num="07" data-type="web" data-title="Coding Interview Platform"
-                    data-desc="Web-based coding interview simulator with DSA question bank, per-question timers, and performance tracking dashboard."
-                    data-tags="Web App,JavaScript,DSA,Timer,Performance Tracking"
-                    data-preview="preview/codein/codein1.png,preview/codein/codein2.png,preview/codein/codein3.png,preview/codein/codein4.png,preview/codein/codein5.png,preview/codein/codein6.png,preview/codein/codein7.png,preview/codein/codein8.png"
-                    data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/VirtualCodingInterviewPlatform","primary":true},{"label":"Live Demo","url":"https://codein-blazestack.vercel.app/","primary":false}]'>
-                    <div class="pcard-phone-area">
-                        <div class="type-badge web">web</div>
-                        <div class="ss-count">1/8</div>
-                        <div class="pcard-browser">
-                            <div class="pcard-browser-bar">
-                                <div class="pcd-dot" style="background:#ff5f57"></div>
-                                <div class="pcd-dot" style="background:#febc2e"></div>
-                                <div class="pcd-dot" style="background:#28c840"></div>
-                            </div>
-                            <div class="pcard-bscreen">
-                                <div class="pcard-slides">
-                                    <img class="pcard-slide" src="preview/codein/codein1.png" alt="">
-                                    <img class="pcard-slide" src="preview/codein/codein2.png" alt="">
-                                    <img class="pcard-slide" src="preview/codein/codein3.png" alt="">
-                                    <img class="pcard-slide" src="preview/codein/codein4.png" alt="">
-                                    <img class="pcard-slide" src="preview/codein/codein5.png" alt="">
-                                    <img class="pcard-slide" src="preview/codein/codein6.png" alt="">
-                                    <img class="pcard-slide" src="preview/codein/codein7.png" alt="">
-                                    <img class="pcard-slide" src="preview/codein/codein8.png" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pcard-frame-dots"></div>
-                    </div>
-                    <div class="pcard-info">
-                        <p class="pcard-num">PROJECT_07</p>
-                        <h3>Coding Interview Platform</h3>
-                        <p>Timed DSA simulator + performance dashboard.</p>
-                        <div class="pcard-chips"><span class="pcard-chip">JavaScript</span><span
-                                class="pcard-chip">DSA</span><span class="pcard-chip">Timer</span></div>
-                    </div>
-                </div>
-
-                <!-- 08 Delhi Metro -->
-                <div class="pcard" data-num="08" data-type="design" data-title="Delhi Metro Redesign"
-                    data-desc="Complete UI/UX redesign concept for the Delhi Metro app in Figma — cleaner navigation, modern visual language, and premium commuter experience."
-                    data-tags="Figma,UI/UX,Prototyping,Design System,Mobile"
-                    data-preview="preview/metro/1.jpg,preview/metro/2.jpg,preview/metro/3.jpg,preview/metro/4.jpg,preview/metro/5.jpg,preview/metro/6.jpg,preview/metro/7.jpg,preview/metro/8.jpg,preview/metro/9.jpg,preview/metro/10.jpg"
-                    data-links='[{"label":"Open Figma ↗","url":"https://www.figma.com/design/RhKKiHmRMf2muWZUPr02Qm/TEAM-BlaZeSTACK?t=RP1i8ui770MlzzaW-1","primary":true}]'>
-                    <div class="pcard-phone-area">
-                        <div class="type-badge design">design</div>
-                        <div class="ss-count">1/10</div>
-                        <div class="pcard-phone">
-                            <div class="pcard-pscreen">
-                                <div class="pcard-slides">
-                                    <img class="pcard-slide" src="preview/metro/1.jpg" alt="">
-                                    <img class="pcard-slide" src="preview/metro/2.jpg" alt="">
-                                    <img class="pcard-slide" src="preview/metro/3.jpg" alt="">
-                                    <img class="pcard-slide" src="preview/metro/4.jpg" alt="">
-                                    <img class="pcard-slide" src="preview/metro/5.jpg" alt="">
-                                    <img class="pcard-slide" src="preview/metro/6.jpg" alt="">
-                                    <img class="pcard-slide" src="preview/metro/7.jpg" alt="">
-                                    <img class="pcard-slide" src="preview/metro/8.jpg" alt="">
-                                    <img class="pcard-slide" src="preview/metro/9.jpg" alt="">
-                                    <img class="pcard-slide" src="preview/metro/10.jpg" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pcard-frame-dots"></div>
-                    </div>
-                    <div class="pcard-info">
-                        <p class="pcard-num">PROJECT_08</p>
-                        <h3>Delhi Metro Redesign</h3>
-                        <p>Modern Figma redesign — cleaner navigation & premium UX.</p>
-                        <div class="pcard-chips"><span class="pcard-chip">Figma</span><span
-                                class="pcard-chip">UI/UX</span><span class="pcard-chip">Design</span></div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- BOTTOM -->
-        <div class="bottom-grid">
-            <div class="bcard" id="contact">
-                <div class="bcard-glow teal"></div>
-                <h2>Let's Build.</h2>
-                <p>Open to Flutter internships, freelance projects & exciting tech collabs. Let's create something that
-                    matters.</p>
-                <div class="bcard-links">
-                    <a href="https://github.com/shikhar11x" target="_blank" class="bl">⌥ GitHub</a>
-                    <a href="https://www.linkedin.com/in/shikharbajpai1/" target="_blank" class="bl">⌘ LinkedIn</a>
-                    <a href="mailto:shikhar11x@gmail.com" class="bl">✉ Email</a>
-                </div>
-            </div>
-            <div class="bcard" id="resume">
-                <div class="bcard-glow purple"></div>
-                <h2>Resume.</h2>
-                <p>Full skill set, project list, internships and achievements — all in one doc.</p>
-                <div class="bcard-links">
-                    <a href="ShikharBajpai (27-03-2026).pdf" target="_blank" class="bl">↗ View PDF</a>
-                    <a href="ShikharBajpai (27-03-2026).pdf" download class="bl">↓ Download</a>
-                </div>
-            </div>
-        </div>
-
-        <footer>
-            <div class="footer-line">© 2026 · shikhar_bajpai · built_with_flutter_love</div>
-        </footer>
-
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Flutter Developer · B.Tech 2027</div>
+      <h1 class="name glitch">
+        <span class="first">Shikhar</span>
+        <span class="last">Bajpai</span>
+      </h1>
+      <div class="hero-tags">
+        <span class="htag active">Flutter</span>
+        <span class="htag active">Dart</span>
+        <span class="htag active">Firebase</span>
+        <span class="htag">GetX</span>
+        <span class="htag">REST APIs</span>
+        <span class="htag">IoT</span>
+        <span class="htag">Figma</span>
+        <span class="htag">UI/UX</span>
+      </div>
+      <p class="hero-desc">Building production-grade Flutter apps with clean architecture, smooth animations & real-world integrations. KR Mangalam University · Class of 2027.</p>
+      <div class="hero-btns">
+        <a href="#projects" class="hbtn hbtn-primary">view_projects() →</a>
+        <a href="#contact" class="hbtn hbtn-ghost">contact_me()</a>
+      </div>
     </div>
 
-    <!-- MODAL -->
-    <div class="modal-overlay" id="mOverlay">
-        <div class="modal" id="mModal">
-            <div id="mPhoneWrap" class="m-phone-wrap" style="display:none">
-                <div class="m-phone">
-                    <div class="m-screen"><img id="mSlideImg" src="" alt=""></div>
-                </div>
+    <!-- HERO PHONE -->
+    <div class="hero-right">
+      <div class="hero-phone-wrap">
+        <div class="hp-glow"></div>
+        <div class="hp-frame">
+          <div class="hp-notch"></div>
+          <div class="hp-screen" id="hpScreen">
+            <div class="hp-slides" id="hpSlides">
+              <img class="hp-slide" src="preview/mvp/home.jpeg" alt="Vanguard home">
+              <img class="hp-slide" src="preview/mvp/sos.jpeg" alt="Vanguard SOS">
+              <img class="hp-slide" src="preview/mvp/gps.jpeg" alt="Vanguard GPS">
+              <img class="hp-slide" src="preview/task/1.jpeg" alt="Task Manager">
+              <img class="hp-slide" src="preview/task/2.jpeg" alt="Task Manager 2">
+              <img class="hp-slide" src="preview/hackerNewsReader/1.jpeg" alt="HackerNews">
             </div>
-            <div id="mWebWrap" class="m-web-wrap" style="display:none">
-                <div class="m-web-bar">
-                    <div class="m-web-dot" style="background:#ff5f57"></div>
-                    <div class="m-web-dot" style="background:#febc2e"></div>
-                    <div class="m-web-dot" style="background:#28c840"></div>
-                </div>
-                <img id="mWebImg" class="m-web-img" src="" alt="">
-            </div>
-            <div id="mCtrl" class="m-controls" style="display:none">
-                <button class="m-btn" id="mPrev">‹</button>
-                <span class="m-counter" id="mCnt">1 / 1</span>
-                <button class="m-btn" id="mNext">›</button>
-            </div>
-            <div class="m-dots" id="mDots"></div>
-            <div class="m-info">
-                <div class="m-top">
-                    <div>
-                        <p class="m-n" id="mNum"></p>
-                        <h2 class="m-title" id="mTitle"></h2>
-                    </div>
-                    <button class="m-close" id="mClose">✕</button>
-                </div>
-                <p class="m-desc" id="mDesc"></p>
-                <div class="m-tags" id="mTags"></div>
-                <div class="m-acts" id="mActs"></div>
-            </div>
+            <div class="hp-hint" id="hpHint"><span>swipe</span></div>
+          </div>
+          <div class="hp-bottom">
+            <div class="hp-dots" id="hpDots"></div>
+          </div>
         </div>
+        <div class="hp-label" id="hpLabel">Vanguard · home</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-val">8+</div>
+      <div class="stat-label">Projects Shipped</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">2027</div>
+      <div class="stat-label">Graduating · B.Tech CSE</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val" style="color:var(--green)">Open</div>
+      <div class="stat-label">For Internships & Freelance</div>
+    </div>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="skills-section">
+    <div class="sec-header">
+      <span class="sec-tag">// tech_stack</span>
+      <div class="sec-line"></div>
+      <span class="sec-num">11 skills</span>
+    </div>
+    <div class="skills-grid">
+      <span class="sk flutter">Flutter</span>
+      <span class="sk flutter">Dart</span>
+      <span class="sk firebase">Firebase</span>
+      <span class="sk firebase">Firestore</span>
+      <span class="sk flutter">GetX</span>
+      <span class="sk other">REST APIs</span>
+      <span class="sk other">State Mgmt</span>
+      <span class="sk iot">IoT · Arduino</span>
+      <span class="sk ui">Figma</span>
+      <span class="sk ui">UI/UX</span>
+      <span class="sk other">Web Dev</span>
+    </div>
+  </div>
+
+  <!-- PROJECTS -->
+  <div class="projects-section" id="projects">
+    <div class="sec-header">
+      <span class="sec-tag">// selected_projects</span>
+      <div class="sec-line"></div>
+      <span class="sec-num">08 works</span>
     </div>
 
-    <script>
-        /* ══════════════════════════════════════
-           CUSTOM CURSOR
-        ══════════════════════════════════════ */
-        const cur = document.getElementById('cursor');
-        const ring = document.getElementById('cursor-ring');
-        let mx = 0, my = 0, rx = 0, ry = 0;
-        document.addEventListener('mousemove', e => {
-            mx = e.clientX; my = e.clientY;
-            cur.style.left = mx + 'px'; cur.style.top = my + 'px';
-        });
-        (function animRing() {
-            rx += (mx - rx) * .1; ry += (my - ry) * .1;
-            ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-            requestAnimationFrame(animRing);
-        })();
-        document.querySelectorAll('a,button,.pcard,.bl,.mact,.m-btn,.sk,.hbtn,.hpdot,.pcdot').forEach(el => {
-            el.addEventListener('mouseenter', () => { cur.style.width = '16px'; cur.style.height = '16px'; ring.style.width = '44px'; ring.style.height = '44px'; });
-            el.addEventListener('mouseleave', () => { cur.style.width = '10px'; cur.style.height = '10px'; ring.style.width = '32px'; ring.style.height = '32px'; });
-        });
+    <div class="proj-grid" id="projGrid">
 
-        /* ══════════════════════════════════════
-           TYPEWRITER for hero name
-        ══════════════════════════════════════ */
-        window.addEventListener('load', () => {
-            const last = document.querySelector('h1.name .last');
-            const txt = 'Bajpai';
-            last.textContent = '';
-            let i = 0;
-            const iv = setInterval(() => {
-                last.textContent = txt.slice(0, ++i);
-                if (i === txt.length) clearInterval(iv);
-            }, 80);
-        });
+      <!-- 01 Vanguard -->
+      <div class="pcard" data-num="01" data-type="app" data-title="Vanguard Safety App"
+        data-desc="A Flutter-based personal safety MVP featuring SOS emergency alerts with GPS location capture, real-time incident reporting, OTP-based authentication, and a live admin monitoring panel powered by Firebase Firestore streams."
+        data-tags="Flutter,Firebase,GetX,GPS,Firestore,OTP Auth"
+        data-preview="preview/mvp/login.jpeg,preview/mvp/home.jpeg,preview/mvp/sos.jpeg,preview/mvp/gps.jpeg,preview/mvp/incident.jpeg,preview/mvp/admin1.jpeg"
+        data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/Flutter-Vanguard-Safety","primary":true},{"label":"Download APK","url":"https://github.com/shikhar11x/Flutter-Vanguard-Safety/releases/tag/v1.0","primary":false}]'>
+        <div class="pcard-phone-area">
+          <div class="type-badge app">app</div>
+          <div class="ss-count">1/6</div>
+          <div class="pcard-phone">
+            <div class="pcard-pscreen">
+              <div class="pcard-slides">
+                <img class="pcard-slide" src="preview/mvp/login.jpeg" alt="">
+                <img class="pcard-slide" src="preview/mvp/home.jpeg" alt="">
+                <img class="pcard-slide" src="preview/mvp/sos.jpeg" alt="">
+                <img class="pcard-slide" src="preview/mvp/gps.jpeg" alt="">
+                <img class="pcard-slide" src="preview/mvp/incident.jpeg" alt="">
+                <img class="pcard-slide" src="preview/mvp/admin1.jpeg" alt="">
+              </div>
+            </div>
+          </div>
+          <div class="pcard-frame-dots"></div>
+        </div>
+        <div class="pcard-info">
+          <p class="pcard-num">PROJECT_01</p>
+          <h3>Vanguard Safety App</h3>
+          <p>SOS alerts + GPS tracking + incident reporting + real-time admin panel.</p>
+          <div class="pcard-chips"><span class="pcard-chip">Flutter</span><span class="pcard-chip">Firebase</span><span class="pcard-chip">GetX</span><span class="pcard-chip">GPS</span></div>
+        </div>
+      </div>
 
-        /* ══════════════════════════════════════
-           HERO PHONE SWIPE
-        ══════════════════════════════════════ */
-        (function () {
-            const slides = document.querySelectorAll('.hp-slide');
-            const strip = document.getElementById('hpSlides');
-            const dotsEl = document.getElementById('hpDots');
-            const hint = document.getElementById('hpHint');
-            const label = document.getElementById('hpLabel');
-            const screen = document.getElementById('hpScreen');
-            if (!strip || !slides.length) return;
+      <!-- 02 Task Manager -->
+      <div class="pcard" data-num="02" data-type="app" data-title="Flutter Task Manager"
+        data-desc="A full-stack Task Manager app built with Flutter featuring Firebase Authentication, real-time Cloud Firestore sync, and REST API integration for motivational quotes."
+        data-tags="Flutter,Dart,Firebase,Firestore,REST API"
+        data-preview="preview/task/1.jpeg,preview/task/2.jpeg,preview/task/3.jpeg,preview/task/4.jpeg"
+        data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/flutter-Task-Manager-App","primary":true},{"label":"Download APK","url":"https://github.com/shikhar11x/flutter-Task-Manager-App/releases/tag/v1.0","primary":false}]'>
+        <div class="pcard-phone-area">
+          <div class="type-badge app">app</div>
+          <div class="ss-count">1/4</div>
+          <div class="pcard-phone">
+            <div class="pcard-pscreen">
+              <div class="pcard-slides">
+                <img class="pcard-slide" src="preview/task/1.jpeg" alt="">
+                <img class="pcard-slide" src="preview/task/2.jpeg" alt="">
+                <img class="pcard-slide" src="preview/task/3.jpeg" alt="">
+                <img class="pcard-slide" src="preview/task/4.jpeg" alt="">
+              </div>
+            </div>
+          </div>
+          <div class="pcard-frame-dots"></div>
+        </div>
+        <div class="pcard-info">
+          <p class="pcard-num">PROJECT_02</p>
+          <h3>Flutter Task Manager</h3>
+          <p>Firebase auth, Firestore sync & motivational quotes API.</p>
+          <div class="pcard-chips"><span class="pcard-chip">Flutter</span><span class="pcard-chip">Firebase</span><span class="pcard-chip">Firestore</span></div>
+        </div>
+      </div>
 
-            const labels = ['Vanguard · home', 'Vanguard · sos', 'Vanguard · gps', 'Task Manager · login', 'Task Manager · tasks', 'HackerNews · stories'];
-            let cur = 0, total = slides.length, dragging = false, startX = 0, diffX = 0, hintHidden = false;
+      <!-- 03 HackerNews -->
+      <div class="pcard" data-num="03" data-type="app" data-title="HackerNews Reader"
+        data-desc="A Hacker News reader app built with Flutter featuring a terminal-style neon green dark UI with shimmer loading animations."
+        data-tags="Flutter,Dart,REST API,Firebase,Shimmer"
+        data-preview="preview/hackerNewsReader/1.jpeg,preview/hackerNewsReader/2.jpeg"
+        data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/Flutter-HackerNews-Reader","primary":true},{"label":"Download APK","url":"https://github.com/shikhar11x/Flutter-HackerNews-Reader/releases/tag/v1.0","primary":false}]'>
+        <div class="pcard-phone-area">
+          <div class="type-badge app">app</div>
+          <div class="ss-count">1/2</div>
+          <div class="pcard-phone">
+            <div class="pcard-pscreen">
+              <div class="pcard-slides">
+                <img class="pcard-slide" src="preview/hackerNewsReader/1.jpeg" alt="">
+                <img class="pcard-slide" src="preview/hackerNewsReader/2.jpeg" alt="">
+              </div>
+            </div>
+          </div>
+          <div class="pcard-frame-dots"></div>
+        </div>
+        <div class="pcard-info">
+          <p class="pcard-num">PROJECT_03</p>
+          <h3>HackerNews Reader</h3>
+          <p>Terminal-style HN client with live stories & shimmer.</p>
+          <div class="pcard-chips"><span class="pcard-chip">Flutter</span><span class="pcard-chip">REST API</span></div>
+        </div>
+      </div>
 
-            dotsEl.innerHTML = Array.from({ length: total }, (_, i) =>
-                `<span class="hpdot${i === 0 ? ' on' : ''}" data-i="${i}"></span>`
-            ).join('');
-            const dots = dotsEl.querySelectorAll('.hpdot');
-            dots.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.i)));
+      <!-- 04 Todo -->
+      <div class="pcard" data-num="04" data-type="app" data-title="Flutter Todo App"
+        data-desc="Clean minimal Todo app with dark glass UI, priority levels, and persistent local storage using Hive."
+        data-tags="Flutter,Dart,Hive,Local Storage,Animation"
+        data-preview="preview/todomain.jpeg,preview/todo1.jpeg,preview/todo2.jpeg"
+        data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/Flutter-TodoApp","primary":true},{"label":"Download APK","url":"https://github.com/shikhar11x/Flutter-TodoApp/releases","primary":false}]'>
+        <div class="pcard-phone-area">
+          <div class="type-badge app">app</div>
+          <div class="ss-count">1/3</div>
+          <div class="pcard-phone">
+            <div class="pcard-pscreen">
+              <div class="pcard-slides">
+                <img class="pcard-slide" src="preview/todomain.jpeg" alt="">
+                <img class="pcard-slide" src="preview/todo1.jpeg" alt="">
+                <img class="pcard-slide" src="preview/todo2.jpeg" alt="">
+              </div>
+            </div>
+          </div>
+          <div class="pcard-frame-dots"></div>
+        </div>
+        <div class="pcard-info">
+          <p class="pcard-num">PROJECT_04</p>
+          <h3>Flutter Todo App</h3>
+          <p>Dark glass UI + priority tasks + Hive storage.</p>
+          <div class="pcard-chips"><span class="pcard-chip">Flutter</span><span class="pcard-chip">Hive</span></div>
+        </div>
+      </div>
 
-            function goTo(i) {
-                cur = (i + total) % total;
-                strip.style.transition = 'transform .4s cubic-bezier(.4,0,.2,1)';
-                strip.style.transform = `translateX(-${cur * 100}%)`;
-                dots.forEach((d, di) => d.classList.toggle('on', di === cur));
-                label.textContent = labels[cur] || '';
-                if (!hintHidden) { hint.classList.add('hidden'); hintHidden = true; }
-            }
+      <!-- 05 Dice -->
+      <div class="pcard" data-num="05" data-type="app" data-title="Flutter Dice App"
+        data-desc="Flutter dice app with smooth roll animations, Provider state management and fully responsive UI."
+        data-tags="Flutter,Dart,Animation,Provider,Responsive"
+        data-preview="preview/dice.png"
+        data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/Flutter-Dice","primary":true},{"label":"Live Demo","url":"https://flutter-dice-blazestack.vercel.app/","primary":false}]'>
+        <div class="pcard-phone-area">
+          <div class="type-badge app">app</div>
+          <div class="ss-count">1/1</div>
+          <div class="pcard-phone">
+            <div class="pcard-pscreen">
+              <div class="pcard-slides">
+                <img class="pcard-slide contain" src="preview/dice.png" alt="">
+              </div>
+            </div>
+          </div>
+          <div class="pcard-frame-dots"></div>
+        </div>
+        <div class="pcard-info">
+          <p class="pcard-num">PROJECT_05</p>
+          <h3>Flutter Dice App</h3>
+          <p>Roll animations + Provider state management.</p>
+          <div class="pcard-chips"><span class="pcard-chip">Flutter</span><span class="pcard-chip">Provider</span><span class="pcard-chip">Animation</span></div>
+        </div>
+      </div>
 
-            screen.addEventListener('pointerdown', e => {
-                dragging = true; startX = e.clientX; diffX = 0;
-                strip.style.transition = 'none';
-                screen.setPointerCapture(e.pointerId);
-            }, { passive: true });
-            screen.addEventListener('pointermove', e => {
-                if (!dragging) return;
-                diffX = e.clientX - startX;
-                strip.style.transform = `translateX(${-cur * screen.offsetWidth + diffX}px)`;
-            }, { passive: true });
-            screen.addEventListener('pointerup', () => {
-                if (!dragging) return; dragging = false;
-                if (diffX < -40) goTo(cur + 1);
-                else if (diffX > 40) goTo(cur - 1);
-                else goTo(cur);
-            }, { passive: true });
+      <!-- 06 IoT -->
+      <div class="pcard" data-num="06" data-type="iot" data-title="Smart Classroom IoT"
+        data-desc="IoT classroom environment monitoring — temperature, humidity, CO2, occupancy with live web dashboard and alert thresholds."
+        data-tags="IoT,Arduino,Dashboard,Real-time,Firebase,Charts"
+        data-preview="preview/iot/1.png,preview/iot/2.png"
+        data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/IoT-Based-Smart-Classroom-Environment-Monitoring-System-6th-SEM","primary":true},{"label":"Live Demo","url":"https://smartclassroomk.vercel.app/","primary":false}]'>
+        <div class="pcard-phone-area">
+          <div class="type-badge iot">iot</div>
+          <div class="ss-count">1/2</div>
+          <div class="pcard-browser">
+            <div class="pcard-browser-bar">
+              <div class="pcd-dot" style="background:#ff5f57"></div>
+              <div class="pcd-dot" style="background:#febc2e"></div>
+              <div class="pcd-dot" style="background:#28c840"></div>
+            </div>
+            <div class="pcard-bscreen">
+              <div class="pcard-slides">
+                <img class="pcard-slide contain" src="preview/iot/1.png" alt="">
+                <img class="pcard-slide contain" src="preview/iot/2.png" alt="">
+              </div>
+            </div>
+          </div>
+          <div class="pcard-frame-dots"></div>
+        </div>
+        <div class="pcard-info">
+          <p class="pcard-num">PROJECT_06</p>
+          <h3>Smart Classroom IoT</h3>
+          <p>Real-time temp, CO2, occupancy monitoring dashboard.</p>
+          <div class="pcard-chips"><span class="pcard-chip">IoT</span><span class="pcard-chip">Arduino</span><span class="pcard-chip">Real-time</span></div>
+        </div>
+      </div>
 
-            let timer = setInterval(() => goTo(cur + 1), 3000);
-            screen.addEventListener('pointerdown', () => clearInterval(timer), { passive: true });
-            screen.addEventListener('pointerup', () => { timer = setInterval(() => goTo(cur + 1), 3000); }, { passive: true });
+      <!-- 07 Coding Platform -->
+      <div class="pcard" data-num="07" data-type="web" data-title="Coding Interview Platform"
+        data-desc="Web-based coding interview simulator with DSA question bank, per-question timers, and performance tracking dashboard."
+        data-tags="Web App,JavaScript,DSA,Timer,Performance Tracking"
+        data-preview="preview/codein/codein1.png,preview/codein/codein2.png,preview/codein/codein3.png,preview/codein/codein4.png,preview/codein/codein5.png,preview/codein/codein6.png,preview/codein/codein7.png,preview/codein/codein8.png"
+        data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/VirtualCodingInterviewPlatform","primary":true},{"label":"Live Demo","url":"https://codein-blazestack.vercel.app/","primary":false}]'>
+        <div class="pcard-phone-area">
+          <div class="type-badge web">web</div>
+          <div class="ss-count">1/8</div>
+          <div class="pcard-browser">
+            <div class="pcard-browser-bar">
+              <div class="pcd-dot" style="background:#ff5f57"></div>
+              <div class="pcd-dot" style="background:#febc2e"></div>
+              <div class="pcd-dot" style="background:#28c840"></div>
+            </div>
+            <div class="pcard-bscreen">
+              <div class="pcard-slides">
+                <img class="pcard-slide" src="preview/codein/codein1.png" alt="">
+                <img class="pcard-slide" src="preview/codein/codein2.png" alt="">
+                <img class="pcard-slide" src="preview/codein/codein3.png" alt="">
+                <img class="pcard-slide" src="preview/codein/codein4.png" alt="">
+                <img class="pcard-slide" src="preview/codein/codein5.png" alt="">
+                <img class="pcard-slide" src="preview/codein/codein6.png" alt="">
+                <img class="pcard-slide" src="preview/codein/codein7.png" alt="">
+                <img class="pcard-slide" src="preview/codein/codein8.png" alt="">
+              </div>
+            </div>
+          </div>
+          <div class="pcard-frame-dots"></div>
+        </div>
+        <div class="pcard-info">
+          <p class="pcard-num">PROJECT_07</p>
+          <h3>Coding Interview Platform</h3>
+          <p>Timed DSA simulator + performance dashboard.</p>
+          <div class="pcard-chips"><span class="pcard-chip">JavaScript</span><span class="pcard-chip">DSA</span><span class="pcard-chip">Timer</span></div>
+        </div>
+      </div>
 
-            label.textContent = labels[0];
-        })();
+      <!-- 08 Delhi Metro -->
+      <div class="pcard" data-num="08" data-type="design" data-title="Delhi Metro Redesign"
+        data-desc="Complete UI/UX redesign concept for the Delhi Metro app in Figma — cleaner navigation, modern visual language, and premium commuter experience."
+        data-tags="Figma,UI/UX,Prototyping,Design System,Mobile"
+        data-preview="preview/metro/1.jpg,preview/metro/2.jpg,preview/metro/3.jpg,preview/metro/4.jpg,preview/metro/5.jpg,preview/metro/6.jpg,preview/metro/7.jpg,preview/metro/8.jpg,preview/metro/9.jpg,preview/metro/10.jpg"
+        data-links='[{"label":"Open Figma ↗","url":"https://www.figma.com/design/RhKKiHmRMf2muWZUPr02Qm/TEAM-BlaZeSTACK?t=RP1i8ui770MlzzaW-1","primary":true}]'>
+        <div class="pcard-phone-area">
+          <div class="type-badge design">design</div>
+          <div class="ss-count">1/10</div>
+          <div class="pcard-phone">
+            <div class="pcard-pscreen">
+              <div class="pcard-slides">
+                <img class="pcard-slide" src="preview/metro/1.jpg" alt="">
+                <img class="pcard-slide" src="preview/metro/2.jpg" alt="">
+                <img class="pcard-slide" src="preview/metro/3.jpg" alt="">
+                <img class="pcard-slide" src="preview/metro/4.jpg" alt="">
+                <img class="pcard-slide" src="preview/metro/5.jpg" alt="">
+                <img class="pcard-slide" src="preview/metro/6.jpg" alt="">
+                <img class="pcard-slide" src="preview/metro/7.jpg" alt="">
+                <img class="pcard-slide" src="preview/metro/8.jpg" alt="">
+                <img class="pcard-slide" src="preview/metro/9.jpg" alt="">
+                <img class="pcard-slide" src="preview/metro/10.jpg" alt="">
+              </div>
+            </div>
+          </div>
+          <div class="pcard-frame-dots"></div>
+        </div>
+        <div class="pcard-info">
+          <p class="pcard-num">PROJECT_08</p>
+          <h3>Delhi Metro Redesign</h3>
+          <p>Modern Figma redesign — cleaner navigation & premium UX.</p>
+          <div class="pcard-chips"><span class="pcard-chip">Figma</span><span class="pcard-chip">UI/UX</span><span class="pcard-chip">Design</span></div>
+        </div>
+      </div>
 
-        /* ══════════════════════════════════════
-           PROJECT CARD SLIDING (auto-cycle)
-        ══════════════════════════════════════ */
-        (function () {
-            document.querySelectorAll('.pcard').forEach(card => {
-                const slides = card.querySelectorAll('.pcard-slide');
-                const strip = card.querySelector('.pcard-slides');
-                const dotsArea = card.querySelector('.pcard-frame-dots');
-                const countEl = card.querySelector('.ss-count');
-                if (!strip || !slides.length) return;
+    </div>
+  </div>
 
-                const total = slides.length;
-                let cur = 0;
-                let timer = null;
-                let dragging = false, startX = 0, diffX = 0;
+  <!-- BOTTOM -->
+  <div class="bottom-grid">
+    <div class="bcard" id="contact">
+      <div class="bcard-glow teal"></div>
+      <h2>Let's Build.</h2>
+      <p>Open to Flutter internships, freelance projects & exciting tech collabs. Let's create something that matters.</p>
+      <div class="bcard-links">
+        <a href="https://github.com/shikhar11x" target="_blank" class="bl">⌥ GitHub</a>
+        <a href="https://www.linkedin.com/in/shikharbajpai1/" target="_blank" class="bl">⌘ LinkedIn</a>
+        <a href="mailto:shikhar11x@gmail.com" class="bl">✉ Email</a>
+      </div>
+    </div>
+    <div class="bcard" id="resume">
+      <div class="bcard-glow purple"></div>
+      <h2>Resume.</h2>
+      <p>Full skill set, project list, internships and achievements — all in one doc.</p>
+      <div class="bcard-links">
+        <a href="ShikharBajpai (27-03-2026).pdf" target="_blank" class="bl">↗ View PDF</a>
+        <a href="ShikharBajpai (27-03-2026).pdf" download class="bl">↓ Download</a>
+      </div>
+    </div>
+  </div>
 
-                // build dots
-                if (dotsArea && total > 1) {
-                    dotsArea.innerHTML = Array.from({ length: total }, (_, i) =>
-                        `<span class="pcdot${i === 0 ? ' on' : ''}" data-i="${i}"></span>`
-                    ).join('');
-                    dotsArea.querySelectorAll('.pcdot').forEach(d =>
-                        d.addEventListener('click', e => { e.stopPropagation(); goTo(+d.dataset.i); })
-                    );
-                }
+  <footer>
+    <div class="footer-line">© 2026 · shikhar_bajpai · built_with_flutter_love</div>
+  </footer>
 
-                function updateCount() {
-                    if (countEl) countEl.textContent = (cur + 1) + '/' + total;
-                }
+</div>
 
-                function goTo(i) {
-                    cur = (i + total) % total;
-                    strip.style.transition = 'transform .35s cubic-bezier(.4,0,.2,1)';
-                    strip.style.transform = `translateX(-${cur * 100}%)`;
-                    dotsArea && dotsArea.querySelectorAll('.pcdot').forEach((d, di) => d.classList.toggle('on', di === cur));
-                    updateCount();
-                }
+<!-- MODAL -->
+<div class="modal-overlay" id="mOverlay">
+  <div class="modal" id="mModal">
+    <div id="mPhoneWrap" class="m-phone-wrap" style="display:none">
+      <div class="m-phone">
+        <div class="m-screen"><img id="mSlideImg" src="" alt=""></div>
+      </div>
+    </div>
+    <div id="mWebWrap" class="m-web-wrap" style="display:none">
+      <div class="m-web-bar">
+        <div class="m-web-dot" style="background:#ff5f57"></div>
+        <div class="m-web-dot" style="background:#febc2e"></div>
+        <div class="m-web-dot" style="background:#28c840"></div>
+      </div>
+      <img id="mWebImg" class="m-web-img" src="" alt="">
+    </div>
+    <div id="mCtrl" class="m-controls" style="display:none">
+      <button class="m-btn" id="mPrev">‹</button>
+      <span class="m-counter" id="mCnt">1 / 1</span>
+      <button class="m-btn" id="mNext">›</button>
+    </div>
+    <div class="m-dots" id="mDots"></div>
+    <div class="m-info">
+      <div class="m-top">
+        <div>
+          <p class="m-n" id="mNum"></p>
+          <h2 class="m-title" id="mTitle"></h2>
+        </div>
+        <button class="m-close" id="mClose">✕</button>
+      </div>
+      <p class="m-desc" id="mDesc"></p>
+      <div class="m-tags" id="mTags"></div>
+      <div class="m-acts" id="mActs"></div>
+    </div>
+  </div>
+</div>
 
-                function startAuto() {
-                    if (total <= 1) return;
-                    timer = setInterval(() => goTo(cur + 1), 2500);
-                }
-                function stopAuto() { clearInterval(timer); }
+<script>
+/* ══════════════════════════════════════
+   CUSTOM CURSOR
+══════════════════════════════════════ */
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cur.style.left = mx + 'px'; cur.style.top = my + 'px';
+});
+(function animRing() {
+  rx += (mx - rx) * .1; ry += (my - ry) * .1;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a,button,.pcard,.bl,.mact,.m-btn,.sk,.hbtn,.hpdot,.pcdot').forEach(el => {
+  el.addEventListener('mouseenter', () => { cur.style.width = '16px'; cur.style.height = '16px'; ring.style.width = '44px'; ring.style.height = '44px'; });
+  el.addEventListener('mouseleave', () => { cur.style.width = '10px'; cur.style.height = '10px'; ring.style.width = '32px'; ring.style.height = '32px'; });
+});
 
-                // hover to start/stop auto-cycle
-                card.addEventListener('mouseenter', startAuto);
-                card.addEventListener('mouseleave', () => { stopAuto(); goTo(0); });
+/* ══════════════════════════════════════
+   TYPEWRITER for hero name
+══════════════════════════════════════ */
+window.addEventListener('load', () => {
+  const last = document.querySelector('h1.name .last');
+  const txt = 'Bajpai';
+  last.textContent = '';
+  let i = 0;
+  const iv = setInterval(() => {
+    last.textContent = txt.slice(0, ++i);
+    if (i === txt.length) clearInterval(iv);
+  }, 80);
+});
 
-                // drag swipe on the phone/browser frame area
-                const frameArea = card.querySelector('.pcard-phone-area');
-                if (frameArea && total > 1) {
-                    frameArea.addEventListener('pointerdown', e => {
-                        dragging = true; startX = e.clientX; diffX = 0;
-                        strip.style.transition = 'none';
-                        frameArea.setPointerCapture(e.pointerId);
-                        e.stopPropagation();
-                    }, { passive: true });
-                    frameArea.addEventListener('pointermove', e => {
-                        if (!dragging) return;
-                        diffX = e.clientX - startX;
-                        const screenW = strip.parentElement.offsetWidth;
-                        strip.style.transform = `translateX(${-cur * screenW + diffX}px)`;
-                    }, { passive: true });
-                    frameArea.addEventListener('pointerup', e => {
-                        if (!dragging) return; dragging = false;
-                        if (diffX < -30) goTo(cur + 1);
-                        else if (diffX > 30) goTo(cur - 1);
-                        else goTo(cur);
-                        e.stopPropagation();
-                    }, { passive: false });
-                }
+/* ══════════════════════════════════════
+   HERO PHONE SWIPE
+══════════════════════════════════════ */
+(function () {
+  const slides = document.querySelectorAll('.hp-slide');
+  const strip = document.getElementById('hpSlides');
+  const dotsEl = document.getElementById('hpDots');
+  const hint = document.getElementById('hpHint');
+  const label = document.getElementById('hpLabel');
+  const screen = document.getElementById('hpScreen');
+  if (!strip || !slides.length) return;
 
-                updateCount();
-            });
-        })();
+  const labels = ['Vanguard · home', 'Vanguard · sos', 'Vanguard · gps', 'Task Manager · login', 'Task Manager · tasks', 'HackerNews · stories'];
+  let cur = 0, total = slides.length, dragging = false, startX = 0, diffX = 0, hintHidden = false;
 
-        /* ══════════════════════════════════════
-           3D TILT on cards
-        ══════════════════════════════════════ */
-        document.querySelectorAll('.pcard').forEach(c => {
-            c.addEventListener('mousemove', e => {
-                const r = c.getBoundingClientRect();
-                const x = (e.clientX - r.left) / r.width - .5;
-                const y = (e.clientY - r.top) / r.height - .5;
-                c.style.transform = `translateY(-4px) rotateX(${-y * 4}deg) rotateY(${x * 4}deg)`;
-                c.style.transformStyle = 'preserve-3d';
-            });
-            c.addEventListener('mouseleave', () => { c.style.transform = ''; c.style.transformStyle = ''; });
-        });
+  dotsEl.innerHTML = Array.from({ length: total }, (_, i) =>
+    `<span class="hpdot${i === 0 ? ' on' : ''}" data-i="${i}"></span>`
+  ).join('');
+  const dots = dotsEl.querySelectorAll('.hpdot');
+  dots.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.i)));
 
-        /* ══════════════════════════════════════
-           MODAL
-        ══════════════════════════════════════ */
-        const ov = document.getElementById('mOverlay');
-        let mImgs = [], mIdx = 0;
-        const pw = document.getElementById('mPhoneWrap'), ww = document.getElementById('mWebWrap');
-        const si = document.getElementById('mSlideImg'), wi = document.getElementById('mWebImg');
-        const ctrl = document.getElementById('mCtrl'), cnt = document.getElementById('mCnt');
-        const mDotsEl = document.getElementById('mDots');
+  function goTo(i) {
+    cur = (i + total) % total;
+    strip.style.transition = 'transform .4s cubic-bezier(.4,0,.2,1)';
+    strip.style.transform = `translateX(-${cur * 100}%)`;
+    dots.forEach((d, di) => d.classList.toggle('on', di === cur));
+    label.textContent = labels[cur] || '';
+    if (!hintHidden) { hint.classList.add('hidden'); hintHidden = true; }
+  }
 
-        function goMSlide(i) {
-            mIdx = (i + mImgs.length) % mImgs.length;
-            const src = mImgs[mIdx].trim();
-            if (pw.style.display !== 'none') si.src = src; else wi.src = src;
-            cnt.textContent = (mIdx + 1) + ' / ' + mImgs.length;
-            mDotsEl.querySelectorAll('.mdot').forEach((d, di) => d.classList.toggle('on', di === mIdx));
-        }
-        document.getElementById('mPrev').onclick = () => goMSlide(mIdx - 1);
-        document.getElementById('mNext').onclick = () => goMSlide(mIdx + 1);
+  screen.addEventListener('pointerdown', e => {
+    dragging = true; startX = e.clientX; diffX = 0;
+    strip.style.transition = 'none';
+    screen.setPointerCapture(e.pointerId);
+  }, { passive: true });
+  screen.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    diffX = e.clientX - startX;
+    strip.style.transform = `translateX(${-cur * screen.offsetWidth + diffX}px)`;
+  }, { passive: true });
+  screen.addEventListener('pointerup', () => {
+    if (!dragging) return; dragging = false;
+    if (diffX < -40) goTo(cur + 1);
+    else if (diffX > 40) goTo(cur - 1);
+    else goTo(cur);
+  }, { passive: true });
 
-        document.addEventListener('keydown', e => {
-            if (!ov.classList.contains('open')) return;
-            if (e.key === 'ArrowRight') goMSlide(mIdx + 1);
-            if (e.key === 'ArrowLeft') goMSlide(mIdx - 1);
-            if (e.key === 'Escape') closeM();
-        });
+  let timer = setInterval(() => goTo(cur + 1), 3000);
+  screen.addEventListener('pointerdown', () => clearInterval(timer), { passive: true });
+  screen.addEventListener('pointerup', () => { timer = setInterval(() => goTo(cur + 1), 3000); }, { passive: true });
 
-        let mTx = 0;
-        ov.addEventListener('touchstart', e => { mTx = e.touches[0].clientX; }, { passive: true });
-        ov.addEventListener('touchend', e => {
-            const dx = e.changedTouches[0].clientX - mTx;
-            if (Math.abs(dx) > 40) { dx < 0 ? goMSlide(mIdx + 1) : goMSlide(mIdx - 1); }
-        }, { passive: true });
+  label.textContent = labels[0];
+})();
 
-        function openM(card) {
-            const t = card.dataset.type || 'app';
-            const isApp = (t === 'app' || t === 'design');
-            document.getElementById('mNum').textContent = 'PROJECT_' + card.dataset.num;
-            document.getElementById('mTitle').textContent = card.dataset.title || '';
-            document.getElementById('mDesc').textContent = card.dataset.desc || '';
-            document.getElementById('mTags').innerHTML = (card.dataset.tags || '').split(',').map(s => `<span class="mtag">${s.trim()}</span>`).join('');
-            let links = []; try { links = JSON.parse(card.dataset.links || '[]'); } catch (e) { }
-            document.getElementById('mActs').innerHTML = links.map(l => `<a href="${l.url}" target="_blank" class="mact${l.primary ? ' primary' : ''}">${l.label}</a>`).join('');
-            mImgs = (card.dataset.preview || '').split(',').filter(Boolean);
-            mIdx = 0;
-            pw.style.display = isApp && mImgs.length ? 'flex' : 'none';
-            ww.style.display = !isApp && mImgs.length ? 'block' : 'none';
-            if (mImgs.length) {
-                const src = mImgs[0].trim();
-                if (isApp) si.src = src; else wi.src = src;
-                ctrl.style.display = mImgs.length > 1 ? 'flex' : 'none';
-                cnt.textContent = '1 / ' + mImgs.length;
-                mDotsEl.innerHTML = mImgs.map((_, i) => `<span class="mdot${i === 0 ? ' on' : ''}" onclick="goMSlide(${i})"></span>`).join('');
-            } else { ctrl.style.display = 'none'; mDotsEl.innerHTML = ''; }
-            ov.classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeM() { ov.classList.remove('open'); document.body.style.overflow = ''; }
+/* ══════════════════════════════════════
+   PROJECT CARD SLIDING (auto-cycle + touch)
+══════════════════════════════════════ */
+(function () {
+  document.querySelectorAll('.pcard').forEach(card => {
+    const slides = card.querySelectorAll('.pcard-slide');
+    const strip = card.querySelector('.pcard-slides');
+    const dotsArea = card.querySelector('.pcard-frame-dots');
+    const countEl = card.querySelector('.ss-count');
+    if (!strip || !slides.length) return;
 
-        document.querySelectorAll('.pcard').forEach(c => c.addEventListener('click', () => openM(c)));
-        document.getElementById('mClose').addEventListener('click', closeM);
-        ov.addEventListener('click', e => { if (e.target === ov) closeM(); });
-    </script>
+    const total = slides.length;
+    let cur = 0, timer = null;
+    let touchStartX = 0, touchDiffX = 0, isSwiping = false;
+
+    // build dots
+    if (dotsArea && total > 1) {
+      dotsArea.innerHTML = Array.from({ length: total }, (_, i) =>
+        `<span class="pcdot${i === 0 ? ' on' : ''}" data-i="${i}"></span>`
+      ).join('');
+      dotsArea.querySelectorAll('.pcdot').forEach(d =>
+        d.addEventListener('click', e => { e.stopPropagation(); goTo(+d.dataset.i); })
+      );
+    }
+
+    function updateCount() {
+      if (countEl) countEl.textContent = (cur + 1) + '/' + total;
+    }
+
+    function goTo(i) {
+      cur = (i + total) % total;
+      strip.style.transition = 'transform .32s cubic-bezier(.4,0,.2,1)';
+      strip.style.transform = `translateX(-${cur * 100}%)`;
+      dotsArea && dotsArea.querySelectorAll('.pcdot').forEach((d, di) => d.classList.toggle('on', di === cur));
+      updateCount();
+    }
+
+    function startAuto() {
+      if (total <= 1) return;
+      stopAuto();
+      timer = setInterval(() => goTo(cur + 1), 2500);
+    }
+    function stopAuto() { clearInterval(timer); timer = null; }
+
+    // Desktop: hover to auto-cycle
+    card.addEventListener('mouseenter', startAuto);
+    card.addEventListener('mouseleave', () => { stopAuto(); goTo(0); });
+
+    // Touch swipe
+    const frameArea = card.querySelector('.pcard-phone-area') || card;
+
+    frameArea.addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX;
+      touchDiffX = 0;
+      isSwiping = false;
+      strip.style.transition = 'none';
+      stopAuto();
+    }, { passive: true });
+
+    frameArea.addEventListener('touchmove', e => {
+      touchDiffX = e.touches[0].clientX - touchStartX;
+      if (Math.abs(touchDiffX) > 8) {
+        isSwiping = true;
+        const screenW = strip.parentElement.offsetWidth || strip.offsetWidth;
+        strip.style.transform = `translateX(${-cur * screenW + touchDiffX}px)`;
+      }
+    }, { passive: true });
+
+    frameArea.addEventListener('touchend', e => {
+      if (isSwiping) {
+        if (touchDiffX < -30) goTo(cur + 1);
+        else if (touchDiffX > 30) goTo(cur - 1);
+        else goTo(cur);
+        e.stopPropagation();
+      }
+      isSwiping = false;
+    }, { passive: false });
+
+    updateCount();
+  });
+})();
+
+/* ══════════════════════════════════════
+   3D TILT on cards
+══════════════════════════════════════ */
+document.querySelectorAll('.pcard').forEach(c => {
+  c.addEventListener('mousemove', e => {
+    const r = c.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - .5;
+    const y = (e.clientY - r.top) / r.height - .5;
+    c.style.transform = `translateY(-4px) rotateX(${-y * 4}deg) rotateY(${x * 4}deg)`;
+    c.style.transformStyle = 'preserve-3d';
+  });
+  c.addEventListener('mouseleave', () => { c.style.transform = ''; c.style.transformStyle = ''; });
+});
+
+/* ══════════════════════════════════════
+   MODAL
+══════════════════════════════════════ */
+const ov = document.getElementById('mOverlay');
+let mImgs = [], mIdx = 0;
+const pw = document.getElementById('mPhoneWrap'), ww = document.getElementById('mWebWrap');
+const si = document.getElementById('mSlideImg'), wi = document.getElementById('mWebImg');
+const ctrl = document.getElementById('mCtrl'), cnt = document.getElementById('mCnt');
+const mDotsEl = document.getElementById('mDots');
+
+function goMSlide(i) {
+  mIdx = (i + mImgs.length) % mImgs.length;
+  const src = mImgs[mIdx].trim();
+  if (pw.style.display !== 'none') si.src = src; else wi.src = src;
+  cnt.textContent = (mIdx + 1) + ' / ' + mImgs.length;
+  mDotsEl.querySelectorAll('.mdot').forEach((d, di) => d.classList.toggle('on', di === mIdx));
+}
+document.getElementById('mPrev').onclick = () => goMSlide(mIdx - 1);
+document.getElementById('mNext').onclick = () => goMSlide(mIdx + 1);
+
+document.addEventListener('keydown', e => {
+  if (!ov.classList.contains('open')) return;
+  if (e.key === 'ArrowRight') goMSlide(mIdx + 1);
+  if (e.key === 'ArrowLeft') goMSlide(mIdx - 1);
+  if (e.key === 'Escape') closeM();
+});
+
+let mTx = 0;
+ov.addEventListener('touchstart', e => { mTx = e.touches[0].clientX; }, { passive: true });
+ov.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - mTx;
+  if (Math.abs(dx) > 40) { dx < 0 ? goMSlide(mIdx + 1) : goMSlide(mIdx - 1); }
+}, { passive: true });
+
+function openM(card) {
+  const t = card.dataset.type || 'app';
+  const isApp = (t === 'app' || t === 'design');
+  document.getElementById('mNum').textContent = 'PROJECT_' + card.dataset.num;
+  document.getElementById('mTitle').textContent = card.dataset.title || '';
+  document.getElementById('mDesc').textContent = card.dataset.desc || '';
+  document.getElementById('mTags').innerHTML = (card.dataset.tags || '').split(',').map(s => `<span class="mtag">${s.trim()}</span>`).join('');
+  let links = []; try { links = JSON.parse(card.dataset.links || '[]'); } catch (e) { }
+  document.getElementById('mActs').innerHTML = links.map(l => `<a href="${l.url}" target="_blank" class="mact${l.primary ? ' primary' : ''}">${l.label}</a>`).join('');
+  mImgs = (card.dataset.preview || '').split(',').filter(Boolean);
+  mIdx = 0;
+  pw.style.display = isApp && mImgs.length ? 'flex' : 'none';
+  ww.style.display = !isApp && mImgs.length ? 'block' : 'none';
+  if (mImgs.length) {
+    const src = mImgs[0].trim();
+    if (isApp) si.src = src; else wi.src = src;
+    ctrl.style.display = mImgs.length > 1 ? 'flex' : 'none';
+    cnt.textContent = '1 / ' + mImgs.length;
+    mDotsEl.innerHTML = mImgs.map((_, i) => `<span class="mdot${i === 0 ? ' on' : ''}" onclick="goMSlide(${i})"></span>`).join('');
+  } else { ctrl.style.display = 'none'; mDotsEl.innerHTML = ''; }
+  ov.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeM() { ov.classList.remove('open'); document.body.style.overflow = ''; }
+
+document.querySelectorAll('.pcard').forEach(c => c.addEventListener('click', () => openM(c)));
+document.getElementById('mClose').addEventListener('click', closeM);
+ov.addEventListener('click', e => { if (e.target === ov) closeM(); });
+</script>
 </body>
-
 </html>
