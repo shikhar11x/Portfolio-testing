@@ -2152,6 +2152,8 @@
            PROJECT CARD SLIDING (auto-cycle + touch)
         ══════════════════════════════════════ */
         (function () {
+            const isTouchDevice = () => window.matchMedia('(hover: none)').matches;
+
             document.querySelectorAll('.pcard').forEach(card => {
                 const slides = card.querySelectorAll('.pcard-slide');
                 const strip = card.querySelector('.pcard-slides');
@@ -2163,7 +2165,6 @@
                 let cur = 0, timer = null;
                 let touchStartX = 0, touchDiffX = 0, isSwiping = false;
 
-                // build dots
                 if (dotsArea && total > 1) {
                     dotsArea.innerHTML = Array.from({ length: total }, (_, i) =>
                         `<span class="pcdot${i === 0 ? ' on' : ''}" data-i="${i}"></span>`
@@ -2192,17 +2193,29 @@
                 }
                 function stopAuto() { clearInterval(timer); timer = null; }
 
-                // Desktop: hover to auto-cycle
-                card.addEventListener('mouseenter', startAuto);
-                card.addEventListener('mouseleave', () => { stopAuto(); goTo(0); });
+                // ── Desktop: hover pe cycle ──
+                if (!isTouchDevice()) {
+                    card.addEventListener('mouseenter', startAuto);
+                    card.addEventListener('mouseleave', () => { stopAuto(); goTo(0); });
+                }
 
-                // Touch swipe
+                // ── Mobile: card screen pe aaye to auto-cycle shuru ──
+                if (isTouchDevice()) {
+                    const obs = new IntersectionObserver(entries => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) startAuto();
+                            else { stopAuto(); goTo(0); }
+                        });
+                    }, { threshold: 0.6 });
+                    obs.observe(card);
+                }
+
+                // ── Touch swipe ──
                 const frameArea = card.querySelector('.pcard-phone-area') || card;
 
                 frameArea.addEventListener('touchstart', e => {
                     touchStartX = e.touches[0].clientX;
-                    touchDiffX = 0;
-                    isSwiping = false;
+                    touchDiffX = 0; isSwiping = false;
                     strip.style.transition = 'none';
                     stopAuto();
                 }, { passive: true });
@@ -2223,6 +2236,7 @@
                         else goTo(cur);
                         e.stopPropagation();
                     }
+                    startAuto(); // swipe ke baad phir se auto-cycle
                     isSwiping = false;
                 }, { passive: false });
 
