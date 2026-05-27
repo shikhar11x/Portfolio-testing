@@ -101,10 +101,51 @@
 
         /* HERO */
         .hero {
-            display: grid; grid-template-columns: 1fr 300px;
-            gap: 32px; align-items: start; margin-bottom: 32px;
+            display: grid; grid-template-columns: 1fr 420px;
+            gap: 0; align-items: center; margin-bottom: 32px;
+            min-height: 520px;
         }
-        .hero-left { animation: fadeUp .6s ease .1s both }
+        .hero-left { animation: fadeUp .6s ease .1s both; position: relative; z-index: 2; }
+
+        /* HERO LEFT AMBIENT EFFECTS */
+        .hero-orb {
+            position: absolute; border-radius: 50%; pointer-events: none;
+            animation: orbFloat 8s ease-in-out infinite;
+        }
+        .hero-orb-1 {
+            width: 320px; height: 320px; top: -60px; left: -80px;
+            background: radial-gradient(circle, rgba(84,197,248,0.07) 0%, transparent 70%);
+            filter: blur(40px); animation-delay: 0s;
+        }
+        .hero-orb-2 {
+            width: 200px; height: 200px; top: 180px; left: 340px;
+            background: radial-gradient(circle, rgba(167,139,250,0.06) 0%, transparent 70%);
+            filter: blur(30px); animation-delay: -3s;
+        }
+        .hero-orb-3 {
+            width: 150px; height: 150px; top: 340px; left: 80px;
+            background: radial-gradient(circle, rgba(74,222,128,0.05) 0%, transparent 70%);
+            filter: blur(25px); animation-delay: -5s;
+        }
+        @keyframes orbFloat {
+            0%,100% { transform: translateY(0) scale(1); opacity: .8; }
+            33% { transform: translateY(-18px) scale(1.05); opacity: 1; }
+            66% { transform: translateY(10px) scale(.97); opacity: .7; }
+        }
+        .hero-particles { position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+        .hero-particle {
+            position: absolute; border-radius: 50%;
+            background: var(--flutter); opacity: 0;
+            animation: particleDrift linear infinite;
+        }
+
+        @keyframes particleDrift {
+            0%   { opacity: 0; transform: translateY(0) scale(0); }
+            10%  { opacity: .55; }
+            90%  { opacity: .15; }
+            100% { opacity: 0; transform: translateY(-130px) scale(1.2); }
+        }
+
         .hero-eyebrow {
             font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
             text-transform: uppercase; color: rgba(84,197,248,0.6); margin-bottom: 20px;
@@ -141,6 +182,9 @@
             display: flex; flex-direction: column; align-items: center;
             padding-top: 8px; position: relative;
         }
+        .hero-right {
+            display: flex; align-items: center; justify-content: center;
+        }
 
         .hp-tap-label {
             font-family: var(--mono); font-size: 9px; letter-spacing: 3px;
@@ -159,8 +203,9 @@
         @keyframes hpPulse { 0%,100%{opacity:.6} 50%{opacity:1} }
 
         .hp-device {
-            width: 230px; position: relative; z-index: 2;
+            width: 240px; position: relative; z-index: 2;
             animation: hpFloat 7s ease-in-out infinite;
+            flex-shrink: 0;
         }
         @keyframes hpFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
 
@@ -425,6 +470,10 @@
         .glitch { animation: glitch 8s infinite }
 
         /* RESPONSIVE */
+        @media(max-width:1200px) {
+            .hero { grid-template-columns: 1fr 340px; }
+            .hp-device { width: 210px; }
+        }
         @media(max-width:1100px) { .proj-grid{grid-template-columns:repeat(3,1fr)} }
         @media(max-width:860px) {
             .wrap{padding:20px}
@@ -489,6 +538,12 @@
         <!-- HERO -->
         <div class="hero">
             <div class="hero-left">
+<!-- Ambient orbs -->
+                <div class="hero-orb hero-orb-1"></div>
+                <div class="hero-orb hero-orb-2"></div>
+                <div class="hero-orb hero-orb-3"></div>
+                <!-- Floating particles container -->
+                <div class="hero-particles" id="heroParticles"></div>
                 <div class="hero-eyebrow">Flutter Developer · B.Tech 2027</div>
                 <h1 class="name glitch">
                     <span class="first">Shikhar</span>
@@ -1000,6 +1055,29 @@
                 if (i === txt.length) clearInterval(iv);
             }, 80);
         });
+
+        /* ══════════════════════════════════════
+           HERO PARTICLES (kept lightweight)
+        ══════════════════════════════════════ */
+        (function() {
+            const container = document.getElementById('heroParticles');
+            if (!container) return;
+            const colors = ['#54c5f8','#a78bfa','#4ade80'];
+            for (let i = 0; i < 10; i++) {
+                const p = document.createElement('div');
+                p.className = 'hero-particle';
+                const size = Math.random() * 2.5 + 1;
+                p.style.cssText = [
+                    'width:' + size + 'px', 'height:' + size + 'px',
+                    'left:' + (Math.random() * 88) + '%',
+                    'top:' + (15 + Math.random() * 80) + '%',
+                    'background:' + colors[Math.floor(Math.random() * colors.length)],
+                    'animation-duration:' + (5 + Math.random() * 6) + 's',
+                    'animation-delay:' + (Math.random() * 10) + 's'
+                ].join(';');
+                container.appendChild(p);
+            }
+        })();
 
         /* ══════════════════════════════════════
            INTERACTIVE PHONE — CLOCK + WALLPAPER
