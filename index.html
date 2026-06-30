@@ -1,1462 +1,873 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shikhar Bajpai — Flutter Developer</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link
-        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-    <style>
-        :root {
-            --bg: #030308;
-            --bg2: #08080f;
-            --bg3: #0d0d18;
-            --border: rgba(255, 255, 255, 0.07);
-            --border2: rgba(255, 255, 255, 0.14);
-            --text: #e8e8f0;
-            --muted: rgba(232, 232, 240, 0.38);
-            --dim: rgba(232, 232, 240, 0.15);
-            --flutter: #54c5f8;
-            --dart: #0175c2;
-            --green: #4ade80;
-            --amber: #fbbf24;
-            --pink: #f472b6;
-            --purple: #a78bfa;
-            --mono: 'JetBrains Mono', monospace;
-            --sans: 'Space Grotesk', sans-serif;
-            --red: #f87171;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shikhar Bajpai — Flutter Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#030308;--bg2:#08080f;--bg3:#0d0d18;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.14);
+  --text:#e8e8f0;--muted:rgba(232,232,240,0.38);--dim:rgba(232,232,240,0.15);
+  --flutter:#54c5f8;--green:#4ade80;--amber:#fbbf24;--pink:#f472b6;--purple:#a78bfa;
+  --mono:'JetBrains Mono',monospace;--sans:'Space Grotesk',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:hidden;max-width:100vw}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);overflow-x:hidden;max-width:100vw;min-height:100vh;cursor:none}
 
-        * { margin: 0; padding: 0; box-sizing: border-box }
-        html { scroll-behavior: smooth }
-        body {
-            font-family: var(--sans);
-            background: var(--bg);
-            color: var(--text);
-            overflow-x: hidden;
-            min-height: 100vh;
-            cursor: none;
-        }
+#aurora-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.18}
+#star-canvas{position:fixed;inset:0;pointer-events:none;z-index:0}
+#scanlines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.025) 2px,rgba(0,0,0,0.025) 4px);pointer-events:none;z-index:2}
+#grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(84,197,248,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(84,197,248,0.025) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:3}
+.bg-orb{position:fixed;border-radius:50%;pointer-events:none;z-index:1;filter:blur(120px);animation:bgOrbFloat ease-in-out infinite}
+.bg-orb-1{width:700px;height:700px;top:-250px;left:-200px;background:radial-gradient(circle,rgba(84,197,248,0.045) 0%,transparent 65%);animation-duration:30s}
+.bg-orb-2{width:600px;height:600px;top:35%;right:-150px;background:radial-gradient(circle,rgba(84,197,248,0.035) 0%,transparent 65%);animation-duration:36s;animation-delay:-12s}
+.bg-orb-3{width:500px;height:500px;bottom:5%;left:15%;background:radial-gradient(circle,rgba(84,197,248,0.025) 0%,transparent 65%);animation-duration:42s;animation-delay:-20s}
+.bg-orb-4{width:450px;height:450px;bottom:35%;right:20%;background:radial-gradient(circle,rgba(84,197,248,0.025) 0%,transparent 65%);animation-duration:34s;animation-delay:-8s}
+@keyframes bgOrbFloat{0%,100%{transform:translate(0,0)}33%{transform:translate(20px,-28px)}66%{transform:translate(-16px,22px)}}
+.meteor{position:fixed;pointer-events:none;z-index:2;width:1.5px;height:1.5px;border-radius:50%;background:white;box-shadow:0 0 3px 1px rgba(84,197,248,0.6);opacity:0}
+#cursor{position:fixed;width:10px;height:10px;background:var(--flutter);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s;mix-blend-mode:screen;box-shadow:0 0 12px 4px rgba(84,197,248,0.5)}
+#cursor-ring{position:fixed;width:32px;height:32px;border:1px solid rgba(84,197,248,0.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);mix-blend-mode:screen}
 
-        /* ═══════════════════════════════════
-           AURORA BACKGROUND CANVAS
-        ═══════════════════════════════════ */
-        #aurora-canvas {
-            position: fixed; inset: 0;
-            pointer-events: none; z-index: 0;
-            opacity: 0.18;
-        }
+.wrap{position:relative;z-index:5;max-width:1400px;margin:0 auto;padding:24px 32px;overflow-x:hidden}
 
-        /* SCANLINE OVERLAY */
-        #scanlines {
-            position: fixed; inset: 0;
-            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.025) 2px, rgba(0,0,0,0.025) 4px);
-            pointer-events: none; z-index: 2;
-        }
+/* NAV */
+nav{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:rgba(8,8,15,0.75);border:1px solid rgba(84,197,248,0.12);border-radius:10px;backdrop-filter:blur(24px);margin-bottom:48px;position:sticky;top:16px;z-index:50;animation:fadeIn .5s ease both;box-shadow:0 0 30px rgba(84,197,248,0.04),inset 0 1px 0 rgba(255,255,255,0.05)}
+.nav-logo{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--flutter);letter-spacing:.5px}
+.nav-logo span{color:var(--muted)}
+.nav-links{display:flex;gap:6px}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:12px;font-family:var(--mono);padding:6px 12px;border-radius:6px;border:1px solid transparent;transition:.2s}
+.nav-links a:hover{color:var(--flutter);border-color:rgba(84,197,248,0.2);background:rgba(84,197,248,0.05)}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite;margin-right:8px;display:inline-block;box-shadow:0 0 8px var(--green)}
 
-        /* GRID LINES BG */
-        #grid-bg {
-            position: fixed; inset: 0;
-            background-image:
-                linear-gradient(rgba(84,197,248,0.025) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(84,197,248,0.025) 1px, transparent 1px);
-            background-size: 60px 60px;
-            pointer-events: none; z-index: 3;
-        }
+/* HERO */
+.hero{display:grid;grid-template-columns:1fr 420px;gap:0;align-items:center;margin-bottom:32px;min-height:520px}
+.hero-left{animation:fadeUp .6s ease .1s both;position:relative;z-index:2}
+.hero-orb{position:absolute;border-radius:50%;pointer-events:none;animation:orbFloat 8s ease-in-out infinite}
+.hero-orb-1{width:380px;height:380px;top:-80px;left:-100px;background:radial-gradient(circle,rgba(84,197,248,0.1) 0%,transparent 70%);filter:blur(50px)}
+.hero-orb-2{width:260px;height:260px;top:180px;left:360px;background:radial-gradient(circle,rgba(84,197,248,0.09) 0%,transparent 70%);filter:blur(40px);animation-delay:-3s}
+.hero-orb-3{width:200px;height:200px;top:360px;left:100px;background:radial-gradient(circle,rgba(84,197,248,0.07) 0%,transparent 70%);filter:blur(35px);animation-delay:-5s}
+@keyframes orbFloat{0%,100%{transform:translateY(0) scale(1);opacity:.8}33%{transform:translateY(-18px) scale(1.05);opacity:1}66%{transform:translateY(10px) scale(.97);opacity:.7}}
+.hero-particles{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.hero-particle{position:absolute;border-radius:50%;opacity:0;animation:particleDrift linear infinite}
+@keyframes particleDrift{0%{opacity:0;transform:translateY(0) scale(0)}10%{opacity:.55}90%{opacity:.15}100%{opacity:0;transform:translateY(-130px) scale(1.2)}}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(84,197,248,0.7);margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.hero-eyebrow::before{content:'// ';color:rgba(148,163,184,0.3)}
+h1.name{font-family:var(--sans);font-size:80px;font-weight:700;line-height:.95;letter-spacing:-4px;margin-bottom:20px}
+h1.name .first{color:var(--text)}
+h1.name .last{color:transparent;-webkit-text-stroke:1px rgba(84,197,248,0.5);display:block;text-shadow:0 0 80px rgba(84,197,248,0.2)}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.htag{font-family:var(--mono);font-size:11px;padding:5px 12px;border-radius:4px;border:1px solid var(--border2);color:var(--muted);transition:.25s}
+.htag.active{border-color:rgba(84,197,248,0.35);color:var(--flutter);background:rgba(84,197,248,0.07);box-shadow:0 0 16px rgba(84,197,248,0.08),inset 0 0 12px rgba(84,197,248,0.04)}
+.hero-desc{font-size:15px;line-height:1.85;color:rgba(232,232,240,0.45);max-width:500px;margin-bottom:36px;font-weight:300}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap}
+.hbtn{font-family:var(--mono);padding:12px 24px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;transition:.2s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.hbtn-primary{background:var(--flutter);color:#050507;border:1px solid var(--flutter);box-shadow:0 0 30px rgba(84,197,248,0.3)}
+.hbtn-primary:hover{background:#7dd8fb;transform:translateY(-2px);box-shadow:0 0 40px rgba(84,197,248,0.45)}
+.hbtn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border2)}
+.hbtn-ghost:hover{border-color:var(--flutter);color:var(--flutter);background:rgba(84,197,248,0.05)}
 
-        /* FLOATING ORBS — very slow, very soft */
-        .bg-orb {
-            position: fixed; border-radius: 50%;
-            pointer-events: none; z-index: 1;
-            filter: blur(120px);
-            animation: bgOrbFloat ease-in-out infinite;
-        }
-        .bg-orb-1 {
-            width: 700px; height: 700px;
-            top: -250px; left: -200px;
-            background: radial-gradient(circle, rgba(84,197,248,0.045) 0%, transparent 65%);
-            animation-duration: 30s; animation-delay: 0s;
-        }
-        .bg-orb-2 {
-            width: 600px; height: 600px;
-            top: 35%; right: -150px;
-            background: radial-gradient(circle, rgba(167,139,250,0.035) 0%, transparent 65%);
-            animation-duration: 36s; animation-delay: -12s;
-        }
-        .bg-orb-3 {
-            width: 500px; height: 500px;
-            bottom: 5%; left: 15%;
-            background: radial-gradient(circle, rgba(74,222,128,0.025) 0%, transparent 65%);
-            animation-duration: 42s; animation-delay: -20s;
-        }
-        .bg-orb-4 {
-            width: 450px; height: 450px;
-            bottom: 35%; right: 20%;
-            background: radial-gradient(circle, rgba(244,114,182,0.025) 0%, transparent 65%);
-            animation-duration: 34s; animation-delay: -8s;
-        }
-        @keyframes bgOrbFloat {
-            0%,100% { transform: translate(0,0); }
-            33% { transform: translate(20px,-28px); }
-            66% { transform: translate(-16px,22px); }
-        }
+/* ═══ HERO RIGHT — Three.js 360° phone canvas + HTML overlay ═══ */
+.hero-right{animation:fadeUp .6s ease .2s both;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
 
-        /* METEORS */
-        .meteor {
-            position: fixed; pointer-events: none; z-index: 2;
-            width: 1.5px; height: 1.5px; border-radius: 50%;
-            background: white;
-            box-shadow: 0 0 3px 1px rgba(84,197,248,0.6);
-            opacity: 0;
-        }
-        @keyframes meteorMove {
-            0%   { opacity: 0; transform: translate(0, 0); }
-            8%   { opacity: 0.55; }
-            85%  { opacity: 0.2; }
-            100% { opacity: 0; }
-        }
+.phone-scene-wrap{position:relative;width:420px;height:540px;display:flex;flex-direction:column;align-items:center}
 
-        /* CUSTOM CURSOR */
+/* label above phone */
+.hp-tap-label{font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(84,197,248,0.4);margin-bottom:8px;display:flex;align-items:center;gap:8px;width:100%;position:relative;z-index:3}
+.hp-tap-label::before,.hp-tap-label::after{content:'';flex:1;height:1px;background:rgba(84,197,248,0.12)}
 
-        #cursor {
-            position: fixed; width: 10px; height: 10px;
-            background: var(--flutter); border-radius: 50%;
-            pointer-events: none; z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: width .15s, height .15s, opacity .2s;
-            mix-blend-mode: screen;
-            box-shadow: 0 0 12px 4px rgba(84,197,248,0.5);
-        }
-        #cursor-ring {
-            position: fixed; width: 32px; height: 32px;
-            border: 1px solid rgba(84, 197, 248, 0.4); border-radius: 50%;
-            pointer-events: none; z-index: 9998;
-            transform: translate(-50%, -50%);
-            transition: transform .08s ease, width .2s, height .2s;
-            mix-blend-mode: screen;
-        }
+/* THREE.js canvas */
+#phone-canvas{width:420px;height:480px;cursor:grab;display:block;position:relative;z-index:2}
+#phone-canvas:active{cursor:grabbing}
 
-        .wrap {
-            position: relative; z-index: 5;
-            max-width: 1400px; margin: 0 auto; padding: 24px 32px;
-        }
+/* label below */
+.hp-bottom-label{margin-top:8px;font-family:var(--mono);font-size:10px;color:rgba(84,197,248,0.45);text-align:center;letter-spacing:1px;min-height:16px;transition:opacity .3s;position:relative;z-index:3}
 
-        /* NAV */
-        nav {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 20px;
-            background: rgba(8, 8, 15, 0.75);
-            border: 1px solid rgba(84,197,248,0.12);
-            border-radius: 10px;
-            backdrop-filter: blur(24px);
-            margin-bottom: 48px;
-            position: sticky; top: 16px; z-index: 50;
-            animation: fadeIn .5s ease both;
-            box-shadow: 0 0 30px rgba(84,197,248,0.04), inset 0 1px 0 rgba(255,255,255,0.05);
-        }
-        .nav-logo { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--flutter); letter-spacing: .5px; }
-        .nav-logo span { color: var(--muted) }
-        .nav-links { display: flex; gap: 6px }
-        .nav-links a {
-            color: var(--muted); text-decoration: none; font-size: 12px;
-            letter-spacing: .3px; transition: .2s; font-family: var(--mono);
-            padding: 6px 12px; border-radius: 6px; border: 1px solid transparent;
-        }
-        .nav-links a:hover { color: var(--flutter); border-color: rgba(84,197,248,0.2); background: rgba(84,197,248,0.05) }
-        .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 2s infinite; margin-right: 8px; display: inline-block;
-            box-shadow: 0 0 8px var(--green);
-        }
+/* glow behind canvas */
+.phone-scene-glow{position:absolute;width:360px;height:480px;background:radial-gradient(ellipse at center,rgba(84,197,248,0.10) 0%,rgba(84,197,248,0.05) 45%,transparent 70%);top:30px;left:50%;transform:translateX(-50%);filter:blur(40px);pointer-events:none;z-index:1;animation:hpPulse 5s ease-in-out infinite}
+@keyframes hpPulse{0%,100%{opacity:.7}50%{opacity:1}}
 
-        /* HERO */
-        .hero {
-            display: grid; grid-template-columns: 1fr 420px;
-            gap: 0; align-items: center; margin-bottom: 32px;
-            min-height: 520px;
-        }
-        .hero-left { animation: fadeUp .6s ease .1s both; position: relative; z-index: 2; }
+/* open-for-work badge */
+/* open-badge removed */
 
-        .hero-orb {
-            position: absolute; border-radius: 50%; pointer-events: none;
-            animation: orbFloat 8s ease-in-out infinite;
-        }
-        .hero-orb-1 {
-            width: 380px; height: 380px; top: -80px; left: -100px;
-            background: radial-gradient(circle, rgba(84,197,248,0.1) 0%, transparent 70%);
-            filter: blur(50px); animation-delay: 0s;
-        }
-        .hero-orb-2 {
-            width: 260px; height: 260px; top: 180px; left: 360px;
-            background: radial-gradient(circle, rgba(167,139,250,0.09) 0%, transparent 70%);
-            filter: blur(40px); animation-delay: -3s;
-        }
-        .hero-orb-3 {
-            width: 200px; height: 200px; top: 360px; left: 100px;
-            background: radial-gradient(circle, rgba(74,222,128,0.07) 0%, transparent 70%);
-            filter: blur(35px); animation-delay: -5s;
-        }
-        @keyframes orbFloat {
-            0%,100% { transform: translateY(0) scale(1); opacity: .8; }
-            33% { transform: translateY(-18px) scale(1.05); opacity: 1; }
-            66% { transform: translateY(10px) scale(.97); opacity: .7; }
-        }
-        .hero-particles { position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-        .hero-particle {
-            position: absolute; border-radius: 50%;
-            background: var(--flutter); opacity: 0;
-            animation: particleDrift linear infinite;
-        }
-        @keyframes particleDrift {
-            0%   { opacity: 0; transform: translateY(0) scale(0); }
-            10%  { opacity: .55; }
-            90%  { opacity: .15; }
-            100% { opacity: 0; transform: translateY(-130px) scale(1.2); }
-        }
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:48px;animation:fadeUp .6s ease .25s both}
+.stat-item{background:rgba(8,8,15,0.55);backdrop-filter:blur(6px);padding:20px 24px;transition:.2s;position:relative;overflow:hidden}
+.stat-item::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 50%,rgba(84,197,248,0.04) 0%,transparent 70%);opacity:0;transition:opacity .3s}
+.stat-item:hover{background:var(--bg3)}.stat-item:hover::before{opacity:1}
+.stat-val{font-family:var(--mono);font-size:28px;font-weight:700;color:var(--flutter);margin-bottom:4px;letter-spacing:-1px;text-shadow:0 0 20px rgba(84,197,248,0.4)}
+.stat-label{font-size:12px;color:var(--muted);letter-spacing:.5px}
 
-        .hero-eyebrow {
-            font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
-            text-transform: uppercase; color: rgba(84,197,248,0.7); margin-bottom: 20px;
-            display: flex; align-items: center; gap: 8px;
-        }
-        .hero-eyebrow::before { content: '// '; color: rgba(148,163,184,0.3) }
-        h1.name {
-            font-family: var(--sans); font-size: 80px; font-weight: 700;
-            line-height: .95; letter-spacing: -4px; margin-bottom: 20px;
-        }
-        h1.name .first { color: var(--text) }
-        h1.name .last {
-            color: transparent;
-            -webkit-text-stroke: 1px rgba(84,197,248,0.5);
-            display: block;
-            text-shadow: 0 0 80px rgba(84,197,248,0.2);
-        }
-        .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
-        .htag {
-            font-family: var(--mono); font-size: 11px; padding: 5px 12px;
-            border-radius: 4px; border: 1px solid var(--border2);
-            color: var(--muted); letter-spacing: .5px;
-            transition: .25s;
-        }
-        .htag:hover { border-color: rgba(84,197,248,0.3); color: var(--flutter); }
-        .htag.active {
-            border-color: rgba(84,197,248,0.35); color: var(--flutter);
-            background: rgba(84,197,248,0.07);
-            box-shadow: 0 0 16px rgba(84,197,248,0.08), inset 0 0 12px rgba(84,197,248,0.04);
-        }
-        .hero-desc { font-size: 15px; line-height: 1.85; color: rgba(232,232,240,0.45); max-width: 500px; margin-bottom: 36px; font-weight: 300; }
-        .hero-btns { display: flex; gap: 10px; flex-wrap: wrap }
-        .hbtn {
-            font-family: var(--mono); padding: 12px 24px; border-radius: 8px;
-            font-size: 13px; font-weight: 500; cursor: pointer; transition: .2s;
-            text-decoration: none; display: inline-flex; align-items: center; gap: 8px; letter-spacing: .3px;
-        }
-        .hbtn-primary {
-            background: var(--flutter); color: #050507; border: 1px solid var(--flutter);
-            box-shadow: 0 0 30px rgba(84,197,248,0.3), 0 0 60px rgba(84,197,248,0.1);
-        }
-        .hbtn-primary:hover { background: #7dd8fb; transform: translateY(-2px); box-shadow: 0 0 40px rgba(84,197,248,0.45), 0 0 80px rgba(84,197,248,0.15); }
-        .hbtn-ghost {
-            background: transparent; color: var(--muted); border: 1px solid var(--border2);
-        }
-        .hbtn-ghost:hover { border-color: var(--flutter); color: var(--flutter); background: rgba(84,197,248,0.05); box-shadow: 0 0 20px rgba(84,197,248,0.1); }
+/* SKILLS */
+.skills-section{margin-bottom:48px;animation:fadeUp .6s ease .3s both}
+.sec-header{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.sec-tag{font-family:var(--mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(84,197,248,0.5);white-space:nowrap}
+.sec-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(84,197,248,0.15),transparent)}
+.sec-num{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:2px}
+.skills-grid{display:flex;flex-wrap:wrap;gap:8px}
+.sk{font-family:var(--mono);font-size:11.5px;padding:7px 14px;border-radius:6px;border:1px solid var(--border);color:var(--muted);transition:.25s;cursor:default}
+.sk:hover{transform:translateY(-2px)}
+.sk.flutter{border-color:rgba(84,197,248,0.3);color:var(--flutter)}.sk.flutter:hover{background:rgba(84,197,248,0.08);box-shadow:0 0 16px rgba(84,197,248,0.12)}
+.sk.firebase{border-color:rgba(84,197,248,0.3);color:var(--flutter)}.sk.firebase:hover{background:rgba(84,197,248,0.08);box-shadow:0 0 16px rgba(84,197,248,0.12)}
+.sk.ui{border-color:rgba(84,197,248,0.3);color:var(--flutter)}.sk.ui:hover{background:rgba(84,197,248,0.08);box-shadow:0 0 16px rgba(84,197,248,0.12)}
+.sk.iot{border-color:rgba(84,197,248,0.3);color:var(--flutter)}.sk.iot:hover{background:rgba(84,197,248,0.08);box-shadow:0 0 16px rgba(84,197,248,0.12)}
+.sk.other{border-color:var(--border);color:var(--muted)}.sk.other:hover{border-color:rgba(84,197,248,0.3);color:var(--flutter)}
 
-        /* ═══════════════════════════════════
-           INTERACTIVE PHONE
-        ═══════════════════════════════════ */
-        .hero-right { animation: fadeUp .6s ease .2s both }
+/* PROJECTS */
+.projects-section{margin-bottom:48px;animation:fadeUp .6s ease .35s both}
+.proj-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.pcard{background:rgba(8,8,15,0.55);backdrop-filter:blur(6px);border:1px solid rgba(84,197,248,0.16);border-radius:16px;overflow:hidden;cursor:pointer;transition:border-color .25s,transform .2s,box-shadow .25s;position:relative;display:flex;flex-direction:column;box-shadow:0 0 0 1px rgba(84,197,248,0.04),0 8px 24px rgba(0,0,0,0.35)}
+.pcard::before{content:'';position:absolute;top:-30%;left:-20%;width:160%;height:90%;background:radial-gradient(ellipse at 30% 0%,rgba(84,197,248,0.10) 0%,transparent 60%);pointer-events:none;z-index:1}
+.pcard::after{content:'';position:absolute;bottom:-15%;right:-15%;width:60%;height:50%;background:radial-gradient(circle,rgba(84,197,248,0.08) 0%,transparent 70%);pointer-events:none;z-index:1}
+.pcard:hover{border-color:rgba(84,197,248,0.5);transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.5),0 0 0 1px rgba(84,197,248,0.15),0 0 30px rgba(84,197,248,0.18)}
+.pcard-phone-area{background:#060609;padding:14px 14px 10px;display:flex;flex-direction:column;align-items:center;position:relative;border-bottom:1px solid var(--border);z-index:2}
+.pcard-phone{width:100%;max-width:130px;background:#0c0c14;border-radius:22px;border:1.5px solid rgba(255,255,255,0.12);box-shadow:0 0 0 4px rgba(0,0,0,0.4),0 12px 32px rgba(0,0,0,0.7);position:relative;overflow:hidden}
+.pcard-phone::before{content:'';position:absolute;top:7px;left:50%;transform:translateX(-50%);width:40px;height:4px;background:#060609;border-radius:6px;z-index:10}
+.pcard-pscreen{width:100%;aspect-ratio:9/19.5;position:relative;overflow:hidden;background:#000}
+.pcard-browser{width:100%;background:#0c0c14;border-radius:10px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 8px 24px rgba(0,0,0,0.6);overflow:hidden}
+.pcard-browser-bar{padding:5px 8px;display:flex;align-items:center;gap:4px;background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.06)}
+.pcd-dot{width:6px;height:6px;border-radius:50%}
+.pcard-bscreen{width:100%;aspect-ratio:16/10;position:relative;overflow:hidden;background:#000}
+.pcard-slides{display:flex;width:100%;height:100%;transition:transform .35s cubic-bezier(.4,0,.2,1);will-change:transform}
+.pcard-slide{min-width:100%;height:100%;object-fit:cover;display:block;flex-shrink:0;user-select:none;-webkit-user-drag:none;pointer-events:none}
+.pcard-slide.contain{object-fit:contain;background:#060609}
+.pcard-frame-dots{display:flex;gap:4px;justify-content:center;margin-top:8px;min-height:8px}
+.pcdot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all .2s;cursor:pointer}
+.pcdot.on{background:var(--flutter);width:12px;border-radius:3px;box-shadow:0 0 6px rgba(84,197,248,0.6)}
+.type-badge{position:absolute;top:9px;left:9px;font-family:var(--mono);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 7px;border-radius:3px;backdrop-filter:blur(8px);z-index:5}
+.type-badge.app{background:rgba(84,197,248,0.15);color:var(--flutter);border:1px solid rgba(84,197,248,0.2)}
+.type-badge.web{background:rgba(84,197,248,0.15);color:var(--flutter);border:1px solid rgba(84,197,248,0.2)}
+.type-badge.design{background:rgba(84,197,248,0.15);color:var(--flutter);border:1px solid rgba(84,197,248,0.2)}
+.type-badge.iot{background:rgba(84,197,248,0.15);color:var(--flutter);border:1px solid rgba(84,197,248,0.2)}
+.ss-count{position:absolute;top:9px;right:9px;z-index:5;background:rgba(5,5,7,0.85);border:1px solid var(--border2);border-radius:20px;padding:3px 7px;font-family:var(--mono);font-size:8px;color:var(--muted);backdrop-filter:blur(6px)}
+.pcard-info{padding:12px 14px 14px;flex:1;display:flex;flex-direction:column;position:relative;z-index:2}
+.pcard-num{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--dim);margin-bottom:4px}
+.pcard h3{font-size:13px;font-weight:600;margin-bottom:5px;line-height:1.3;letter-spacing:-.2px}
+.pcard p{font-size:11.5px;line-height:1.65;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1}
+.pcard-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:9px}
+.pcard-chip{font-family:var(--mono);padding:2px 7px;border-radius:3px;border:1px solid rgba(255,255,255,0.07);font-size:9px;color:rgba(232,232,240,0.3)}
 
-        .hp-container {
-            display: flex; flex-direction: column; align-items: center;
-            padding-top: 8px; position: relative;
-        }
-        .hero-right {
-            display: flex; align-items: center; justify-content: center;
-        }
+/* BOTTOM */
+.achievements-section{margin-bottom:48px;animation:fadeUp .6s ease .42s both}
+.ach-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.ach-card{background:rgba(8,8,15,0.55);backdrop-filter:blur(6px);border:1px solid rgba(84,197,248,0.16);border-radius:14px;padding:20px 14px;text-align:center;transition:.25s;position:relative;overflow:hidden;box-shadow:0 0 0 1px rgba(84,197,248,0.04)}
+.ach-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(84,197,248,0.05) 0%,transparent 70%);opacity:0;transition:opacity .3s}
+.ach-card:hover{border-color:rgba(84,197,248,0.3);transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,0.4),0 0 20px rgba(84,197,248,0.06)}
+.ach-card:hover::before{opacity:1}
+.ach-icon{font-size:26px;margin-bottom:10px}
+.ach-cat{font-family:var(--mono);font-size:11px;color:var(--flutter);font-weight:600;margin-bottom:6px;letter-spacing:.5px}
+.ach-val{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px}
+.ach-sub{font-size:11px;color:var(--muted)}
 
-        .hp-tap-label {
-            font-family: var(--mono); font-size: 9px; letter-spacing: 3px;
-            text-transform: uppercase; color: rgba(84,197,248,0.4);
-            margin-bottom: 14px; display: flex; align-items: center; gap: 8px; width: 100%;
-        }
-        .hp-tap-label::before, .hp-tap-label::after { content: ''; flex: 1; height: 1px; background: rgba(84,197,248,0.12); }
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:40px;animation:fadeUp .6s ease .5s both}
+.bcard{padding:40px 44px;border-radius:14px;background:rgba(8,8,15,0.55);backdrop-filter:blur(6px);border:1px solid var(--border);position:relative;overflow:hidden;transition:.2s}
+.bcard:hover{border-color:rgba(84,197,248,0.18);box-shadow:0 0 40px rgba(84,197,248,0.04)}
+.bcard-glow{position:absolute;width:300px;height:300px;border-radius:50%;filter:blur(80px);pointer-events:none}
+.bcard-glow.teal{background:rgba(84,197,248,0.07);bottom:-80px;left:-60px}
+.bcard-glow.purple{background:rgba(84,197,248,0.08);top:-80px;right:-60px}
+.bcard h2{font-size:26px;font-weight:700;letter-spacing:-1px;margin-bottom:8px}
+.bcard p{font-size:13.5px;color:var(--muted);line-height:1.7;margin-bottom:24px;font-weight:300}
+.bcard-links{display:flex;gap:8px;flex-wrap:wrap}
+.bl{font-family:var(--mono);padding:9px 16px;border-radius:7px;border:1px solid var(--border2);text-decoration:none;color:var(--muted);font-size:12px;transition:.2s;display:flex;align-items:center;gap:6px}
+.bl:hover{border-color:rgba(84,197,248,0.35);color:var(--flutter);background:rgba(84,197,248,0.06);box-shadow:0 0 16px rgba(84,197,248,0.1)}
 
-        .hp-glow-wrap {
-            position: absolute; width: 340px; height: 640px;
-            background: radial-gradient(ellipse at center, rgba(84,197,248,0.14) 0%, rgba(167,139,250,0.08) 45%, transparent 70%);
-            top: 40px; left: 50%; transform: translateX(-50%);
-            filter: blur(40px); pointer-events: none; z-index: 0;
-            animation: hpPulse 5s ease-in-out infinite;
-        }
-        @keyframes hpPulse { 0%,100%{opacity:.7} 50%{opacity:1} }
+footer{text-align:center;padding:24px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:1.5px;animation:fadeUp .6s ease .6s both}
+.footer-line{display:flex;align-items:center;justify-content:center;gap:16px}
+.footer-line::before,.footer-line::after{content:'';flex:1;max-width:120px;height:1px;background:linear-gradient(90deg,transparent,rgba(84,197,248,0.15))}
 
-        .hp-device {
-            width: 240px; position: relative; z-index: 2;
-            animation: hpFloat 7s ease-in-out infinite;
-            flex-shrink: 0;
-        }
-        @keyframes hpFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.93);backdrop-filter:blur(28px);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .25s ease}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg2);border:1px solid rgba(84,197,248,0.15);border-radius:18px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.1) transparent;display:flex;flex-direction:column;transform:scale(.96) translateY(12px);transition:transform .3s cubic-bezier(.34,1.4,.64,1);box-shadow:0 0 60px rgba(84,197,248,0.08),0 40px 80px rgba(0,0,0,0.6)}
+.modal-overlay.open .modal{transform:scale(1) translateY(0)}
+.m-phone-wrap{display:flex;justify-content:center;padding:24px 24px 0}
+.m-phone{width:220px;background:#0d0d14;border-radius:36px;border:1.5px solid rgba(255,255,255,0.1);overflow:hidden;box-shadow:0 0 0 8px rgba(0,0,0,0.4),0 30px 60px rgba(0,0,0,0.7);position:relative}
+.m-phone::before{content:'';position:absolute;top:12px;left:50%;transform:translateX(-50%);width:72px;height:5px;background:rgba(255,255,255,0.08);border-radius:10px;z-index:10}
+.m-screen{width:100%;aspect-ratio:9/19.5;position:relative;overflow:hidden}
+.m-screen img{width:100%;height:100%;object-fit:cover;display:block}
+.m-web-wrap{margin:24px 24px 0;background:#0d0d14;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.1)}
+.m-web-bar{padding:8px 12px;display:flex;align-items:center;gap:5px;background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.06)}
+.m-web-dot{width:8px;height:8px;border-radius:50%}
+.m-web-img{width:100%;display:block;max-height:240px;object-fit:cover}
+.m-controls{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 0 4px}
+.m-btn{width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.04);color:var(--muted);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;font-family:var(--mono)}
+.m-btn:hover{background:rgba(84,197,248,0.12);color:var(--flutter);border-color:rgba(84,197,248,0.3)}
+.m-counter{font-family:var(--mono);font-size:11px;color:var(--muted);min-width:44px;text-align:center;letter-spacing:1px}
+.m-dots{display:flex;gap:5px;justify-content:center;padding-bottom:4px}
+.mdot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.2);transition:.2s;cursor:pointer}
+.mdot.on{background:var(--flutter);width:14px;border-radius:3px}
+.m-info{padding:20px 24px 24px}
+.m-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.m-n{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--dim);margin-bottom:3px}
+.m-title{font-size:20px;font-weight:700;letter-spacing:-.4px}
+.m-close{width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.04);color:var(--muted);font-size:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;flex-shrink:0}
+.m-close:hover{background:rgba(255,255,255,0.1);color:var(--text)}
+.m-desc{font-size:13px;line-height:1.8;color:rgba(232,232,240,0.45);margin-bottom:14px;font-weight:300}
+.m-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
+.mtag{font-family:var(--mono);padding:3px 10px;border-radius:4px;border:1px solid rgba(255,255,255,0.08);font-size:10px;color:rgba(232,232,240,0.35)}
+.m-acts{display:flex;gap:8px;flex-wrap:wrap;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06)}
+.mact{font-family:var(--mono);padding:9px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);text-decoration:none;color:var(--muted);font-size:12px;font-weight:500;transition:.2s}
+.mact:hover{border-color:rgba(84,197,248,0.3);color:var(--flutter);background:rgba(84,197,248,0.07)}
+.mact.primary{background:var(--flutter);color:#050507;border-color:var(--flutter)}
+.mact.primary:hover{background:#7dd8fb}
 
-        .hp-body {
-            background: linear-gradient(160deg, #1a1a2e 0%, #0d0d16 100%);
-            border-radius: 44px;
-            border: 1.5px solid rgba(255,255,255,0.12);
-            box-shadow:
-                0 0 0 6px rgba(0,0,0,0.55),
-                0 0 0 7.5px rgba(84,197,248,0.1),
-                0 40px 80px rgba(0,0,0,0.85),
-                0 0 60px rgba(84,197,248,0.06),
-                inset 0 1px 0 rgba(255,255,255,0.08);
-            overflow: hidden; position: relative;
-        }
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes glitch{0%,90%,100%{transform:translate(0)}91%{transform:translate(-2px,1px)}93%{transform:translate(2px,-1px)}95%{transform:translate(-1px,0)}97%{transform:translate(1px,0)}}
+.glitch{animation:glitch 8s infinite}
 
-        .hp-btn { position: absolute; background: #18182a; border-radius: 2px; border: 1px solid rgba(255,255,255,0.08); }
-        .hp-vol-u { width: 3px; height: 30px; top: 108px; left: -4px; }
-        .hp-vol-d { width: 3px; height: 30px; top: 148px; left: -4px; }
-        .hp-pwr   { width: 3px; height: 44px; top: 118px; right: -4px; }
-
-        .hp-notch {
-            position: absolute; top: 13px; left: 50%; transform: translateX(-50%);
-            width: 80px; height: 5px; background: #060609; border-radius: 10px; z-index: 20;
-        }
-
-        .hp-screen {
-            margin: 10px 7px 11px; border-radius: 34px; overflow: hidden;
-            background: #020208; position: relative; aspect-ratio: 9/19.5;
-            -webkit-mask-image: -webkit-radial-gradient(white, black);
-        }
-
-        .hp-homescreen {
-            position: absolute; inset: 0; display: flex; flex-direction: column;
-            background: linear-gradient(160deg, #060b20 0%, #030412 50%, #08050e 100%);
-            padding-top: 28px;
-        }
-
-        .hp-wp-grid { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-        .hp-wp-lh { position: absolute; height: 1px; width: 100%; background: rgba(84,197,248,0.04); }
-        .hp-wp-lv { position: absolute; width: 1px; height: 100%; background: rgba(84,197,248,0.04); }
-
-        .hp-statusbar {
-            position: absolute; top: 0; left: 0; right: 0; z-index: 15;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 7px 16px 3px; font-family: var(--mono); font-size: 8.5px;
-            color: rgba(255,255,255,0.7);
-            background: linear-gradient(180deg, rgba(2,2,8,0.8), transparent);
-        }
-        .hp-battery { display: flex; align-items: center; gap: 3px; }
-        .hp-batt-outline {
-            border: 1.5px solid rgba(255,255,255,0.65); border-radius: 2px;
-            width: 13px; height: 8px; display: flex; align-items: center; padding: 1.5px;
-        }
-        .hp-batt-fill { height: 100%; background: rgba(74,222,128,0.9); border-radius: 1px; width: 65%; }
-
-        .hp-clock { text-align: center; padding: 14px 0 18px; position: relative; z-index: 2; }
-        .hp-clock-time { font-family: var(--mono); font-size: 38px; font-weight: 300; color: rgba(255,255,255,0.92); letter-spacing: -1px; line-height: 1; }
-        .hp-clock-date { font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.35); letter-spacing: 2px; text-transform: uppercase; margin-top: 3px; }
-
-        .hp-app-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 10px; padding: 0 14px; position: relative; z-index: 2; flex: 1;
-        }
-        .hp-app {
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
-            cursor: pointer; transition: transform .15s;
-        }
-        .hp-app:active { transform: scale(0.9); }
-        .hp-app-icon {
-            width: 52px; height: 52px; border-radius: 13px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px; position: relative; overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.55);
-            transition: transform .2s, box-shadow .2s;
-        }
-        .hp-app:hover .hp-app-icon { transform: scale(1.12); box-shadow: 0 8px 24px rgba(0,0,0,0.75); }
-        .hp-app-icon::after {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(160deg, rgba(255,255,255,0.18), transparent 55%);
-            border-radius: 13px; pointer-events: none;
-        }
-        .hp-app-name { font-family: var(--mono); font-size: 8px; color: rgba(255,255,255,0.6); text-align: center; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-        .ic-vanguard { background: linear-gradient(135deg, #0d47a1, #1976d2); }
-        .ic-task     { background: linear-gradient(135deg, #1b5e20, #388e3c); }
-        .ic-hn       { background: linear-gradient(135deg, #bf360c, #f4511e); }
-        .ic-todo     { background: linear-gradient(135deg, #4a148c, #7b1fa2); }
-        .ic-dice     { background: linear-gradient(135deg, #006064, #00acc1); }
-        .ic-iot      { background: linear-gradient(135deg, #f57f17, #f9a825); }
-        .ic-code     { background: linear-gradient(135deg, #1a237e, #303f9f); }
-        .ic-metro    { background: linear-gradient(135deg, #880e4f, #c2185b); }
-
-        .hp-dock {
-            margin: 6px 10px 12px;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px; padding: 8px 0;
-            display: flex; justify-content: space-around; align-items: center;
-            position: relative; z-index: 2;
-        }
-        .hp-dock-icon {
-            width: 40px; height: 40px; border-radius: 11px;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: transform .15s; text-decoration: none;
-            font-size: 18px; font-family: var(--mono); color: white;
-            font-weight: 600; font-size: 13px;
-        }
-        .hp-dock-icon:hover { transform: scale(1.14); }
-        .di-gh  { background: linear-gradient(135deg, #161b22, #30363d); }
-        .di-li  { background: linear-gradient(135deg, #0077b5, #00a0dc); }
-        .di-em  { background: linear-gradient(135deg, #c62828, #ef5350); }
-        .di-rv  { background: linear-gradient(135deg, #37474f, #546e7a); }
-
-        .hp-home-bar { width: 80px; height: 3px; background: rgba(255,255,255,0.22); border-radius: 2px; margin: 2px auto 0; position: relative; z-index: 2; }
-
-        .hp-bottom-label {
-            margin-top: 16px; font-family: var(--mono); font-size: 10px;
-            color: rgba(84,197,248,0.45); text-align: center; letter-spacing: 1px;
-            min-height: 16px; transition: opacity .3s;
-        }
-
-        /* STAT ROW */
-        .stats-row {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 1px; background: var(--border); border: 1px solid var(--border);
-            border-radius: 12px; overflow: hidden; margin-bottom: 48px;
-            animation: fadeUp .6s ease .25s both;
-            box-shadow: 0 0 40px rgba(84,197,248,0.03);
-        }
-        .stat-item {
-            background: var(--bg2); padding: 20px 24px; transition: .2s;
-            position: relative; overflow: hidden;
-        }
-        .stat-item::before {
-            content: ''; position: absolute; inset: 0;
-            background: radial-gradient(circle at 20% 50%, rgba(84,197,248,0.04) 0%, transparent 70%);
-            opacity: 0; transition: opacity .3s;
-        }
-        .stat-item:hover { background: var(--bg3); }
-        .stat-item:hover::before { opacity: 1; }
-        .stat-val { font-family: var(--mono); font-size: 28px; font-weight: 700; color: var(--flutter); margin-bottom: 4px; letter-spacing: -1px;
-            text-shadow: 0 0 20px rgba(84,197,248,0.4);
-        }
-        .stat-label { font-size: 12px; color: var(--muted); letter-spacing: .5px }
-
-        /* SKILLS */
-        .skills-section { margin-bottom: 48px; animation: fadeUp .6s ease .3s both; }
-        .sec-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
-        .sec-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: rgba(84,197,248,0.5); white-space: nowrap; }
-        .sec-line { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(84,197,248,0.15), transparent); }
-        .sec-num { font-family: var(--mono); font-size: 10px; color: var(--dim); letter-spacing: 2px }
-        .skills-grid { display: flex; flex-wrap: wrap; gap: 8px; }
-        .sk { font-family: var(--mono); font-size: 11.5px; padding: 7px 14px; border-radius: 6px; border: 1px solid var(--border); color: var(--muted); transition: .25s; cursor: default; }
-        .sk:hover { transform: translateY(-2px) }
-        .sk.flutter { border-color: rgba(84,197,248,0.3); color: var(--flutter) }
-        .sk.flutter:hover { background: rgba(84,197,248,0.08); box-shadow: 0 0 16px rgba(84,197,248,0.12); }
-        .sk.firebase { border-color: rgba(251,191,36,0.3); color: var(--amber) }
-        .sk.firebase:hover { background: rgba(251,191,36,0.08); box-shadow: 0 0 16px rgba(251,191,36,0.1); }
-        .sk.ui { border-color: rgba(244,114,182,0.3); color: var(--pink) }
-        .sk.ui:hover { background: rgba(244,114,182,0.08); box-shadow: 0 0 16px rgba(244,114,182,0.1); }
-        .sk.iot { border-color: rgba(74,222,128,0.3); color: var(--green) }
-        .sk.iot:hover { background: rgba(74,222,128,0.08); box-shadow: 0 0 16px rgba(74,222,128,0.1); }
-        .sk.other { border-color: var(--border); color: var(--muted) }
-        .sk.other:hover { border-color: var(--border2); color: var(--text) }
-
-        /* PROJECTS */
-        .projects-section { margin-bottom: 48px; animation: fadeUp .6s ease .35s both }
-        .proj-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-        .pcard {
-            background: var(--bg2); border: 1px solid var(--border); border-radius: 16px;
-            overflow: hidden; cursor: pointer; transition: border-color .25s, transform .2s, box-shadow .25s;
-            position: relative; display: flex; flex-direction: column;
-        }
-        .pcard:hover {
-            border-color: rgba(84,197,248,0.35); transform: translateY(-4px);
-            box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 24px rgba(84,197,248,0.06), 0 0 60px rgba(84,197,248,0.03);
-        }
-        .pcard-phone-area { background: #060609; padding: 14px 14px 10px; display: flex; flex-direction: column; align-items: center; position: relative; border-bottom: 1px solid var(--border); }
-        .pcard-phone { width: 100%; max-width: 130px; background: #0c0c14; border-radius: 22px; border: 1.5px solid rgba(255,255,255,0.12); box-shadow: 0 0 0 4px rgba(0,0,0,0.4), 0 12px 32px rgba(0,0,0,0.7); position: relative; overflow: hidden; }
-        .pcard-phone::before { content: ''; position: absolute; top: 7px; left: 50%; transform: translateX(-50%); width: 40px; height: 4px; background: #060609; border-radius: 6px; z-index: 10; }
-        .pcard-pscreen { width: 100%; aspect-ratio: 9/19.5; position: relative; overflow: hidden; background: #000; }
-        .pcard-browser { width: 100%; background: #0c0c14; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 8px 24px rgba(0,0,0,0.6); overflow: hidden; }
-        .pcard-browser-bar { padding: 5px 8px; display: flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.06); }
-        .pcd-dot { width: 6px; height: 6px; border-radius: 50% }
-        .pcard-bscreen { width: 100%; aspect-ratio: 16/10; position: relative; overflow: hidden; background: #000; }
-        .pcard-slides { display: flex; width: 100%; height: 100%; transition: transform .35s cubic-bezier(.4,0,.2,1); will-change: transform; }
-        .pcard-slide { min-width: 100%; height: 100%; object-fit: cover; display: block; flex-shrink: 0; user-select: none; -webkit-user-drag: none; pointer-events: none; }
-        .pcard-slide.contain { object-fit: contain; background: #060609 }
-        .pcard-frame-dots { display: flex; gap: 4px; justify-content: center; margin-top: 8px; min-height: 8px; }
-        .pcdot { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.15); transition: all .2s; cursor: pointer; }
-        .pcdot.on { background: var(--flutter); width: 12px; border-radius: 3px; box-shadow: 0 0 6px rgba(84,197,248,0.6); }
-        .type-badge { position: absolute; top: 9px; left: 9px; font-family: var(--mono); font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 7px; border-radius: 3px; backdrop-filter: blur(8px); z-index: 5; }
-        .type-badge.app { background: rgba(84,197,248,0.15); color: var(--flutter); border: 1px solid rgba(84,197,248,0.2) }
-        .type-badge.web { background: rgba(74,222,128,0.1); color: var(--green); border: 1px solid rgba(74,222,128,0.2) }
-        .type-badge.design { background: rgba(244,114,182,0.1); color: var(--pink); border: 1px solid rgba(244,114,182,0.2) }
-        .type-badge.iot { background: rgba(251,191,36,0.1); color: var(--amber); border: 1px solid rgba(251,191,36,0.2) }
-        .ss-count { position: absolute; top: 9px; right: 9px; z-index: 5; background: rgba(5,5,7,0.85); border: 1px solid var(--border2); border-radius: 20px; padding: 3px 7px; font-family: var(--mono); font-size: 8px; color: var(--muted); backdrop-filter: blur(6px); }
-        .pcard-info { padding: 12px 14px 14px; flex: 1; display: flex; flex-direction: column }
-        .pcard-num { font-family: var(--mono); font-size: 9px; letter-spacing: 3px; color: var(--dim); margin-bottom: 4px; }
-        .pcard h3 { font-size: 13px; font-weight: 600; margin-bottom: 5px; line-height: 1.3; letter-spacing: -.2px; }
-        .pcard p { font-size: 11.5px; line-height: 1.65; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; flex: 1; }
-        .pcard-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 9px }
-        .pcard-chip { font-family: var(--mono); padding: 2px 7px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.07); font-size: 9px; color: rgba(232,232,240,0.3); letter-spacing: .3px; }
-
-        /* BOTTOM */
-        .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 40px; animation: fadeUp .6s ease .5s both; }
-        .bcard {
-            padding: 40px 44px; border-radius: 14px; background: var(--bg2);
-            border: 1px solid var(--border); position: relative; overflow: hidden; transition: .2s;
-        }
-        .bcard:hover { border-color: rgba(84,197,248,0.18); box-shadow: 0 0 40px rgba(84,197,248,0.04); }
-        .bcard-glow { position: absolute; width: 300px; height: 300px; border-radius: 50%; filter: blur(80px); pointer-events: none; }
-        .bcard-glow.teal { background: rgba(84,197,248,0.07); bottom: -80px; left: -60px }
-        .bcard-glow.purple { background: rgba(167,139,250,0.08); top: -80px; right: -60px }
-        .bcard h2 { font-size: 26px; font-weight: 700; letter-spacing: -1px; margin-bottom: 8px; }
-        .bcard p { font-size: 13.5px; color: var(--muted); line-height: 1.7; margin-bottom: 24px; font-weight: 300; }
-        .bcard-links { display: flex; gap: 8px; flex-wrap: wrap }
-        .bl {
-            font-family: var(--mono); padding: 9px 16px; border-radius: 7px;
-            border: 1px solid var(--border2); text-decoration: none; color: var(--muted);
-            font-size: 12px; transition: .2s; display: flex; align-items: center; gap: 6px;
-        }
-        .bl:hover { border-color: rgba(84,197,248,0.35); color: var(--flutter); background: rgba(84,197,248,0.06); box-shadow: 0 0 16px rgba(84,197,248,0.1); }
-
-        footer { text-align: center; padding: 24px; font-family: var(--mono); font-size: 11px; color: var(--dim); letter-spacing: 1.5px; animation: fadeUp .6s ease .6s both; }
-        .footer-line { display: flex; align-items: center; justify-content: center; gap: 16px; }
-        .footer-line::before, .footer-line::after { content: ''; flex: 1; max-width: 120px; height: 1px; background: linear-gradient(90deg, transparent, rgba(84,197,248,0.15)); }
-
-        /* MODAL */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.93); backdrop-filter: blur(28px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; opacity: 0; pointer-events: none; transition: opacity .25s ease; }
-        .modal-overlay.open { opacity: 1; pointer-events: all }
-        .modal { background: var(--bg2); border: 1px solid rgba(84,197,248,0.15); border-radius: 18px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; display: flex; flex-direction: column; transform: scale(.96) translateY(12px); transition: transform .3s cubic-bezier(.34,1.4,.64,1);
-            box-shadow: 0 0 60px rgba(84,197,248,0.08), 0 40px 80px rgba(0,0,0,0.6);
-        }
-        .modal-overlay.open .modal { transform: scale(1) translateY(0) }
-        .m-phone-wrap { display: flex; justify-content: center; padding: 24px 24px 0; }
-        .m-phone { width: 220px; background: #0d0d14; border-radius: 36px; border: 1.5px solid rgba(255,255,255,0.1); overflow: hidden; box-shadow: 0 0 0 8px rgba(0,0,0,0.4), 0 30px 60px rgba(0,0,0,0.7); position: relative; }
-        .m-phone::before { content: ''; position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 72px; height: 5px; background: rgba(255,255,255,0.08); border-radius: 10px; z-index: 10; }
-        .m-screen { width: 100%; aspect-ratio: 9/19.5; position: relative; overflow: hidden; }
-        .m-screen img { width: 100%; height: 100%; object-fit: cover; display: block }
-        .m-web-wrap { margin: 24px 24px 0; background: #0d0d14; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
-        .m-web-bar { padding: 8px 12px; display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.06); }
-        .m-web-dot { width: 8px; height: 8px; border-radius: 50% }
-        .m-web-img { width: 100%; display: block; max-height: 240px; object-fit: cover }
-        .m-controls { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 0 4px; }
-        .m-btn { width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.04); color: var(--muted); font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: .2s; font-family: var(--mono); }
-        .m-btn:hover { background: rgba(84,197,248,0.12); color: var(--flutter); border-color: rgba(84,197,248,0.3) }
-        .m-counter { font-family: var(--mono); font-size: 11px; color: var(--muted); min-width: 44px; text-align: center; letter-spacing: 1px; }
-        .m-dots { display: flex; gap: 5px; justify-content: center; padding-bottom: 4px }
-        .mdot { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: .2s; cursor: pointer; }
-        .mdot.on { background: var(--flutter); width: 14px; border-radius: 3px }
-        .m-info { padding: 20px 24px 24px }
-        .m-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px }
-        .m-n { font-family: var(--mono); font-size: 9px; letter-spacing: 3px; color: var(--dim); margin-bottom: 3px }
-        .m-title { font-size: 20px; font-weight: 700; letter-spacing: -.4px }
-        .m-close { width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.04); color: var(--muted); font-size: 13px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: .2s; flex-shrink: 0; font-family: var(--mono); }
-        .m-close:hover { background: rgba(255,255,255,0.1); color: var(--text) }
-        .m-desc { font-size: 13px; line-height: 1.8; color: rgba(232,232,240,0.45); margin-bottom: 14px; font-weight: 300 }
-        .m-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 16px }
-        .mtag { font-family: var(--mono); padding: 3px 10px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.08); font-size: 10px; color: rgba(232,232,240,0.35); letter-spacing: .3px; }
-        .m-acts { display: flex; gap: 8px; flex-wrap: wrap; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06); }
-        .mact { font-family: var(--mono); padding: 9px 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12); text-decoration: none; color: var(--muted); font-size: 12px; font-weight: 500; transition: .2s; }
-        .mact:hover { border-color: rgba(84,197,248,0.3); color: var(--flutter); background: rgba(84,197,248,0.07) }
-        .mact.primary { background: var(--flutter); color: #050507; border-color: var(--flutter) }
-        .mact.primary:hover { background: #7dd8fb }
-
-        /* ANIMATIONS */
-        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-        @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-        @keyframes glitch {
-            0%,90%,100%{transform:translate(0)}
-            91%{transform:translate(-2px,1px)}
-            93%{transform:translate(2px,-1px)}
-            95%{transform:translate(-1px,0)}
-            97%{transform:translate(1px,0)}
-        }
-        .glitch { animation: glitch 8s infinite }
-
-        /* RESPONSIVE */
-        @media(max-width:1200px) {
-            .hero { grid-template-columns: 1fr 340px; }
-            .hp-device { width: 210px; }
-        }
-        @media(max-width:1100px) { .proj-grid{grid-template-columns:repeat(3,1fr)} }
-        @media(max-width:860px) {
-            .wrap{padding:20px}
-            .hero{grid-template-columns:1fr;gap:0;min-height:unset}
-            .hero-right{display:flex;justify-content:center;margin-top:36px;margin-bottom:8px}
-            .hp-device{width:190px}
-            .hp-glow-wrap{width:280px;height:500px}
-            .proj-grid{grid-template-columns:1fr 1fr}
-            .bottom-grid{grid-template-columns:1fr}
-            h1.name{font-size:64px;letter-spacing:-3px}
-            nav{margin-bottom:32px}
-        }
-        @media(max-width:600px) {
-            #cursor,#cursor-ring{display:none} body{cursor:auto}
-            .wrap{padding:12px 14px}
-            nav{padding:10px 14px;margin-bottom:20px;top:10px;border-radius:8px}
-            .nav-logo{font-size:12px} .nav-links{display:none}
-            .hero{grid-template-columns:1fr;gap:0;margin-bottom:20px;min-height:unset}
-            .hero-right{display:flex;justify-content:center;margin-top:28px;margin-bottom:4px}
-            .hp-device{width:165px}
-            .hp-glow-wrap{width:240px;height:440px}
-            .hp-tap-label{font-size:8px}
-            .hero-left{animation:none}
-            .hero-eyebrow{font-size:10px;letter-spacing:2px;margin-bottom:14px}
-            h1.name{font-size:46px;letter-spacing:-2px;margin-bottom:16px}
-            .hero-tags{gap:6px;margin-bottom:18px}
-            .htag{font-size:10px;padding:4px 10px}
-            .hero-desc{font-size:13px;line-height:1.7;margin-bottom:24px}
-            .hbtn{font-size:12px;padding:11px 20px}
-            .hero-btns{gap:8px}
-            .stats-row{grid-template-columns:1fr 1fr;margin-bottom:28px}
-            .stat-item:last-child{grid-column:span 2}
-            .stat-val{font-size:22px} .stat-label{font-size:11px}
-            .proj-grid{grid-template-columns:1fr 1fr;gap:8px}
-            .bottom-grid{grid-template-columns:1fr;gap:10px;margin-bottom:24px}
-            .bcard{padding:22px 20px} .bcard h2{font-size:20px}
-            footer{padding:16px;font-size:10px}
-        }
-        @media(max-width:400px) {
-            .hp-device{width:148px}
-            .hp-app-icon{width:44px;height:44px;font-size:20px}
-        }
-        @media(max-width:380px) {
-            h1.name{font-size:38px;letter-spacing:-1.5px}
-            .proj-grid{grid-template-columns:1fr}
-            .stats-row{grid-template-columns:1fr}
-            .stat-item:last-child{grid-column:span 1}
-        }
-    </style>
+@media(max-width:1200px){.hero{grid-template-columns:1fr 340px}.phone-scene-wrap{width:340px}#phone-canvas{width:340px;height:390px}}
+@media(max-width:1100px){.proj-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:860px){
+  .wrap{padding:20px}.hero{grid-template-columns:1fr;gap:0;min-height:unset}
+  .hero-right{margin-top:36px;margin-bottom:8px;width:100%}
+  .proj-grid{grid-template-columns:1fr 1fr}.bottom-grid{grid-template-columns:1fr}.ach-grid{grid-template-columns:repeat(3,1fr)}
+  h1.name{font-size:64px;letter-spacing:-3px}
+  .phone-scene-wrap{width:280px}#phone-canvas{width:280px;height:320px}
+}
+@media(max-width:600px){
+  #cursor,#cursor-ring{display:none}body{cursor:auto}
+  .wrap{padding:12px 14px}nav{padding:10px 14px;margin-bottom:20px;top:10px}.nav-links{display:none}
+  h1.name{font-size:46px;letter-spacing:-2px;margin-bottom:16px}
+  .phone-scene-wrap{width:230px}#phone-canvas{width:230px;height:260px}
+  .stats-row{grid-template-columns:repeat(3,1fr);margin-bottom:28px}
+  .stat-item{padding:14px 10px}.stat-val{font-size:19px}.stat-label{font-size:9px}
+  .proj-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .bottom-grid{grid-template-columns:1fr;gap:10px;margin-bottom:24px}
+  .ach-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .ach-card{padding:14px 10px}.ach-icon{font-size:20px;margin-bottom:6px}
+  .ach-val{font-size:12px}.ach-sub{font-size:9.5px}
+  .bcard{padding:22px 20px}.bcard h2{font-size:20px}
+}
+@media(max-width:380px){h1.name{font-size:38px;letter-spacing:-1.5px}.proj-grid{grid-template-columns:1fr}.stats-row{grid-template-columns:1fr 1fr}.stat-item:last-child{grid-column:span 2}}
+</style>
 </head>
-
 <body>
-    <!-- AURORA CANVAS -->
-    <canvas id="aurora-canvas"></canvas>
+<canvas id="aurora-canvas"></canvas>
+<canvas id="star-canvas"></canvas>
+<div id="scanlines"></div>
+<div id="grid-bg"></div>
+<div class="bg-orb bg-orb-1"></div><div class="bg-orb bg-orb-2"></div>
+<div class="bg-orb bg-orb-3"></div><div class="bg-orb bg-orb-4"></div>
+<div id="cursor"></div><div id="cursor-ring"></div>
 
-    <!-- SCANLINES + GRID -->
-    <div id="scanlines"></div>
-    <div id="grid-bg"></div>
+<div class="wrap">
+<nav>
+  <div class="nav-logo"><span>~/</span>shikhar<span style="color:var(--flutter)">_</span>bajpai<span class="nav-dot" style="margin-left:8px"></span></div>
+  <div class="nav-links">
+    <a href="#">home</a><a href="#projects">projects</a>
+    <a href="#achievements">achievements</a>
+    <a href="#contact">contact</a><a href="#resume">resume</a>
+  </div>
+</nav>
 
-    <!-- BACKGROUND ORBS -->
-    <div class="bg-orb bg-orb-1"></div>
-    <div class="bg-orb bg-orb-2"></div>
-    <div class="bg-orb bg-orb-3"></div>
-    <div class="bg-orb bg-orb-4"></div>
-
-    <!-- CUSTOM CURSOR -->
-    <div id="cursor"></div>
-    <div id="cursor-ring"></div>
-
-    <div class="wrap">
-
-        <!-- NAV -->
-        <nav>
-            <div class="nav-logo">
-                <span>~/</span>shikhar<span style="color:var(--flutter)">_</span>bajpai
-                <span class="nav-dot"></span>
-            </div>
-            <div class="nav-links">
-                <a href="#">home</a>
-                <a href="#projects">projects</a>
-                <a href="#contact">contact</a>
-                <a href="#resume">resume</a>
-            </div>
-        </nav>
-
-        <!-- HERO -->
-        <div class="hero">
-            <div class="hero-left">
-                <div class="hero-orb hero-orb-1"></div>
-                <div class="hero-orb hero-orb-2"></div>
-                <div class="hero-orb hero-orb-3"></div>
-                <div class="hero-particles" id="heroParticles"></div>
-                <div class="hero-eyebrow">Flutter Developer · B.Tech 2027</div>
-                <h1 class="name glitch">
-                    <span class="first">Shikhar</span>
-                    <span class="last">Bajpai</span>
-                </h1>
-                <div class="hero-tags">
-                    <span class="htag active">Flutter</span>
-                    <span class="htag active">Dart</span>
-                    <span class="htag active">Firebase</span>
-                    <span class="htag">GetX</span>
-                    <span class="htag">REST APIs</span>
-                    <span class="htag">IoT</span>
-                    <span class="htag">Figma</span>
-                    <span class="htag">UI/UX</span>
-                </div>
-                <p class="hero-desc">Building production-grade Flutter apps with clean architecture, smooth animations &
-                    real-world integrations. KR Mangalam University · Class of 2027.</p>
-                <div class="hero-btns">
-                    <a href="#projects" class="hbtn hbtn-primary">view_projects() →</a>
-                    <a href="#contact" class="hbtn hbtn-ghost">contact_me()</a>
-                </div>
-            </div>
-
-            <!-- INTERACTIVE PHONE -->
-            <div class="hero-right">
-                <div class="hp-container">
-                    <div class="hp-tap-label">tap to launch</div>
-                    <div class="hp-glow-wrap"></div>
-
-                    <div class="hp-device">
-                        <div class="hp-body">
-                            <div class="hp-btn hp-vol-u"></div>
-                            <div class="hp-btn hp-vol-d"></div>
-                            <div class="hp-btn hp-pwr"></div>
-                            <div class="hp-notch"></div>
-
-                            <div class="hp-screen">
-                                <div class="hp-homescreen">
-                                    <div class="hp-wp-grid" id="hpWpGrid"></div>
-                                    <div class="hp-statusbar">
-                                        <span id="hpSbTime" style="font-weight:500;letter-spacing:.5px;">9:41</span>
-                                        <div class="hp-battery">
-                                            <div class="hp-batt-outline"><div class="hp-batt-fill"></div></div>
-                                        </div>
-                                    </div>
-                                    <div class="hp-clock">
-                                        <div class="hp-clock-time" id="hpClockTime">9:41</div>
-                                        <div class="hp-clock-date" id="hpClockDate">Wed, 27 May</div>
-                                    </div>
-                                    <div class="hp-app-grid">
-                                        <div class="hp-app" data-proj="0"><div class="hp-app-icon ic-vanguard">🛡️</div><span class="hp-app-name">Vanguard</span></div>
-                                        <div class="hp-app" data-proj="1"><div class="hp-app-icon ic-task">✅</div><span class="hp-app-name">Task Mgr</span></div>
-                                        <div class="hp-app" data-proj="2"><div class="hp-app-icon ic-hn">📰</div><span class="hp-app-name">HN Reader</span></div>
-                                        <div class="hp-app" data-proj="3"><div class="hp-app-icon ic-todo">📝</div><span class="hp-app-name">Todo App</span></div>
-                                        <div class="hp-app" data-proj="4"><div class="hp-app-icon ic-dice">🎲</div><span class="hp-app-name">Dice App</span></div>
-                                        <div class="hp-app" data-proj="5"><div class="hp-app-icon ic-iot">🌡️</div><span class="hp-app-name">IoT Dash</span></div>
-                                        <div class="hp-app" data-proj="6"><div class="hp-app-icon ic-code">💻</div><span class="hp-app-name">CodeIn</span></div>
-                                        <div class="hp-app" data-proj="7"><div class="hp-app-icon ic-metro">🚇</div><span class="hp-app-name">Metro UI</span></div>
-                                    </div>
-                                    <div class="hp-dock">
-                                        <a href="https://github.com/shikhar11x" target="_blank" class="hp-dock-icon di-gh">⌥</a>
-                                        <a href="https://www.linkedin.com/in/shikharbajpai1/" target="_blank" class="hp-dock-icon di-li">in</a>
-                                        <a href="mailto:shikhar11x@gmail.com" class="hp-dock-icon di-em">✉</a>
-                                        <a href="ShikharBajpai.pdf" download class="hp-dock-icon di-rv">📄</a>
-                                    </div>
-                                    <div class="hp-home-bar"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="hp-bottom-label" id="hpLabel">shikhar's portfolio</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- STATS -->
-        <div class="stats-row">
-            <div class="stat-item">
-                <div class="stat-val">8+</div>
-                <div class="stat-label">Projects Shipped</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-val">2027</div>
-                <div class="stat-label">Graduating · B.Tech CSE</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-val" style="color:var(--green);text-shadow:0 0 20px rgba(74,222,128,0.4)">Open</div>
-                <div class="stat-label">For Internships & Freelance</div>
-            </div>
-        </div>
-
-        <!-- SKILLS -->
-        <div class="skills-section">
-            <div class="sec-header">
-                <span class="sec-tag">// tech_stack</span>
-                <div class="sec-line"></div>
-                <span class="sec-num">11 skills</span>
-            </div>
-            <div class="skills-grid">
-                <span class="sk flutter">Flutter</span>
-                <span class="sk flutter">Dart</span>
-                <span class="sk firebase">Firebase</span>
-                <span class="sk firebase">Firestore</span>
-                <span class="sk flutter">GetX</span>
-                <span class="sk other">REST APIs</span>
-                <span class="sk other">State Mgmt</span>
-                <span class="sk iot">IoT · Arduino</span>
-                <span class="sk ui">Figma</span>
-                <span class="sk ui">UI/UX</span>
-                <span class="sk other">Web Dev</span>
-            </div>
-        </div>
-
-        <!-- PROJECTS -->
-        <div class="projects-section" id="projects">
-            <div class="sec-header">
-                <span class="sec-tag">// selected_projects</span>
-                <div class="sec-line"></div>
-                <span class="sec-num">08 works</span>
-            </div>
-
-            <div class="proj-grid" id="projGrid">
-
-                <!-- 01 Vanguard -->
-                <div class="pcard" data-idx="0" data-num="01" data-type="app" data-title="Vanguard Safety App"
-                    data-desc="A Flutter-based personal safety MVP featuring SOS emergency alerts with GPS location capture, real-time incident reporting, OTP-based authentication, and a live admin monitoring panel powered by Firebase Firestore streams."
-                    data-tags="Flutter,Firebase,GetX,GPS,Firestore,OTP Auth"
-                    data-preview="preview/mvp/login.jpeg,preview/mvp/home.jpeg,preview/mvp/sos.jpeg,preview/mvp/gps.jpeg,preview/mvp/incident.jpeg,preview/mvp/admin1.jpeg"
-                    data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/Flutter-Vanguard-Safety","primary":true},{"label":"Download APK","url":"https://github.com/shikhar11x/Flutter-Vanguard-Safety/releases/tag/v1.0","primary":false}]'>
-                    <div class="pcard-phone-area">
-                        <div class="type-badge app">app</div>
-                        <div class="ss-count">1/6</div>
-                        <div class="pcard-phone">
-                            <div class="pcard-pscreen">
-                                <div class="pcard-slides">
-                                    <img class="pcard-slide" src="preview/mvp/login.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/mvp/home.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/mvp/sos.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/mvp/gps.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/mvp/incident.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/mvp/admin1.jpeg" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pcard-frame-dots"></div>
-                    </div>
-                    <div class="pcard-info">
-                        <p class="pcard-num">PROJECT_01</p>
-                        <h3>Vanguard Safety App</h3>
-                        <p>SOS alerts + GPS tracking + incident reporting + real-time admin panel.</p>
-                        <div class="pcard-chips"><span class="pcard-chip">Flutter</span><span class="pcard-chip">Firebase</span><span class="pcard-chip">GetX</span><span class="pcard-chip">GPS</span></div>
-                    </div>
-                </div>
-
-                <!-- 02 Task Manager -->
-                <div class="pcard" data-idx="1" data-num="02" data-type="app" data-title="Flutter Task Manager"
-                    data-desc="A full-stack Task Manager app built with Flutter featuring Firebase Authentication, real-time Cloud Firestore sync, and REST API integration for motivational quotes."
-                    data-tags="Flutter,Dart,Firebase,Firestore,REST API"
-                    data-preview="preview/task/1.jpeg,preview/task/2.jpeg,preview/task/3.jpeg,preview/task/4.jpeg"
-                    data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/flutter-Task-Manager-App","primary":true},{"label":"Download APK","url":"https://github.com/shikhar11x/flutter-Task-Manager-App/releases/tag/v1.0","primary":false}]'>
-                    <div class="pcard-phone-area">
-                        <div class="type-badge app">app</div>
-                        <div class="ss-count">1/4</div>
-                        <div class="pcard-phone">
-                            <div class="pcard-pscreen">
-                                <div class="pcard-slides">
-                                    <img class="pcard-slide" src="preview/task/1.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/task/2.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/task/3.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/task/4.jpeg" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pcard-frame-dots"></div>
-                    </div>
-                    <div class="pcard-info">
-                        <p class="pcard-num">PROJECT_02</p>
-                        <h3>Flutter Task Manager</h3>
-                        <p>Firebase auth, Firestore sync & motivational quotes API.</p>
-                        <div class="pcard-chips"><span class="pcard-chip">Flutter</span><span class="pcard-chip">Firebase</span><span class="pcard-chip">Firestore</span></div>
-                    </div>
-                </div>
-
-                <!-- 03 HackerNews -->
-                <div class="pcard" data-idx="2" data-num="03" data-type="app" data-title="HackerNews Reader"
-                    data-desc="A Hacker News reader app built with Flutter featuring a terminal-style neon green dark UI with shimmer loading animations."
-                    data-tags="Flutter,Dart,REST API,Firebase,Shimmer"
-                    data-preview="preview/hackerNewsReader/1.jpeg,preview/hackerNewsReader/2.jpeg"
-                    data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/Flutter-HackerNews-Reader","primary":true},{"label":"Download APK","url":"https://github.com/shikhar11x/Flutter-HackerNews-Reader/releases/tag/v1.0","primary":false}]'>
-                    <div class="pcard-phone-area">
-                        <div class="type-badge app">app</div>
-                        <div class="ss-count">1/2</div>
-                        <div class="pcard-phone">
-                            <div class="pcard-pscreen">
-                                <div class="pcard-slides">
-                                    <img class="pcard-slide" src="preview/hackerNewsReader/1.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/hackerNewsReader/2.jpeg" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pcard-frame-dots"></div>
-                    </div>
-                    <div class="pcard-info">
-                        <p class="pcard-num">PROJECT_03</p>
-                        <h3>HackerNews Reader</h3>
-                        <p>Terminal-style HN client with live stories & shimmer.</p>
-                        <div class="pcard-chips"><span class="pcard-chip">Flutter</span><span class="pcard-chip">REST API</span></div>
-                    </div>
-                </div>
-
-                <!-- 04 Todo -->
-                <div class="pcard" data-idx="3" data-num="04" data-type="app" data-title="Flutter Todo App"
-                    data-desc="Clean minimal Todo app with dark glass UI, priority levels, and persistent local storage using Hive."
-                    data-tags="Flutter,Dart,Hive,Local Storage,Animation"
-                    data-preview="preview/todomain.jpeg,preview/todo1.jpeg,preview/todo2.jpeg"
-                    data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/Flutter-TodoApp","primary":true},{"label":"Download APK","url":"https://github.com/shikhar11x/Flutter-TodoApp/releases","primary":false}]'>
-                    <div class="pcard-phone-area">
-                        <div class="type-badge app">app</div>
-                        <div class="ss-count">1/3</div>
-                        <div class="pcard-phone">
-                            <div class="pcard-pscreen">
-                                <div class="pcard-slides">
-                                    <img class="pcard-slide" src="preview/todomain.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/todo1.jpeg" alt="">
-                                    <img class="pcard-slide" src="preview/todo2.jpeg" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pcard-frame-dots"></div>
-                    </div>
-                    <div class="pcard-info">
-                        <p class="pcard-num">PROJECT_04</p>
-                        <h3>Flutter Todo App</h3>
-                        <p>Dark glass UI + priority tasks + Hive storage.</p>
-                        <div class="pcard-chips"><span class="pcard-chip">Flutter</span><span class="pcard-chip">Hive</span></div>
-                    </div>
-                </div>
-
-                <!-- 05 Dice -->
-                <div class="pcard" data-idx="4" data-num="05" data-type="app" data-title="Flutter Dice App"
-                    data-desc="Flutter dice app with smooth roll animations, Provider state management and fully responsive UI."
-                    data-tags="Flutter,Dart,Animation,Provider,Responsive" data-preview="preview/dice.jpeg"
-                    data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/Flutter-Dice","primary":true},{"label":"Live Demo","url":"https://flutter-dice-blazestack.vercel.app/","primary":false}]'>
-                    <div class="pcard-phone-area">
-                        <div class="type-badge app">app</div>
-                        <div class="ss-count">1/1</div>
-                        <div class="pcard-phone">
-                            <div class="pcard-pscreen">
-                                <div class="pcard-slides">
-                                    <img class="pcard-slide contain" src="preview/dice.jpeg" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pcard-frame-dots"></div>
-                    </div>
-                    <div class="pcard-info">
-                        <p class="pcard-num">PROJECT_05</p>
-                        <h3>Flutter Dice App</h3>
-                        <p>Roll animations + Provider state management.</p>
-                        <div class="pcard-chips"><span class="pcard-chip">Flutter</span><span class="pcard-chip">Provider</span><span class="pcard-chip">Animation</span></div>
-                    </div>
-                </div>
-
-                <!-- 06 IoT -->
-                <div class="pcard" data-idx="5" data-num="06" data-type="iot" data-title="Smart Classroom IoT"
-                    data-desc="IoT classroom environment monitoring — temperature, humidity, CO2, occupancy with live web dashboard and alert thresholds."
-                    data-tags="IoT,Arduino,Dashboard,Real-time,Firebase,Charts"
-                    data-preview="preview/iot/1.png,preview/iot/2.png"
-                    data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/IoT-Based-Smart-Classroom-Environment-Monitoring-System-6th-SEM","primary":true},{"label":"Live Demo","url":"https://smartclassroomk.vercel.app/","primary":false}]'>
-                    <div class="pcard-phone-area">
-                        <div class="type-badge iot">iot</div>
-                        <div class="ss-count">1/2</div>
-                        <div class="pcard-browser">
-                            <div class="pcard-browser-bar">
-                                <div class="pcd-dot" style="background:#ff5f57"></div>
-                                <div class="pcd-dot" style="background:#febc2e"></div>
-                                <div class="pcd-dot" style="background:#28c840"></div>
-                            </div>
-                            <div class="pcard-bscreen">
-                                <div class="pcard-slides">
-                                    <img class="pcard-slide contain" src="preview/iot/1.png" alt="">
-                                    <img class="pcard-slide contain" src="preview/iot/2.png" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pcard-frame-dots"></div>
-                    </div>
-                    <div class="pcard-info">
-                        <p class="pcard-num">PROJECT_06</p>
-                        <h3>Smart Classroom IoT</h3>
-                        <p>Real-time temp, CO2, occupancy monitoring dashboard.</p>
-                        <div class="pcard-chips"><span class="pcard-chip">IoT</span><span class="pcard-chip">Arduino</span><span class="pcard-chip">Real-time</span></div>
-                    </div>
-                </div>
-
-                <!-- 07 Coding Platform -->
-                <div class="pcard" data-idx="6" data-num="07" data-type="web" data-title="Coding Interview Platform"
-                    data-desc="Web-based coding interview simulator with DSA question bank, per-question timers, and performance tracking dashboard."
-                    data-tags="Web App,JavaScript,DSA,Timer,Performance Tracking"
-                    data-preview="preview/codein/codein1.png,preview/codein/codein2.png,preview/codein/codein3.png,preview/codein/codein4.png,preview/codein/codein5.png,preview/codein/codein6.png,preview/codein/codein7.png,preview/codein/codein8.png"
-                    data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/VirtualCodingInterviewPlatform","primary":true},{"label":"Live Demo","url":"https://codein-blazestack.vercel.app/","primary":false}]'>
-                    <div class="pcard-phone-area">
-                        <div class="type-badge web">web</div>
-                        <div class="ss-count">1/8</div>
-                        <div class="pcard-browser">
-                            <div class="pcard-browser-bar">
-                                <div class="pcd-dot" style="background:#ff5f57"></div>
-                                <div class="pcd-dot" style="background:#febc2e"></div>
-                                <div class="pcd-dot" style="background:#28c840"></div>
-                            </div>
-                            <div class="pcard-bscreen">
-                                <div class="pcard-slides">
-                                    <img class="pcard-slide" src="preview/codein/codein1.png" alt="">
-                                    <img class="pcard-slide" src="preview/codein/codein2.png" alt="">
-                                    <img class="pcard-slide" src="preview/codein/codein3.png" alt="">
-                                    <img class="pcard-slide" src="preview/codein/codein4.png" alt="">
-                                    <img class="pcard-slide" src="preview/codein/codein5.png" alt="">
-                                    <img class="pcard-slide" src="preview/codein/codein6.png" alt="">
-                                    <img class="pcard-slide" src="preview/codein/codein7.png" alt="">
-                                    <img class="pcard-slide" src="preview/codein/codein8.png" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pcard-frame-dots"></div>
-                    </div>
-                    <div class="pcard-info">
-                        <p class="pcard-num">PROJECT_07</p>
-                        <h3>Coding Interview Platform</h3>
-                        <p>Timed DSA simulator + performance dashboard.</p>
-                        <div class="pcard-chips"><span class="pcard-chip">JavaScript</span><span class="pcard-chip">DSA</span><span class="pcard-chip">Timer</span></div>
-                    </div>
-                </div>
-
-                <!-- 08 Delhi Metro -->
-                <div class="pcard" data-idx="7" data-num="08" data-type="design" data-title="Delhi Metro Redesign"
-                    data-desc="Complete UI/UX redesign concept for the Delhi Metro app in Figma — cleaner navigation, modern visual language, and premium commuter experience."
-                    data-tags="Figma,UI/UX,Prototyping,Design System,Mobile"
-                    data-preview="preview/metro/1.jpg,preview/metro/2.jpg,preview/metro/3.jpg,preview/metro/4.jpg,preview/metro/5.jpg,preview/metro/6.jpg,preview/metro/7.jpg,preview/metro/8.jpg,preview/metro/9.jpg,preview/metro/10.jpg"
-                    data-links='[{"label":"Open Figma ↗","url":"https://www.figma.com/design/RhKKiHmRMf2muWZUPr02Qm/TEAM-BlaZeSTACK?t=RP1i8ui770MlzzaW-1","primary":true}]'>
-                    <div class="pcard-phone-area">
-                        <div class="type-badge design">design</div>
-                        <div class="ss-count">1/10</div>
-                        <div class="pcard-phone">
-                            <div class="pcard-pscreen">
-                                <div class="pcard-slides">
-                                    <img class="pcard-slide" src="preview/metro/1.jpg" alt="">
-                                    <img class="pcard-slide" src="preview/metro/2.jpg" alt="">
-                                    <img class="pcard-slide" src="preview/metro/3.jpg" alt="">
-                                    <img class="pcard-slide" src="preview/metro/4.jpg" alt="">
-                                    <img class="pcard-slide" src="preview/metro/5.jpg" alt="">
-                                    <img class="pcard-slide" src="preview/metro/6.jpg" alt="">
-                                    <img class="pcard-slide" src="preview/metro/7.jpg" alt="">
-                                    <img class="pcard-slide" src="preview/metro/8.jpg" alt="">
-                                    <img class="pcard-slide" src="preview/metro/9.jpg" alt="">
-                                    <img class="pcard-slide" src="preview/metro/10.jpg" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pcard-frame-dots"></div>
-                    </div>
-                    <div class="pcard-info">
-                        <p class="pcard-num">PROJECT_08</p>
-                        <h3>Delhi Metro Redesign</h3>
-                        <p>Modern Figma redesign — cleaner navigation & premium UX.</p>
-                        <div class="pcard-chips"><span class="pcard-chip">Figma</span><span class="pcard-chip">UI/UX</span><span class="pcard-chip">Design</span></div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- BOTTOM -->
-        <div class="bottom-grid">
-            <div class="bcard" id="contact">
-                <div class="bcard-glow teal"></div>
-                <h2>Let's Build.</h2>
-                <p>Open to Flutter internships, freelance projects & exciting tech collabs. Let's create something that matters.</p>
-                <div class="bcard-links">
-                    <a href="https://github.com/shikhar11x" target="_blank" class="bl">⌥ GitHub</a>
-                    <a href="https://www.linkedin.com/in/shikharbajpai1/" target="_blank" class="bl">⌘ LinkedIn</a>
-                    <a href="mailto:shikhar11x@gmail.com" class="bl">✉ Email</a>
-                </div>
-            </div>
-            <div class="bcard" id="resume">
-                <div class="bcard-glow purple"></div>
-                <h2>Resume.</h2>
-                <p>Full skill set, project list, internships and achievements — all in one doc.</p>
-                <div class="bcard-links">
-                    <a href="ShikharBajpai.pdf" target="_blank" class="bl">↗ View PDF</a>
-                    <a href="ShikharBajpai.pdf" download class="bl">↓ Download</a>
-                </div>
-            </div>
-        </div>
-
-        <footer>
-            <div class="footer-line">© 2026 · shikhar_bajpai · built_with_flutter_love</div>
-        </footer>
-
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-orb hero-orb-1"></div><div class="hero-orb hero-orb-2"></div><div class="hero-orb hero-orb-3"></div>
+    <div class="hero-particles" id="heroParticles"></div>
+    <div class="hero-eyebrow">Flutter Developer · B.Tech 2027</div>
+    <h1 class="name glitch"><span class="first">Shikhar</span><span class="last">Bajpai</span></h1>
+    <div class="hero-tags">
+      <span class="htag active">Flutter</span><span class="htag active">Dart</span>
+      <span class="htag active">Firebase</span><span class="htag">GetX</span>
+      <span class="htag">REST APIs</span><span class="htag">IoT</span>
+      <span class="htag">Figma</span><span class="htag">UI/UX</span>
     </div>
-
-    <!-- MODAL -->
-    <div class="modal-overlay" id="mOverlay">
-        <div class="modal" id="mModal">
-            <div id="mPhoneWrap" class="m-phone-wrap" style="display:none">
-                <div class="m-phone">
-                    <div class="m-screen"><img id="mSlideImg" src="" alt=""></div>
-                </div>
-            </div>
-            <div id="mWebWrap" class="m-web-wrap" style="display:none">
-                <div class="m-web-bar">
-                    <div class="m-web-dot" style="background:#ff5f57"></div>
-                    <div class="m-web-dot" style="background:#febc2e"></div>
-                    <div class="m-web-dot" style="background:#28c840"></div>
-                </div>
-                <img id="mWebImg" class="m-web-img" src="" alt="">
-            </div>
-            <div id="mCtrl" class="m-controls" style="display:none">
-                <button class="m-btn" id="mPrev">‹</button>
-                <span class="m-counter" id="mCnt">1 / 1</span>
-                <button class="m-btn" id="mNext">›</button>
-            </div>
-            <div class="m-dots" id="mDots"></div>
-            <div class="m-info">
-                <div class="m-top">
-                    <div>
-                        <p class="m-n" id="mNum"></p>
-                        <h2 class="m-title" id="mTitle"></h2>
-                    </div>
-                    <button class="m-close" id="mClose">✕</button>
-                </div>
-                <p class="m-desc" id="mDesc"></p>
-                <div class="m-tags" id="mTags"></div>
-                <div class="m-acts" id="mActs"></div>
-            </div>
-        </div>
+    <p class="hero-desc">Building production-grade Flutter apps with clean architecture, smooth animations &amp; real-world integrations. KR Mangalam University · Class of 2027.</p>
+    <div class="hero-btns">
+      <a href="#projects" class="hbtn hbtn-primary">view_projects() →</a>
+      <a href="#contact" class="hbtn hbtn-ghost">contact_me()</a>
     </div>
+  </div>
 
-    <script>
-        /* ══════════════════════════════════════
-           AURORA CANVAS ANIMATION
-        ══════════════════════════════════════ */
-        (function() {
-            const canvas = document.getElementById('aurora-canvas');
-            const ctx = canvas.getContext('2d');
-            let W, H, t = 0;
+  <!-- HERO RIGHT: Three.js 360° phone with working screen inside -->
+  <div class="hero-right">
+    <div class="phone-scene-wrap">
+      <div class="hp-tap-label">drag to rotate · tap app to open</div>
+      <div class="phone-scene-glow"></div>
+      <canvas id="phone-canvas"></canvas>
+      <div class="hp-bottom-label" id="hpLabel">shikhar's portfolio</div>
+    </div>
+  </div>
+</div>
 
-            function resize() {
-                W = canvas.width = window.innerWidth;
-                H = canvas.height = window.innerHeight;
-            }
-            resize();
-            window.addEventListener('resize', resize);
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat-item"><div class="stat-val">9+</div><div class="stat-label">Projects Shipped</div></div>
+  <div class="stat-item"><div class="stat-val">2027</div><div class="stat-label">Graduating · B.Tech CSE</div></div>
+  <div class="stat-item"><div class="stat-val" style="color:var(--green);text-shadow:0 0 20px rgba(74,222,128,0.4)">Open</div><div class="stat-label">For Internships &amp; Freelance</div></div>
+</div>
 
-            const bands = [
-                { color: [84, 197, 248],  y: 0.18, amp: 0.05, freq: 0.0004, speed: 0.00004, phase: 0 },
-                { color: [167, 139, 250], y: 0.48, amp: 0.04, freq: 0.0003, speed: 0.00003, phase: 2 },
-                { color: [74, 222, 128],  y: 0.78, amp: 0.03, freq: 0.0005, speed: 0.000035, phase: 4 },
-            ];
+<!-- SKILLS -->
+<div class="skills-section">
+  <div class="sec-header"><span class="sec-tag">// tech_stack</span><div class="sec-line"></div><span class="sec-num">12 skills</span></div>
+  <div class="skills-grid">
+    <span class="sk flutter">Flutter</span><span class="sk flutter">Dart</span>
+    <span class="sk firebase">Firebase</span><span class="sk firebase">Firestore</span>
+    <span class="sk flutter">GetX</span><span class="sk flutter">Provider</span>
+    <span class="sk other">REST APIs</span><span class="sk other">Node.js</span>
+    <span class="sk other">State Mgmt</span><span class="sk iot">IoT · Arduino</span>
+    <span class="sk ui">Figma</span><span class="sk ui">UI/UX</span>
+  </div>
+</div>
 
-            function drawBand(band, time) {
-                const yBase = H * band.y;
-                const amp = H * band.amp;
-                const grad = ctx.createLinearGradient(0, yBase - amp * 3, 0, yBase + amp * 3);
-                const [r, g, b] = band.color;
-                grad.addColorStop(0, `rgba(${r},${g},${b},0)`);
-                grad.addColorStop(0.4, `rgba(${r},${g},${b},0.03)`);
-                grad.addColorStop(0.5, `rgba(${r},${g},${b},0.055)`);
-                grad.addColorStop(0.6, `rgba(${r},${g},${b},0.03)`);
-                grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
-                ctx.fillStyle = grad;
-                ctx.beginPath();
-                ctx.moveTo(0, 0);
-                for (let x = 0; x <= W; x += 4) {
-                    const y = yBase + Math.sin(x * band.freq + time * band.speed * 1000 + band.phase) * amp
-                             + Math.sin(x * band.freq * 2.3 + time * band.speed * 700 + band.phase * 1.4) * amp * 0.4;
-                    ctx.lineTo(x, y);
-                }
-                ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.closePath();
-                ctx.fill();
-            }
+<!-- PROJECTS -->
+<div class="projects-section" id="projects">
+  <div class="sec-header"><span class="sec-tag">// selected_projects</span><div class="sec-line"></div><span class="sec-num">09 works</span></div>
+  <div class="proj-grid" id="projGrid">
+    <div class="pcard" data-idx="0" data-num="01" data-type="app" data-title="Vanguard Safety App" data-desc="A Flutter-based personal safety MVP featuring SOS emergency alerts with GPS location capture, real-time incident reporting, OTP-based authentication, and a live admin monitoring panel powered by Firebase Firestore streams." data-tags="Flutter,Firebase,GetX,GPS,Firestore,OTP Auth" data-preview="preview/mvp/login.jpeg,preview/mvp/home.jpeg,preview/mvp/sos.jpeg,preview/mvp/gps.jpeg,preview/mvp/incident.jpeg,preview/mvp/admin1.jpeg" data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/Flutter-Vanguard-Safety","primary":true},{"label":"Download APK","url":"https://github.com/shikhar11x/Flutter-Vanguard-Safety/releases/tag/v1.0","primary":false}]'>
+      <div class="pcard-phone-area"><div class="type-badge app">app</div><div class="ss-count">1/6</div><div class="pcard-phone"><div class="pcard-pscreen"><div class="pcard-slides"><img class="pcard-slide" src="preview/mvp/login.jpeg" alt=""><img class="pcard-slide" src="preview/mvp/home.jpeg" alt=""><img class="pcard-slide" src="preview/mvp/sos.jpeg" alt=""><img class="pcard-slide" src="preview/mvp/gps.jpeg" alt=""><img class="pcard-slide" src="preview/mvp/incident.jpeg" alt=""><img class="pcard-slide" src="preview/mvp/admin1.jpeg" alt=""></div></div></div><div class="pcard-frame-dots"></div></div>
+      <div class="pcard-info"><p class="pcard-num">PROJECT_01</p><h3>Vanguard Safety App</h3><p>SOS alerts + GPS tracking + incident reporting + real-time admin panel.</p><div class="pcard-chips"><span class="pcard-chip">Flutter</span><span class="pcard-chip">Firebase</span><span class="pcard-chip">GetX</span><span class="pcard-chip">GPS</span></div></div>
+    </div>
+    <div class="pcard" data-idx="1" data-num="02" data-type="app" data-title="Flutter Task Manager" data-desc="A full-stack Task Manager app built with Flutter featuring Firebase Authentication, real-time Cloud Firestore sync, and REST API integration for motivational quotes." data-tags="Flutter,Dart,Firebase,Firestore,REST API" data-preview="preview/task/1.jpeg,preview/task/2.jpeg,preview/task/3.jpeg,preview/task/4.jpeg" data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/flutter-Task-Manager-App","primary":true},{"label":"Download APK","url":"https://github.com/shikhar11x/flutter-Task-Manager-App/releases/tag/v1.0","primary":false}]'>
+      <div class="pcard-phone-area"><div class="type-badge app">app</div><div class="ss-count">1/4</div><div class="pcard-phone"><div class="pcard-pscreen"><div class="pcard-slides"><img class="pcard-slide" src="preview/task/1.jpeg" alt=""><img class="pcard-slide" src="preview/task/2.jpeg" alt=""><img class="pcard-slide" src="preview/task/3.jpeg" alt=""><img class="pcard-slide" src="preview/task/4.jpeg" alt=""></div></div></div><div class="pcard-frame-dots"></div></div>
+      <div class="pcard-info"><p class="pcard-num">PROJECT_02</p><h3>Flutter Task Manager</h3><p>Firebase auth, Firestore sync &amp; motivational quotes API.</p><div class="pcard-chips"><span class="pcard-chip">Flutter</span><span class="pcard-chip">Firebase</span><span class="pcard-chip">Firestore</span></div></div>
+    </div>
+    <div class="pcard" data-idx="2" data-num="03" data-type="app" data-title="LingoBreeze" data-desc="A vocabulary learning app to save and review words backed by a Node.js + Express REST API with Firebase Firestore and Clean Architecture." data-tags="Flutter,Provider,Node.js,Express,Firebase,Firestore,REST API" data-preview="preview/lingo/1.jpg,preview/lingo/2.jpg,preview/lingo/3.jpg,preview/lingo/4.jpg" data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/lingbreeze","primary":true}]'>
+      <div class="pcard-phone-area"><div class="type-badge app">app</div><div class="ss-count">1/4</div><div class="pcard-phone"><div class="pcard-pscreen"><div class="pcard-slides"><img class="pcard-slide" src="preview/lingo/1.jpg" alt=""><img class="pcard-slide" src="preview/lingo/2.jpg" alt=""><img class="pcard-slide" src="preview/lingo/3.jpg" alt=""><img class="pcard-slide" src="preview/lingo/4.jpg" alt=""></div></div></div><div class="pcard-frame-dots"></div></div>
+      <div class="pcard-info"><p class="pcard-num">PROJECT_03</p><h3>LingoBreeze</h3><p>Vocabulary app — save &amp; review words via Node.js + Firestore backend.</p><div class="pcard-chips"><span class="pcard-chip">Flutter</span><span class="pcard-chip">Provider</span><span class="pcard-chip">Node.js</span><span class="pcard-chip">Firestore</span></div></div>
+    </div>
+    <div class="pcard" data-idx="3" data-num="04" data-type="app" data-title="HackerNews Reader" data-desc="A Hacker News reader app built with Flutter featuring a terminal-style neon green dark UI with shimmer loading animations." data-tags="Flutter,Dart,REST API,Firebase,Shimmer" data-preview="preview/hackerNewsReader/1.jpeg,preview/hackerNewsReader/2.jpeg" data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/Flutter-HackerNews-Reader","primary":true},{"label":"Download APK","url":"https://github.com/shikhar11x/Flutter-HackerNews-Reader/releases/tag/v1.0","primary":false}]'>
+      <div class="pcard-phone-area"><div class="type-badge app">app</div><div class="ss-count">1/2</div><div class="pcard-phone"><div class="pcard-pscreen"><div class="pcard-slides"><img class="pcard-slide" src="preview/hackerNewsReader/1.jpeg" alt=""><img class="pcard-slide" src="preview/hackerNewsReader/2.jpeg" alt=""></div></div></div><div class="pcard-frame-dots"></div></div>
+      <div class="pcard-info"><p class="pcard-num">PROJECT_04</p><h3>HackerNews Reader</h3><p>Terminal-style HN client with live stories &amp; shimmer.</p><div class="pcard-chips"><span class="pcard-chip">Flutter</span><span class="pcard-chip">REST API</span></div></div>
+    </div>
+    <div class="pcard" data-idx="4" data-num="05" data-type="app" data-title="Flutter Todo App" data-desc="Clean minimal Todo app with dark glass UI, priority levels, and persistent local storage using Hive." data-tags="Flutter,Dart,Hive,Local Storage,Animation" data-preview="preview/todomain.jpeg,preview/todo1.jpeg,preview/todo2.jpeg" data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/Flutter-TodoApp","primary":true},{"label":"Download APK","url":"https://github.com/shikhar11x/Flutter-TodoApp/releases","primary":false}]'>
+      <div class="pcard-phone-area"><div class="type-badge app">app</div><div class="ss-count">1/3</div><div class="pcard-phone"><div class="pcard-pscreen"><div class="pcard-slides"><img class="pcard-slide" src="preview/todomain.jpeg" alt=""><img class="pcard-slide" src="preview/todo1.jpeg" alt=""><img class="pcard-slide" src="preview/todo2.jpeg" alt=""></div></div></div><div class="pcard-frame-dots"></div></div>
+      <div class="pcard-info"><p class="pcard-num">PROJECT_05</p><h3>Flutter Todo App</h3><p>Dark glass UI + priority tasks + Hive storage.</p><div class="pcard-chips"><span class="pcard-chip">Flutter</span><span class="pcard-chip">Hive</span></div></div>
+    </div>
+    <div class="pcard" data-idx="5" data-num="06" data-type="app" data-title="Flutter Dice App" data-desc="Flutter dice app with smooth roll animations, Provider state management and fully responsive UI." data-tags="Flutter,Dart,Animation,Provider,Responsive" data-preview="preview/dice.jpeg" data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/Flutter-Dice","primary":true},{"label":"Live Demo","url":"https://flutter-dice-blazestack.vercel.app/","primary":false}]'>
+      <div class="pcard-phone-area"><div class="type-badge app">app</div><div class="ss-count">1/1</div><div class="pcard-phone"><div class="pcard-pscreen"><div class="pcard-slides"><img class="pcard-slide contain" src="preview/dice.jpeg" alt=""></div></div></div><div class="pcard-frame-dots"></div></div>
+      <div class="pcard-info"><p class="pcard-num">PROJECT_06</p><h3>Flutter Dice App</h3><p>Roll animations + Provider state management.</p><div class="pcard-chips"><span class="pcard-chip">Flutter</span><span class="pcard-chip">Provider</span><span class="pcard-chip">Animation</span></div></div>
+    </div>
+    <div class="pcard" data-idx="6" data-num="07" data-type="iot" data-title="Smart Classroom IoT" data-desc="IoT classroom environment monitoring — temperature, humidity, CO2, occupancy with live web dashboard and alert thresholds." data-tags="IoT,Arduino,Dashboard,Real-time,Firebase,Charts" data-preview="preview/iot/1.png,preview/iot/2.png" data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/IoT-Based-Smart-Classroom-Environment-Monitoring-System-6th-SEM","primary":true},{"label":"Live Demo","url":"https://smartclassroomk.vercel.app/","primary":false}]'>
+      <div class="pcard-phone-area"><div class="type-badge iot">iot</div><div class="ss-count">1/2</div><div class="pcard-browser"><div class="pcard-browser-bar"><div class="pcd-dot" style="background:#ff5f57"></div><div class="pcd-dot" style="background:#febc2e"></div><div class="pcd-dot" style="background:#28c840"></div></div><div class="pcard-bscreen"><div class="pcard-slides"><img class="pcard-slide contain" src="preview/iot/1.png" alt=""><img class="pcard-slide contain" src="preview/iot/2.png" alt=""></div></div></div><div class="pcard-frame-dots"></div></div>
+      <div class="pcard-info"><p class="pcard-num">PROJECT_07</p><h3>Smart Classroom IoT</h3><p>Real-time temp, CO2, occupancy monitoring dashboard.</p><div class="pcard-chips"><span class="pcard-chip">IoT</span><span class="pcard-chip">Arduino</span><span class="pcard-chip">Real-time</span></div></div>
+    </div>
+    <div class="pcard" data-idx="7" data-num="08" data-type="web" data-title="Coding Interview Platform" data-desc="Web-based coding interview simulator with DSA question bank, per-question timers, and performance tracking dashboard." data-tags="Web App,JavaScript,DSA,Timer,Performance Tracking" data-preview="preview/codein/codein1.png,preview/codein/codein2.png,preview/codein/codein3.png,preview/codein/codein4.png,preview/codein/codein5.png,preview/codein/codein6.png,preview/codein/codein7.png,preview/codein/codein8.png" data-links='[{"label":"GitHub ↗","url":"https://github.com/shikhar11x/VirtualCodingInterviewPlatform","primary":true},{"label":"Live Demo","url":"https://codein-blazestack.vercel.app/","primary":false}]'>
+      <div class="pcard-phone-area"><div class="type-badge web">web</div><div class="ss-count">1/8</div><div class="pcard-browser"><div class="pcard-browser-bar"><div class="pcd-dot" style="background:#ff5f57"></div><div class="pcd-dot" style="background:#febc2e"></div><div class="pcd-dot" style="background:#28c840"></div></div><div class="pcard-bscreen"><div class="pcard-slides"><img class="pcard-slide" src="preview/codein/codein1.png" alt=""><img class="pcard-slide" src="preview/codein/codein2.png" alt=""><img class="pcard-slide" src="preview/codein/codein3.png" alt=""><img class="pcard-slide" src="preview/codein/codein4.png" alt=""><img class="pcard-slide" src="preview/codein/codein5.png" alt=""><img class="pcard-slide" src="preview/codein/codein6.png" alt=""><img class="pcard-slide" src="preview/codein/codein7.png" alt=""><img class="pcard-slide" src="preview/codein/codein8.png" alt=""></div></div></div><div class="pcard-frame-dots"></div></div>
+      <div class="pcard-info"><p class="pcard-num">PROJECT_08</p><h3>Coding Interview Platform</h3><p>Timed DSA simulator + performance dashboard.</p><div class="pcard-chips"><span class="pcard-chip">JavaScript</span><span class="pcard-chip">DSA</span><span class="pcard-chip">Timer</span></div></div>
+    </div>
+    <div class="pcard" data-idx="8" data-num="09" data-type="design" data-title="Delhi Metro Redesign" data-desc="Complete UI/UX redesign concept for the Delhi Metro app in Figma — cleaner navigation, modern visual language, and premium commuter experience." data-tags="Figma,UI/UX,Prototyping,Design System,Mobile" data-preview="preview/metro/1.jpg,preview/metro/2.jpg,preview/metro/3.jpg,preview/metro/4.jpg,preview/metro/5.jpg,preview/metro/6.jpg,preview/metro/7.jpg,preview/metro/8.jpg,preview/metro/9.jpg,preview/metro/10.jpg" data-links='[{"label":"Open Figma ↗","url":"https://www.figma.com/design/RhKKiHmRMf2muWZUPr02Qm/TEAM-BlaZeSTACK?t=RP1i8ui770MlzzaW-1","primary":true}]'>
+      <div class="pcard-phone-area"><div class="type-badge design">design</div><div class="ss-count">1/10</div><div class="pcard-phone"><div class="pcard-pscreen"><div class="pcard-slides"><img class="pcard-slide" src="preview/metro/1.jpg" alt=""><img class="pcard-slide" src="preview/metro/2.jpg" alt=""><img class="pcard-slide" src="preview/metro/3.jpg" alt=""><img class="pcard-slide" src="preview/metro/4.jpg" alt=""><img class="pcard-slide" src="preview/metro/5.jpg" alt=""><img class="pcard-slide" src="preview/metro/6.jpg" alt=""><img class="pcard-slide" src="preview/metro/7.jpg" alt=""><img class="pcard-slide" src="preview/metro/8.jpg" alt=""><img class="pcard-slide" src="preview/metro/9.jpg" alt=""><img class="pcard-slide" src="preview/metro/10.jpg" alt=""></div></div></div><div class="pcard-frame-dots"></div></div>
+      <div class="pcard-info"><p class="pcard-num">PROJECT_09</p><h3>Delhi Metro Redesign</h3><p>Modern Figma redesign — cleaner navigation &amp; premium UX.</p><div class="pcard-chips"><span class="pcard-chip">Figma</span><span class="pcard-chip">UI/UX</span><span class="pcard-chip">Design</span></div></div>
+    </div>
+  </div>
+</div>
 
-            function loop(timestamp) {
-                ctx.clearRect(0, 0, W, H);
-                bands.forEach(b => drawBand(b, timestamp));
-                requestAnimationFrame(loop);
-            }
-            requestAnimationFrame(loop);
-        })();
+<!-- ACHIEVEMENTS -->
+<div class="achievements-section" id="achievements">
+  <div class="sec-header"><span class="sec-tag">// achievements</span><div class="sec-line"></div><span class="sec-num">06 highlights</span></div>
+  <div class="ach-grid">
+    <div class="ach-card"><div class="ach-icon">🏆</div><div class="ach-cat">Hackathons</div><div class="ach-val">3+ Participated</div><div class="ach-sub">Built innovative solutions</div></div>
+    <div class="ach-card"><div class="ach-icon">🎓</div><div class="ach-cat">Education</div><div class="ach-val">B.Tech CSE 2027</div><div class="ach-sub">KR Mangalam University</div></div>
+    <div class="ach-card"><div class="ach-icon">💼</div><div class="ach-cat">Internship</div><div class="ach-val">SAP Basis Intern</div><div class="ach-sub">System Management</div></div>
+    <div class="ach-card"><div class="ach-icon">📱</div><div class="ach-cat">Projects</div><div class="ach-val">9+ Completed</div><div class="ach-sub">Production Grade Apps</div></div>
+    <div class="ach-card"><div class="ach-icon">⭐</div><div class="ach-cat">Rating</div><div class="ach-val">4.8+ Average</div><div class="ach-sub">Across All Projects</div></div>
+    <div class="ach-card"><div class="ach-icon">🌍</div><div class="ach-cat">Impact</div><div class="ach-val">20K+ Users</div><div class="ach-sub">Apps Downloaded</div></div>
+  </div>
+</div>
 
-        /* ══════════════════════════════════════
-           METEORS — random angle, gentle
-        ══════════════════════════════════════ */
-        (function() {
-            function spawnMeteor() {
-                const m = document.createElement('div');
-                m.className = 'meteor';
+<!-- BOTTOM -->
+<div class="bottom-grid">
+  <div class="bcard" id="contact"><div class="bcard-glow teal"></div><h2>Let's Build.</h2><p>Open to Flutter internships, freelance projects &amp; exciting tech collabs.</p><div class="bcard-links"><a href="https://github.com/shikhar11x" target="_blank" class="bl">&#8997; GitHub</a><a href="https://www.linkedin.com/in/shikharbajpai1/" target="_blank" class="bl">&#8984; LinkedIn</a><a href="mailto:shikhar11x@gmail.com" class="bl">&#10003; Email</a></div></div>
+  <div class="bcard" id="resume"><div class="bcard-glow purple"></div><h2>Resume.</h2><p>Full skill set, project list, internships and achievements — all in one doc.</p><div class="bcard-links"><a href="ShikharBajpai.pdf" target="_blank" class="bl">&#8599; View PDF</a><a href="ShikharBajpai.pdf" download class="bl">&#8595; Download</a></div></div>
+</div>
+<footer><div class="footer-line">&#169; 2026 &middot; Shikhar_bajpai</div></footer>
+</div>
 
-                // Random start position anywhere on screen edges/top area
-                const startX = Math.random() * window.innerWidth;
-                const startY = Math.random() * window.innerHeight * 0.6;
-                m.style.left = startX + 'px';
-                m.style.top  = startY + 'px';
+<!-- MODAL -->
+<div class="modal-overlay" id="mOverlay">
+  <div class="modal" id="mModal">
+    <div id="mPhoneWrap" class="m-phone-wrap" style="display:none"><div class="m-phone"><div class="m-screen"><img id="mSlideImg" src="" alt=""></div></div></div>
+    <div id="mWebWrap" class="m-web-wrap" style="display:none"><div class="m-web-bar"><div class="m-web-dot" style="background:#ff5f57"></div><div class="m-web-dot" style="background:#febc2e"></div><div class="m-web-dot" style="background:#28c840"></div></div><img id="mWebImg" class="m-web-img" src="" alt=""></div>
+    <div id="mCtrl" class="m-controls" style="display:none"><button class="m-btn" id="mPrev">&#8249;</button><span class="m-counter" id="mCnt">1 / 1</span><button class="m-btn" id="mNext">&#8250;</button></div>
+    <div class="m-dots" id="mDots"></div>
+    <div class="m-info">
+      <div class="m-top"><div><p class="m-n" id="mNum"></p><h2 class="m-title" id="mTitle"></h2></div><button class="m-close" id="mClose">&#10005;</button></div>
+      <p class="m-desc" id="mDesc"></p><div class="m-tags" id="mTags"></div><div class="m-acts" id="mActs"></div>
+    </div>
+  </div>
+</div>
 
-                // Random travel distance and angle
-                const dist  = 180 + Math.random() * 280;
-                const angle = (Math.random() * 160) - 80; // -80deg to +80deg
-                const rad   = angle * Math.PI / 180;
-                const dx    = Math.sin(rad) * dist;
-                const dy    = Math.cos(rad) * dist;
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ── AURORA ── */
+(function(){
+  var c=document.getElementById('aurora-canvas'),ctx=c.getContext('2d'),W,H;
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  var bands=[{color:[84,197,248],y:.18,amp:.05,freq:.0004,speed:.00004,phase:0},{color:[58,168,224],y:.48,amp:.04,freq:.0003,speed:.00003,phase:2},{color:[125,216,251],y:.78,amp:.03,freq:.0005,speed:.000035,phase:4}];
+  function drawBand(b,ts){var yB=H*b.y,a=H*b.amp,g=ctx.createLinearGradient(0,yB-a*3,0,yB+a*3);var r=b.color[0],gr=b.color[1],bl=b.color[2];g.addColorStop(0,'rgba('+r+','+gr+','+bl+',0)');g.addColorStop(.4,'rgba('+r+','+gr+','+bl+',.03)');g.addColorStop(.5,'rgba('+r+','+gr+','+bl+',.055)');g.addColorStop(.6,'rgba('+r+','+gr+','+bl+',.03)');g.addColorStop(1,'rgba('+r+','+gr+','+bl+',0)');ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(0,0);for(var x=0;x<=W;x+=4){var y=yB+Math.sin(x*b.freq+ts*b.speed*1000+b.phase)*a+Math.sin(x*b.freq*2.3+ts*b.speed*700+b.phase*1.4)*a*.4;ctx.lineTo(x,y);}ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();ctx.fill();}
+  function loop(ts){ctx.clearRect(0,0,W,H);bands.forEach(function(b){drawBand(b,ts);});requestAnimationFrame(loop);}
+  requestAnimationFrame(loop);
+})();
 
-                const dur   = 3.5 + Math.random() * 4; // 3.5s – 7.5s
-                const delay = Math.random() * 1.5;
+/* ── STARFIELD — full page height, scrolls with content, twinkling ── */
+(function(){
+  var c=document.getElementById('star-canvas'),ctx=c.getContext('2d');
+  var stars=[],W,H,docH;
+  function resize(){
+    W=window.innerWidth;
+    docH=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight,window.innerHeight);
+    H=window.innerHeight;
+    c.width=W;c.height=H;
+    var density=Math.floor((W*docH)/9000);
+    stars=[];
+    for(var i=0;i<density;i++){
+      stars.push({
+        x:Math.random()*W,
+        y:Math.random()*docH,
+        r:Math.random()*1.4+0.3,
+        baseA:Math.random()*0.5+0.25,
+        speed:Math.random()*0.015+0.005,
+        phase:Math.random()*Math.PI*2,
+        tint:Math.random()<0.15?'132,197,255':(Math.random()<0.3?'200,170,255':'255,255,255')
+      });
+    }
+  }
+  resize();
+  window.addEventListener('resize',resize);
+  window.addEventListener('load',resize);
+  var lastDocH=docH;
+  setInterval(function(){
+    var newDocH=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight,window.innerHeight);
+    if(Math.abs(newDocH-lastDocH)>40){lastDocH=newDocH;resize();}
+  },800);
 
-                m.style.animation = 'none';
-                document.body.appendChild(m);
+  var t=0;
+  function draw(){
+    t+=1;
+    var scrollY=window.scrollY||window.pageYOffset||0;
+    ctx.clearRect(0,0,W,H);
+    for(var i=0;i<stars.length;i++){
+      var s=stars[i];
+      var sy=s.y-scrollY;
+      if(sy<-10||sy>H+10)continue;
+      var a=s.baseA+Math.sin(t*s.speed+s.phase)*0.25;
+      if(a<0)a=0;
+      ctx.beginPath();
+      ctx.arc(s.x,sy,s.r,0,Math.PI*2);
+      ctx.fillStyle='rgba('+s.tint+','+a.toFixed(3)+')';
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
 
-                setTimeout(() => {
-                    m.style.transition = `opacity ${dur * 0.08}s ease-in`;
-                    m.style.animation  = `meteorMove ${dur}s ${delay}s ease-out forwards`;
-                    m.style.setProperty('--dx', dx + 'px');
-                    m.style.setProperty('--dy', dy + 'px');
+/* ── METEORS ── */
+(function(){
+  function spawnMeteor(){var m=document.createElement('div');m.className='meteor';var sx=Math.random()*window.innerWidth,sy=Math.random()*window.innerHeight*.6;m.style.left=sx+'px';m.style.top=sy+'px';var dist=180+Math.random()*280,angle=(Math.random()*160)-80,rad=angle*Math.PI/180,dx=Math.sin(rad)*dist,dy=Math.cos(rad)*dist,dur=3.5+Math.random()*4;document.body.appendChild(m);setTimeout(function(){m.animate([{opacity:0,transform:'translate(0,0)',offset:0},{opacity:.5,transform:'translate('+dx*.08+'px,'+dy*.08+'px)',offset:.08},{opacity:.18,transform:'translate('+dx*.85+'px,'+dy*.85+'px)',offset:.85},{opacity:0,transform:'translate('+dx+'px,'+dy+'px)',offset:1}],{duration:dur*1000,easing:'ease-out',fill:'forwards'}).onfinish=function(){m.remove();setTimeout(spawnMeteor,1800+Math.random()*3500);};},50);}
+  for(var i=0;i<4;i++)setTimeout(spawnMeteor,i*2200+Math.random()*1000);
+})();
 
-                    // Use JS keyframes for dynamic translate values
-                    m.animate([
-                        { opacity: 0,    transform: `translate(0, 0)`,           offset: 0 },
-                        { opacity: 0.5,  transform: `translate(${dx*0.08}px, ${dy*0.08}px)`, offset: 0.08 },
-                        { opacity: 0.18, transform: `translate(${dx*0.85}px, ${dy*0.85}px)`, offset: 0.85 },
-                        { opacity: 0,    transform: `translate(${dx}px, ${dy}px)`,            offset: 1 },
-                    ], {
-                        duration: dur * 1000,
-                        delay: delay * 1000,
-                        easing: 'ease-out',
-                        fill: 'forwards'
-                    }).onfinish = () => {
-                        m.remove();
-                        // Spawn next meteor after a random gap
-                        setTimeout(spawnMeteor, 1800 + Math.random() * 3500);
-                    };
-                }, 50);
-            }
+/* ── CURSOR ── */
+var cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring'),mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function animRing(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);})();
+document.querySelectorAll('a,button,.pcard,.bl,.mact,.m-btn,.sk,.hbtn,.pcdot').forEach(function(el){el.addEventListener('mouseenter',function(){cur.style.width='16px';cur.style.height='16px';ring.style.width='44px';ring.style.height='44px';});el.addEventListener('mouseleave',function(){cur.style.width='10px';cur.style.height='10px';ring.style.width='32px';ring.style.height='32px';});});
 
-            // Start a few meteors staggered
-            for (let i = 0; i < 4; i++) {
-                setTimeout(spawnMeteor, i * 2200 + Math.random() * 1000);
-            }
-        })();
+/* ── TYPEWRITER ── */
+window.addEventListener('load',function(){var last=document.querySelector('h1.name .last'),txt='Bajpai';last.textContent='';var i=0;var iv=setInterval(function(){last.textContent=txt.slice(0,++i);if(i===txt.length)clearInterval(iv);},80);});
 
-        /* ══════════════════════════════════════
-           CUSTOM CURSOR
-        ══════════════════════════════════════ */
-        const cur = document.getElementById('cursor');
-        const ring = document.getElementById('cursor-ring');
-        let mx = 0, my = 0, rx = 0, ry = 0;
-        document.addEventListener('mousemove', e => {
-            mx = e.clientX; my = e.clientY;
-            cur.style.left = mx + 'px'; cur.style.top = my + 'px';
-        });
-        (function animRing() {
-            rx += (mx - rx) * .1; ry += (my - ry) * .1;
-            ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-            requestAnimationFrame(animRing);
-        })();
-        document.querySelectorAll('a,button,.pcard,.bl,.mact,.m-btn,.sk,.hbtn,.pcdot,.hp-app,.hp-dock-icon').forEach(el => {
-            el.addEventListener('mouseenter', () => { cur.style.width = '16px'; cur.style.height = '16px'; ring.style.width = '44px'; ring.style.height = '44px'; });
-            el.addEventListener('mouseleave', () => { cur.style.width = '10px'; cur.style.height = '10px'; ring.style.width = '32px'; ring.style.height = '32px'; });
-        });
+/* ── HERO PARTICLES ── */
+(function(){var c=document.getElementById('heroParticles');if(!c)return;var colors=['#54c5f8','#7dd8fb','#3aa8e0','#a8e0fc'];for(var i=0;i<14;i++){var p=document.createElement('div');p.className='hero-particle';var sz=Math.random()*3+1;p.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+(Math.random()*88)+'%;top:'+(15+Math.random()*80)+'%;background:'+colors[Math.floor(Math.random()*colors.length)]+';animation-duration:'+(5+Math.random()*6)+'s;animation-delay:'+(Math.random()*10)+'s';c.appendChild(p);}})();
 
-        /* ══════════════════════════════════════
-           TYPEWRITER for hero name
-        ══════════════════════════════════════ */
-        window.addEventListener('load', () => {
-            const last = document.querySelector('h1.name .last');
-            const txt = 'Bajpai';
-            last.textContent = '';
-            let i = 0;
-            const iv = setInterval(() => {
-                last.textContent = txt.slice(0, ++i);
-                if (i === txt.length) clearInterval(iv);
-            }, 80);
-        });
+/* ══════════════════════════════════════════════════════
+   THREE.JS 360° PHONE  —  with WORKING HTML screen inside
+   Uses CSS3DRenderer for the screen overlay
+   ══════════════════════════════════════════════════════ */
+(function(){
+  if(!window.THREE) return;
 
-        /* ══════════════════════════════════════
-           HERO PARTICLES
-        ══════════════════════════════════════ */
-        (function() {
-            const container = document.getElementById('heroParticles');
-            if (!container) return;
-            const colors = ['#54c5f8','#a78bfa','#4ade80','#f472b6'];
-            for (let i = 0; i < 14; i++) {
-                const p = document.createElement('div');
-                p.className = 'hero-particle';
-                const size = Math.random() * 3 + 1;
-                p.style.cssText = [
-                    'width:' + size + 'px', 'height:' + size + 'px',
-                    'left:' + (Math.random() * 88) + '%',
-                    'top:' + (15 + Math.random() * 80) + '%',
-                    'background:' + colors[Math.floor(Math.random() * colors.length)],
-                    'animation-duration:' + (5 + Math.random() * 6) + 's',
-                    'animation-delay:' + (Math.random() * 10) + 's'
-                ].join(';');
-                container.appendChild(p);
-            }
-        })();
+  var canvas = document.getElementById('phone-canvas');
+  var W = canvas.offsetWidth || 420;
+  var H = canvas.offsetHeight || 480;
+  canvas.width = W; canvas.height = H;
 
-        /* ══════════════════════════════════════
-           INTERACTIVE PHONE — CLOCK + WALLPAPER
-        ══════════════════════════════════════ */
-        (function () {
-            const g = document.getElementById('hpWpGrid');
-            if (g) {
-                for (let i = 0; i < 9; i++) {
-                    const lh = document.createElement('div');
-                    lh.className = 'hp-wp-lh'; lh.style.top = (i * 12.5) + '%'; g.appendChild(lh);
-                }
-                for (let i = 0; i < 6; i++) {
-                    const lv = document.createElement('div');
-                    lv.className = 'hp-wp-lv'; lv.style.left = (i * 20) + '%'; g.appendChild(lv);
-                }
-            }
-            function updateClock() {
-                const n = new Date();
-                const h = String(n.getHours()).padStart(2, '0');
-                const m = String(n.getMinutes()).padStart(2, '0');
-                const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-                const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-                const t = h + ':' + m;
-                const sbEl = document.getElementById('hpSbTime');
-                const ctEl = document.getElementById('hpClockTime');
-                const cdEl = document.getElementById('hpClockDate');
-                if (sbEl) sbEl.textContent = t;
-                if (ctEl) ctEl.textContent = t;
-                if (cdEl) cdEl.textContent = days[n.getDay()] + ', ' + n.getDate() + ' ' + months[n.getMonth()];
-            }
-            updateClock(); setInterval(updateClock, 10000);
-        })();
+  /* WebGL renderer for 3D body */
+  var renderer = new THREE.WebGLRenderer({canvas:canvas, alpha:true, antialias:true});
+  renderer.setSize(W,H);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
 
-        /* ══════════════════════════════════════
-           PHONE APP ICONS → OPEN MODAL
-        ══════════════════════════════════════ */
-        document.querySelectorAll('.hp-app').forEach(app => {
-            app.addEventListener('click', () => {
-                const idx = app.getAttribute('data-proj');
-                const card = document.querySelector(`.pcard[data-idx="${idx}"]`);
-                if (card) {
-                    const icon = app.querySelector('.hp-app-icon');
-                    icon.style.transform = 'scale(0.85)';
-                    setTimeout(() => { icon.style.transform = ''; }, 150);
-                    const lbl = document.getElementById('hpLabel');
-                    if (lbl) lbl.textContent = '→ ' + card.dataset.title;
-                    setTimeout(() => openM(card), 120);
-                }
-            });
-        });
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(42, W/H, 0.1, 100);
+  camera.position.set(0,0,7);
 
-        /* ══════════════════════════════════════
-           PROJECT CARD AUTO-SLIDING
-        ══════════════════════════════════════ */
-        (function () {
-            document.querySelectorAll('.pcard').forEach((card, cardIndex) => {
-                const slides = card.querySelectorAll('.pcard-slide');
-                const strip = card.querySelector('.pcard-slides');
-                const dotsArea = card.querySelector('.pcard-frame-dots');
-                const countEl = card.querySelector('.ss-count');
-                if (!strip || !slides.length) return;
-                const total = slides.length;
-                let cur = 0, timer = null;
-                let touchStartX = 0, touchDiffX = 0, isSwiping = false;
-                if (dotsArea && total > 1) {
-                    dotsArea.innerHTML = Array.from({ length: total }, (_, i) =>
-                        `<span class="pcdot${i === 0 ? ' on' : ''}" data-i="${i}"></span>`
-                    ).join('');
-                    dotsArea.querySelectorAll('.pcdot').forEach(d =>
-                        d.addEventListener('click', e => { e.stopPropagation(); goTo(+d.dataset.i); resetAuto(); })
-                    );
-                }
-                function updateCount() { if (countEl) countEl.textContent = (cur + 1) + '/' + total; }
-                function goTo(i) {
-                    cur = (i + total) % total;
-                    strip.style.transition = 'transform .32s cubic-bezier(.4,0,.2,1)';
-                    strip.style.transform = `translateX(-${cur * 100}%)`;
-                    if (dotsArea) dotsArea.querySelectorAll('.pcdot').forEach((d, di) => d.classList.toggle('on', di === cur));
-                    updateCount();
-                }
-                function startAuto() { if (total <= 1) return; stopAuto(); timer = setInterval(() => goTo(cur + 1), 2500); }
-                function stopAuto() { clearInterval(timer); timer = null; }
-                function resetAuto() { stopAuto(); startAuto(); }
-                setTimeout(() => startAuto(), cardIndex * 400);
-                card.addEventListener('mouseenter', stopAuto);
-                card.addEventListener('mouseleave', startAuto);
-                const frameArea = card.querySelector('.pcard-phone-area') || card;
-                frameArea.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; touchDiffX = 0; isSwiping = false; strip.style.transition = 'none'; stopAuto(); }, { passive: true });
-                frameArea.addEventListener('touchmove', e => {
-                    touchDiffX = e.touches[0].clientX - touchStartX;
-                    if (Math.abs(touchDiffX) > 8) { isSwiping = true; strip.style.transform = `translateX(${-cur * (strip.parentElement.offsetWidth || strip.offsetWidth) + touchDiffX}px)`; }
-                }, { passive: true });
-                frameArea.addEventListener('touchend', e => {
-                    if (isSwiping) { if (touchDiffX < -30) goTo(cur + 1); else if (touchDiffX > 30) goTo(cur - 1); else goTo(cur); e.stopPropagation(); }
-                    isSwiping = false; setTimeout(startAuto, 800);
-                }, { passive: false });
-                updateCount();
-            });
-        })();
+  /* ── phone group ── */
+  var phoneGroup = new THREE.Group();
+  scene.add(phoneGroup);
 
-        /* ══════════════════════════════════════
-           3D TILT
-        ══════════════════════════════════════ */
-        document.querySelectorAll('.pcard').forEach(c => {
-            c.addEventListener('mousemove', e => {
-                const r = c.getBoundingClientRect();
-                const x = (e.clientX - r.left) / r.width - .5;
-                const y = (e.clientY - r.top) / r.height - .5;
-                c.style.transform = `translateY(-4px) rotateX(${-y * 4}deg) rotateY(${x * 4}deg)`;
-                c.style.transformStyle = 'preserve-3d';
-            });
-            c.addEventListener('mouseleave', () => { c.style.transform = ''; c.style.transformStyle = ''; });
-        });
+  /* body — rounded-rect extruded shape, iPhone-style corners */
+  function roundedRectShape(w,h,r){
+    var s=new THREE.Shape();
+    var x=-w/2,y=-h/2;
+    s.moveTo(x+r,y);
+    s.lineTo(x+w-r,y);
+    s.quadraticCurveTo(x+w,y,x+w,y+r);
+    s.lineTo(x+w,y+h-r);
+    s.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+    s.lineTo(x+r,y+h);
+    s.quadraticCurveTo(x,y+h,x,y+h-r);
+    s.lineTo(x,y+r);
+    s.quadraticCurveTo(x,y,x+r,y);
+    return s;
+  }
+  var bodyMat = new THREE.MeshPhongMaterial({color:0x12121e,shininess:60,specular:new THREE.Color(0x54c5f8).multiplyScalar(0.15)});
+  var bodyShape = roundedRectShape(2.0,4.0,0.34);
+  var bodyGeo = new THREE.ExtrudeGeometry(bodyShape,{depth:0.2,bevelEnabled:false,curveSegments:14});
+  var bodyMesh = new THREE.Mesh(bodyGeo,bodyMat);
+  bodyMesh.position.z = -0.1; /* body spans z=-0.1 to z=+0.1 exactly, no bevel overshoot */
+  phoneGroup.add(bodyMesh);
 
-        /* ══════════════════════════════════════
-           MODAL
-        ══════════════════════════════════════ */
-        const ov = document.getElementById('mOverlay');
-        let mImgs = [], mIdx = 0;
-        const pw = document.getElementById('mPhoneWrap'), ww = document.getElementById('mWebWrap');
-        const si = document.getElementById('mSlideImg'), wi = document.getElementById('mWebImg');
-        const ctrl = document.getElementById('mCtrl'), cnt = document.getElementById('mCnt');
-        const mDotsEl = document.getElementById('mDots');
+  /* screen bezel — also rounded to match, sits flush on body front face */
+  var bezelShape = roundedRectShape(1.85,3.8,0.28);
+  var bezelGeo = new THREE.ExtrudeGeometry(bezelShape,{depth:0.006,bevelEnabled:false,curveSegments:14});
+  var bezelMesh = new THREE.Mesh(bezelGeo,new THREE.MeshBasicMaterial({color:0x040408}));
+  bezelMesh.position.z = 0.106;
+  phoneGroup.add(bezelMesh);
 
-        function goMSlide(i) {
-            mIdx = (i + mImgs.length) % mImgs.length;
-            const src = mImgs[mIdx].trim();
-            if (pw.style.display !== 'none') si.src = src; else wi.src = src;
-            cnt.textContent = (mIdx + 1) + ' / ' + mImgs.length;
-            mDotsEl.querySelectorAll('.mdot').forEach((d, di) => d.classList.toggle('on', di === mIdx));
+  /* notch */
+  var notchGeo = new THREE.BoxGeometry(0.5,0.07,0.01);
+  var notch = new THREE.Mesh(notchGeo,new THREE.MeshBasicMaterial({color:0x020204}));
+  notch.position.set(0,1.84,0.12); phoneGroup.add(notch);
+
+  /* side buttons */
+  var btnMat = new THREE.MeshPhongMaterial({color:0x1a1a2e,shininess:100});
+  [[0.12],[0.3],[0.3]].forEach(function(h,i){var b=new THREE.Mesh(new THREE.BoxGeometry(0.05,h[0],0.1),btnMat);b.position.set(-1.025,0.6-i*0.38,0);phoneGroup.add(b);});
+  var pw=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.42,0.1),btnMat);pw.position.set(1.025,0.4,0);phoneGroup.add(pw);
+
+  /* home bar */
+  var hb=new THREE.Mesh(new THREE.BoxGeometry(0.55,0.035,0.005),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.25}));
+  hb.position.set(0,-1.82,0.12);phoneGroup.add(hb);
+
+  /* back camera bump */
+  var bcam=new THREE.Mesh(new THREE.BoxGeometry(0.45,0.45,0.06),new THREE.MeshPhongMaterial({color:0x0d0d16,shininess:200,specular:new THREE.Color(0x54c5f8).multiplyScalar(0.6)}));
+  bcam.position.set(-0.45,1.32,-0.13);phoneGroup.add(bcam);
+  [{x:-0.1,y:0.1},{x:0.1,y:0.1},{x:0,y:-0.1}].forEach(function(p){var lens=new THREE.Mesh(new THREE.CircleGeometry(0.09,16),new THREE.MeshPhongMaterial({color:0x060610,shininess:400,specular:new THREE.Color(0x54c5f8).multiplyScalar(1)}));lens.position.set(-0.45+p.x,1.32+p.y,-0.1);phoneGroup.add(lens);});
+
+  /* ── CSS-like SCREEN plane: we draw on it with a canvas texture ── */
+  /* Build a texture from the interactive phone homescreen rendered in a hidden div */
+  var screenTex = new THREE.CanvasTexture(buildScreenCanvas());
+  var scrMat = new THREE.MeshBasicMaterial({map:screenTex,transparent:false});
+  var scrMesh = new THREE.Mesh(new THREE.BoxGeometry(1.73,3.56,0.005), scrMat);
+  scrMesh.position.set(0,0,0.115);
+  phoneGroup.add(scrMesh);
+
+  /* glow ring underneath — full 360° orbit ring, sized to fit fully in view */
+  var ringGeo=new THREE.RingGeometry(0.7,0.78,96,1,0,Math.PI*2);
+  var ringMat=new THREE.MeshBasicMaterial({color:0x54c5f8,transparent:true,opacity:0.45,side:THREE.DoubleSide});
+  var ringM=new THREE.Mesh(ringGeo,ringMat);ringM.rotation.x=-Math.PI/2;ringM.position.y=-2.05;scene.add(ringM);
+  var rg2=new THREE.RingGeometry(0.85,0.9,96,1,0,Math.PI*2);
+  var rm2=new THREE.MeshBasicMaterial({color:0x54c5f8,transparent:true,opacity:0.25,side:THREE.DoubleSide});
+  var r2=new THREE.Mesh(rg2,rm2);r2.rotation.x=-Math.PI/2;r2.position.y=-2.05;scene.add(r2);
+  var rg3=new THREE.RingGeometry(0.96,1.0,96,1,0,Math.PI*2);
+  var rm3=new THREE.MeshBasicMaterial({color:0x54c5f8,transparent:true,opacity:0.14,side:THREE.DoubleSide});
+  var r3=new THREE.Mesh(rg3,rm3);r3.rotation.x=-Math.PI/2;r3.position.y=-2.05;scene.add(r3);
+
+  /* floating shapes */
+  var floatData=[
+    {g:new THREE.OctahedronGeometry(0.2),c:0x54c5f8,p:[2.6,1.0,0.4],sp:0.4,off:0},
+    {g:new THREE.TetrahedronGeometry(0.18),c:0x3aa8e0,p:[-2.5,0.5,0.3],sp:0.5,off:1.2},
+    {g:new THREE.BoxGeometry(0.2,0.2,0.2),c:0x7dd8fb,p:[2.2,-1.0,0.2],sp:0.35,off:2.4},
+    {g:new THREE.OctahedronGeometry(0.14),c:0x3aa8e0,p:[-2.1,-1.3,0.5],sp:0.45,off:3.6}
+  ];
+  var floaters=floatData.map(function(d){var m=new THREE.Mesh(d.g,new THREE.MeshPhongMaterial({color:d.c,transparent:true,opacity:0.8,shininess:150}));m.position.set(d.p[0],d.p[1],d.p[2]);scene.add(m);return{mesh:m,sp:d.sp,off:d.off,baseY:d.p[1]};});
+
+  /* lights */
+  scene.add(new THREE.AmbientLight(0x111133,2.5));
+  var pl1=new THREE.PointLight(0x54c5f8,1.8,12);pl1.position.set(-3,3,4);scene.add(pl1);
+  var pl2=new THREE.PointLight(0x54c5f8,1.2,10);pl2.position.set(3,-2,3);scene.add(pl2);
+  var pl3=new THREE.PointLight(0x54c5f8,0.8,8);pl3.position.set(0,-3,-2);scene.add(pl3);
+
+  /* ── drag rotation ── */
+  var isDragging=false,prevX=0,prevY=0,rotX=0.08,rotY=0.3,velX=0,velY=0;
+  canvas.addEventListener('mousedown',function(e){isDragging=true;prevX=e.clientX;prevY=e.clientY;velX=0;velY=0;e.preventDefault();});
+  window.addEventListener('mouseup',function(){isDragging=false;});
+  window.addEventListener('mousemove',function(e){if(!isDragging)return;var dx=e.clientX-prevX,dy=e.clientY-prevY;rotY+=dx*0.006;rotX+=dy*0.004;rotX=Math.max(-1.2,Math.min(1.2,rotX));velX=dy*0.004;velY=dx*0.006;prevX=e.clientX;prevY=e.clientY;});
+  canvas.addEventListener('touchstart',function(e){isDragging=true;prevX=e.touches[0].clientX;prevY=e.touches[0].clientY;velX=0;velY=0;},{passive:true});
+  window.addEventListener('touchend',function(){isDragging=false;},{passive:true});
+  window.addEventListener('touchmove',function(e){if(!isDragging)return;var dx=e.touches[0].clientX-prevX,dy=e.touches[0].clientY-prevY;rotY+=dx*0.006;rotX+=dy*0.004;rotX=Math.max(-1.2,Math.min(1.2,rotX));prevX=e.touches[0].clientX;prevY=e.touches[0].clientY;},{passive:true});
+
+  /* ── tap detection to open modal from 3D phone ── */
+  var tapStartX=0,tapStartY=0;
+  canvas.addEventListener('mousedown',function(e){tapStartX=e.clientX;tapStartY=e.clientY;});
+  canvas.addEventListener('mouseup',function(e){
+    if(Math.abs(e.clientX-tapStartX)<5&&Math.abs(e.clientY-tapStartY)<5){
+      handlePhoneClick(e.clientX,e.clientY);
+    }
+  });
+  canvas.addEventListener('touchend',function(e){
+    if(e.changedTouches.length>0){
+      var t=e.changedTouches[0];
+      if(Math.abs(t.clientX-tapStartX)<8&&Math.abs(t.clientY-tapStartY)<8){
+        handlePhoneClick(t.clientX,t.clientY);
+      }
+    }
+  },{passive:true});
+
+  function handlePhoneClick(cx,cy){
+    /* convert click to NDC, raycast */
+    var rect=canvas.getBoundingClientRect();
+    var mouse=new THREE.Vector2(((cx-rect.left)/rect.width)*2-1,-((cy-rect.top)/rect.height)*2+1);
+    var raycaster=new THREE.Raycaster();
+    raycaster.setFromCamera(mouse,camera);
+    var hits=raycaster.intersectObject(scrMesh);
+    if(!hits.length)return;
+    var uv=hits[0].uv; /* 0..1, v=0 at bottom in THREE uv */
+    var u=uv.x, v=1-uv.y; /* flip so v=0 is top */
+
+    /* convert to exact canvas pixel coords (canvas is 256x554) */
+    var px = u*256, py = v*554;
+
+    /* check app grid hits using EXACT same coords as drawScreen() */
+    var startX=20,startY=148,iconW=70,iconH=70,padX=12,padY=18;
+    var hitIdx=-1;
+    for(var i=0;i<9;i++){
+      var col=i%3,row=Math.floor(i/3);
+      var x=startX+col*(iconW+padX);
+      var y=startY+row*(iconH+padY);
+      /* clickable area includes icon + label below */
+      if(px>=x-4 && px<=x+iconW+4 && py>=y-4 && py<=y+iconH+22){
+        hitIdx=i; break;
+      }
+    }
+    if(hitIdx>=0){
+      var card=document.querySelector('.pcard[data-idx="'+hitIdx+'"]');
+      if(card){
+        var lbl=document.getElementById('hpLabel');
+        if(lbl)lbl.textContent='→ '+card.dataset.title;
+        flashIcon(hitIdx);
+        setTimeout(function(){openM(card);},120);
+      }
+      return;
+    }
+
+    /* dock hit test — matches drawScreen(): dockY = H-72, icons start x=22, spacing 56, size 36x34 */
+    var dockY = 554-72;
+    if(py>=dockY && py<=dockY+48){
+      var dockLinks=['https://github.com/shikhar11x','https://www.linkedin.com/in/shikharbajpai1/','mailto:shikhar11x@gmail.com','ShikharBajpai.pdf'];
+      for(var d=0; d<4; d++){
+        var dix=22+d*56;
+        if(px>=dix-6 && px<=dix+36+6){
+          window.open(dockLinks[d],'_blank');
+          return;
         }
-        document.getElementById('mPrev').onclick = () => goMSlide(mIdx - 1);
-        document.getElementById('mNext').onclick = () => goMSlide(mIdx + 1);
+      }
+    }
+  }
 
-        document.addEventListener('keydown', e => {
-            if (!ov.classList.contains('open')) return;
-            if (e.key === 'ArrowRight') goMSlide(mIdx + 1);
-            if (e.key === 'ArrowLeft') goMSlide(mIdx - 1);
-            if (e.key === 'Escape') closeM();
-        });
+  var flashIdxActive=-1,flashTimer=null;
+  function flashIcon(idx){flashIdxActive=idx;clearTimeout(flashTimer);flashTimer=setTimeout(function(){flashIdxActive=-1;},300);}
 
-        let mTx = 0;
-        ov.addEventListener('touchstart', e => { mTx = e.touches[0].clientX; }, { passive: true });
-        ov.addEventListener('touchend', e => {
-            const dx = e.changedTouches[0].clientX - mTx;
-            if (Math.abs(dx) > 40) { dx < 0 ? goMSlide(mIdx + 1) : goMSlide(mIdx - 1); }
-        }, { passive: true });
+  /* ── Build screen canvas ── */
+  function buildScreenCanvas(){
+    var sc=document.createElement('canvas');
+    sc.width=256;sc.height=554; /* 9:19.5 ratio */
+    return sc;
+  }
 
-        function openM(card) {
-            const t = card.dataset.type || 'app';
-            const isApp = (t === 'app' || t === 'design');
-            document.getElementById('mNum').textContent = 'PROJECT_' + card.dataset.num;
-            document.getElementById('mTitle').textContent = card.dataset.title || '';
-            document.getElementById('mDesc').textContent = card.dataset.desc || '';
-            document.getElementById('mTags').innerHTML = (card.dataset.tags || '').split(',').map(s => `<span class="mtag">${s.trim()}</span>`).join('');
-            let links = []; try { links = JSON.parse(card.dataset.links || '[]'); } catch (e) { }
-            document.getElementById('mActs').innerHTML = links.map(l => `<a href="${l.url}" target="_blank" class="mact${l.primary ? ' primary' : ''}">${l.label}</a>`).join('');
-            mImgs = (card.dataset.preview || '').split(',').filter(Boolean);
-            mIdx = 0;
-            pw.style.display = isApp && mImgs.length ? 'flex' : 'none';
-            ww.style.display = !isApp && mImgs.length ? 'block' : 'none';
-            if (mImgs.length) {
-                const src = mImgs[0].trim();
-                if (isApp) si.src = src; else wi.src = src;
-                ctrl.style.display = mImgs.length > 1 ? 'flex' : 'none';
-                cnt.textContent = '1 / ' + mImgs.length;
-                mDotsEl.innerHTML = mImgs.map((_, i) => `<span class="mdot${i === 0 ? ' on' : ''}" onclick="goMSlide(${i})"></span>`).join('');
-            } else { ctrl.style.display = 'none'; mDotsEl.innerHTML = ''; }
-            ov.classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeM() {
-            ov.classList.remove('open');
-            document.body.style.overflow = '';
-            const lbl = document.getElementById('hpLabel');
-            if (lbl) lbl.textContent = "shikhar's portfolio";
-        }
+  /* ── Draw the phone screen frame ── */
+  var clockH='--',clockM='--',clockDate='';
+  function updateClock(){
+    var n=new Date();
+    clockH=String(n.getHours()).padStart(2,'0');
+    clockM=String(n.getMinutes()).padStart(2,'0');
+    var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    clockDate=days[n.getDay()]+', '+n.getDate()+' '+months[n.getMonth()];
+  }
+  updateClock();setInterval(updateClock,15000);
 
-        document.querySelectorAll('.pcard').forEach(c => c.addEventListener('click', () => openM(c)));
-        document.getElementById('mClose').addEventListener('click', closeM);
-        ov.addEventListener('click', e => { if (e.target === ov) closeM(); });
-    </script>
+  var appData=[
+    {icon:'🛡️',label:'Vanguard',bg:'#0d3a66,#1976d2'},
+    {icon:'✅',label:'Task Mgr',bg:'#0a4a5e,#0e93b3'},
+    {icon:'📚',label:'LingoBreeze',bg:'#1565c0,#42a5f5'},
+    {icon:'📰',label:'HN Reader',bg:'#0b3d5c,#2e8fc9'},
+    {icon:'📝',label:'Todo App',bg:'#103a5c,#1976d2'},
+    {icon:'🎲',label:'Dice App',bg:'#006064,#00acc1'},
+    {icon:'🌡️',label:'IoT Dash',bg:'#0d4d6b,#3aa8e0'},
+    {icon:'💻',label:'CodeIn',bg:'#0a2f52,#1f6fb8'},
+    {icon:'🚇',label:'Metro UI',bg:'#0c4a6e,#54c5f8'}
+  ];
+
+  function drawScreen(sc){
+    var ctx=sc.getContext('2d');
+    var W=sc.width,H=sc.height;
+
+    /* bg gradient */
+    var bg=ctx.createLinearGradient(0,0,W,H);
+    bg.addColorStop(0,'#060b20');bg.addColorStop(.5,'#030412');bg.addColorStop(1,'#08050e');
+    ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+
+    /* grid lines */
+    ctx.strokeStyle='rgba(84,197,248,0.04)';ctx.lineWidth=1;
+    for(var i=0;i<9;i++){ctx.beginPath();ctx.moveTo(0,i*H/8);ctx.lineTo(W,i*H/8);ctx.stroke();}
+    for(var i=0;i<6;i++){ctx.beginPath();ctx.moveTo(i*W/5,0);ctx.lineTo(i*W/5,H);ctx.stroke();}
+
+    /* status bar */
+    ctx.fillStyle='rgba(84,197,248,0.7)';ctx.font='bold 12px monospace';
+    ctx.fillText(clockH+':'+clockM,12,20);
+    /* battery */
+    ctx.strokeStyle='rgba(255,255,255,0.65)';ctx.lineWidth=1.5;
+    ctx.strokeRect(W-30,8,20,12);ctx.fillStyle='rgba(74,222,128,0.9)';ctx.fillRect(W-28,10,13,8);
+
+    /* clock */
+    ctx.textAlign='center';
+    ctx.fillStyle='rgba(255,255,255,0.92)';ctx.font='bold 52px monospace';
+    ctx.fillText(clockH+':'+clockM,W/2,105);
+    ctx.fillStyle='rgba(255,255,255,0.35)';ctx.font='11px monospace';
+    ctx.fillText(clockDate.toUpperCase(),W/2,124);
+    ctx.textAlign='left';
+
+    /* app icons grid 3x3 */
+    var startX=20,startY=148,iconW=70,iconH=70,padX=12,padY=18;
+    appData.forEach(function(app,i){
+      var col=i%3,row=Math.floor(i/3);
+      var x=startX+col*(iconW+padX);
+      var y=startY+row*(iconH+padY);
+
+      /* icon bg */
+      var colors=app.bg.split(',');
+      var grad=ctx.createLinearGradient(x,y,x+iconW,y+iconH);
+      grad.addColorStop(0,colors[0].trim());grad.addColorStop(1,colors[1].trim());
+      ctx.fillStyle=grad;
+      roundRect(ctx,x,y,iconW,iconH,14);
+      ctx.fill();
+
+      /* flash effect when tapped */
+      if(flashIdxActive===i){ctx.fillStyle='rgba(255,255,255,0.35)';roundRect(ctx,x,y,iconW,iconH,14);ctx.fill();}
+
+      /* shine */
+      var shine=ctx.createLinearGradient(x,y,x+iconW,y+iconH/2);
+      shine.addColorStop(0,'rgba(255,255,255,0.18)');shine.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.fillStyle=shine;roundRect(ctx,x,y,iconW,iconH/2,14);ctx.fill();
+
+      /* emoji */
+      ctx.font='28px serif';ctx.textAlign='center';
+      ctx.fillText(app.icon,x+iconW/2,y+iconH/2+10);
+
+      /* label */
+      ctx.fillStyle='rgba(255,255,255,0.6)';ctx.font='9px monospace';
+      ctx.fillText(app.label,x+iconW/2,y+iconH+13);
+      ctx.textAlign='left';
+    });
+
+    /* dock */
+    var dockY=H-72,dockH=48;
+    ctx.fillStyle='rgba(255,255,255,0.06)';
+    roundRect(ctx,10,dockY,W-20,dockH,12);ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,0.1)';ctx.lineWidth=1;
+    roundRect(ctx,10,dockY,W-20,dockH,12);ctx.stroke();
+
+    var dockIcons=[['#161b22','#30363d','GH'],['#0d4d7a','#1ba8e0','Li'],['#0b3a5c','#3aa8e0','@'],['#37474f','#546e7a','CV']];
+    dockIcons.forEach(function(d,i){
+      var dix=22+i*(56);
+      var dg=ctx.createLinearGradient(dix,dockY+7,dix+36,dockY+42);
+      dg.addColorStop(0,d[0]);dg.addColorStop(1,d[1]);
+      ctx.fillStyle=dg;roundRect(ctx,dix,dockY+7,36,34,8);ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,0.85)';ctx.font='bold 11px monospace';ctx.textAlign='center';
+      ctx.fillText(d[2],dix+18,dockY+29);ctx.textAlign='left';
+    });
+
+    /* home bar */
+    ctx.fillStyle='rgba(255,255,255,0.22)';
+    roundRect(ctx,W/2-40,H-12,80,4,2);ctx.fill();
+  }
+
+  function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+
+  var sc=buildScreenCanvas();
+
+  /* ── animate ── */
+  var t=0;
+  function animate(){
+    requestAnimationFrame(animate);t+=0.012;
+
+    if(!isDragging){rotY+=0.003;}
+    phoneGroup.rotation.y=rotY;
+    phoneGroup.rotation.x=rotX;
+    phoneGroup.position.y=Math.sin(t*0.7)*0.1;
+
+    floaters.forEach(function(f){f.mesh.rotation.x+=0.011;f.mesh.rotation.y+=0.016;f.mesh.position.y=f.baseY+Math.sin(t*f.sp+f.off)*0.3;});
+    ringM.rotation.z+=0.004;r2.rotation.z-=0.003;r3.rotation.z+=0.002;
+    pl1.intensity=1.6+Math.sin(t)*0.3;
+
+    /* redraw screen texture */
+    drawScreen(sc);
+    screenTex.image=sc;
+    screenTex.needsUpdate=true;
+
+    renderer.render(scene,camera);
+  }
+  animate();
+
+  window.addEventListener('resize',function(){
+    var W2=canvas.offsetWidth||420,H2=canvas.offsetHeight||480;
+    camera.aspect=W2/H2;camera.updateProjectionMatrix();
+    renderer.setSize(W2,H2);
+  });
+})();
+
+/* ── PROJECT CARD SLIDESHOW ── */
+(function(){
+  document.querySelectorAll('.pcard').forEach(function(card,ci){
+    var slides=card.querySelectorAll('.pcard-slide'),strip=card.querySelector('.pcard-slides'),dotsArea=card.querySelector('.pcard-frame-dots'),countEl=card.querySelector('.ss-count');
+    if(!strip||!slides.length)return;
+    var total=slides.length,cur=0,timer=null,txStart=0,txDiff=0,isSwiping=false;
+    if(dotsArea&&total>1){dotsArea.innerHTML=Array.from({length:total},function(_,i){return '<span class="pcdot'+(i===0?' on':'')+'" data-i="'+i+'"></span>';}).join('');dotsArea.querySelectorAll('.pcdot').forEach(function(d){d.addEventListener('click',function(e){e.stopPropagation();goTo(+d.dataset.i);resetAuto();});});}
+    function upCnt(){if(countEl)countEl.textContent=(cur+1)+'/'+total;}
+    function goTo(i){cur=(i+total)%total;strip.style.transition='transform .32s cubic-bezier(.4,0,.2,1)';strip.style.transform='translateX(-'+(cur*100)+'%)';if(dotsArea)dotsArea.querySelectorAll('.pcdot').forEach(function(d,di){d.classList.toggle('on',di===cur);});upCnt();}
+    function startAuto(){if(total<=1)return;stopAuto();timer=setInterval(function(){goTo(cur+1);},2500);}
+    function stopAuto(){clearInterval(timer);timer=null;}
+    function resetAuto(){stopAuto();startAuto();}
+    setTimeout(startAuto,ci*400);
+    card.addEventListener('mouseenter',stopAuto);card.addEventListener('mouseleave',startAuto);
+    var fa=card.querySelector('.pcard-phone-area')||card;
+    fa.addEventListener('touchstart',function(e){txStart=e.touches[0].clientX;txDiff=0;isSwiping=false;strip.style.transition='none';stopAuto();},{passive:true});
+    fa.addEventListener('touchmove',function(e){txDiff=e.touches[0].clientX-txStart;if(Math.abs(txDiff)>8){isSwiping=true;strip.style.transform='translateX('+(-(cur*(strip.parentElement.offsetWidth||strip.offsetWidth))+txDiff)+'px)';}},{passive:true});
+    fa.addEventListener('touchend',function(e){if(isSwiping){if(txDiff<-30)goTo(cur+1);else if(txDiff>30)goTo(cur-1);else goTo(cur);e.stopPropagation();}isSwiping=false;setTimeout(startAuto,800);},{passive:false});
+    upCnt();
+  });
+})();
+
+/* ── 3D tilt on cards ── */
+document.querySelectorAll('.pcard').forEach(function(c){
+  c.addEventListener('mousemove',function(e){var r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform='translateY(-4px) rotateX('+(-y*4)+'deg) rotateY('+(x*4)+'deg)';c.style.transformStyle='preserve-3d';});
+  c.addEventListener('mouseleave',function(){c.style.transform='';c.style.transformStyle='';});
+});
+
+/* ── MODAL ── */
+var ov=document.getElementById('mOverlay'),mImgs=[],mIdx=0;
+var pw=document.getElementById('mPhoneWrap'),ww=document.getElementById('mWebWrap');
+var si=document.getElementById('mSlideImg'),wi=document.getElementById('mWebImg');
+var ctrl=document.getElementById('mCtrl'),cnt=document.getElementById('mCnt'),mDotsEl=document.getElementById('mDots');
+function goMSlide(i){mIdx=(i+mImgs.length)%mImgs.length;var src=mImgs[mIdx].trim();if(pw.style.display!=='none')si.src=src;else wi.src=src;cnt.textContent=(mIdx+1)+' / '+mImgs.length;mDotsEl.querySelectorAll('.mdot').forEach(function(d,di){d.classList.toggle('on',di===mIdx);});}
+document.getElementById('mPrev').onclick=function(){goMSlide(mIdx-1);};
+document.getElementById('mNext').onclick=function(){goMSlide(mIdx+1);};
+document.addEventListener('keydown',function(e){if(!ov.classList.contains('open'))return;if(e.key==='ArrowRight')goMSlide(mIdx+1);if(e.key==='ArrowLeft')goMSlide(mIdx-1);if(e.key==='Escape')closeM();});
+var mTx=0;ov.addEventListener('touchstart',function(e){mTx=e.touches[0].clientX;},{passive:true});ov.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-mTx;if(Math.abs(dx)>40){dx<0?goMSlide(mIdx+1):goMSlide(mIdx-1);}},{passive:true});
+function openM(card){
+  var t=card.dataset.type||'app',isApp=(t==='app'||t==='design');
+  document.getElementById('mNum').textContent='PROJECT_'+card.dataset.num;
+  document.getElementById('mTitle').textContent=card.dataset.title||'';
+  document.getElementById('mDesc').textContent=card.dataset.desc||'';
+  document.getElementById('mTags').innerHTML=(card.dataset.tags||'').split(',').map(function(s){return '<span class="mtag">'+s.trim()+'</span>';}).join('');
+  var links=[];try{links=JSON.parse(card.dataset.links||'[]');}catch(ex){}
+  document.getElementById('mActs').innerHTML=links.map(function(l){return '<a href="'+l.url+'" target="_blank" class="mact'+(l.primary?' primary':'')+'">'+l.label+'</a>';}).join('');
+  mImgs=(card.dataset.preview||'').split(',').filter(Boolean);mIdx=0;
+  pw.style.display=isApp&&mImgs.length?'flex':'none';ww.style.display=!isApp&&mImgs.length?'block':'none';
+  if(mImgs.length){var src=mImgs[0].trim();if(isApp)si.src=src;else wi.src=src;ctrl.style.display=mImgs.length>1?'flex':'none';cnt.textContent='1 / '+mImgs.length;mDotsEl.innerHTML=mImgs.map(function(_,i){return '<span class="mdot'+(i===0?' on':'')+'" onclick="goMSlide('+i+')"></span>';}).join('');}else{ctrl.style.display='none';mDotsEl.innerHTML='';}
+  ov.classList.add('open');document.body.style.overflow='hidden';
+}
+function closeM(){ov.classList.remove('open');document.body.style.overflow='';var lbl=document.getElementById('hpLabel');if(lbl)lbl.textContent="shikhar's portfolio";}
+document.querySelectorAll('.pcard').forEach(function(c){c.addEventListener('click',function(){openM(c);});});
+document.getElementById('mClose').addEventListener('click',closeM);
+ov.addEventListener('click',function(e){if(e.target===ov)closeM();});
+</script>
 </body>
 </html>
