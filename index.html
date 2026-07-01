@@ -119,10 +119,12 @@ h1.name .last{color:transparent;-webkit-text-stroke:1px rgba(84,197,248,0.5);dis
 /* PROJECTS */
 .projects-section{margin-bottom:48px;animation:fadeUp .6s ease .35s both}
 .proj-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.pcard{background:rgba(8,8,15,0.55);backdrop-filter:blur(6px);border:1px solid rgba(84,197,248,0.16);border-radius:16px;overflow:hidden;cursor:pointer;transition:border-color .25s,transform .2s,box-shadow .25s;position:relative;display:flex;flex-direction:column;box-shadow:0 0 0 1px rgba(84,197,248,0.04),0 8px 24px rgba(0,0,0,0.35)}
-.pcard::before{content:'';position:absolute;top:-30%;left:-20%;width:160%;height:90%;background:radial-gradient(ellipse at 30% 0%,rgba(84,197,248,0.10) 0%,transparent 60%);pointer-events:none;z-index:1}
-.pcard::after{content:'';position:absolute;bottom:-15%;right:-15%;width:60%;height:50%;background:radial-gradient(circle,rgba(84,197,248,0.08) 0%,transparent 70%);pointer-events:none;z-index:1}
-.pcard:hover{border-color:rgba(84,197,248,0.5);transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.5),0 0 0 1px rgba(84,197,248,0.15),0 0 30px rgba(84,197,248,0.18)}
+.pcard{background:linear-gradient(145deg,rgba(6,6,18,0.85),rgba(2,2,10,0.72));backdrop-filter:blur(16px);border:1px solid rgba(84,197,248,0.20);border-radius:20px;overflow:hidden;cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);position:relative;display:flex;flex-direction:column;box-shadow:0 4px 28px rgba(0,0,0,0.45),0 0 0 1px rgba(84,197,248,0.05),inset 0 1px 0 rgba(255,255,255,0.06)}
+.pcard::before{content:'';position:absolute;top:0;left:8%;right:8%;height:1.5px;background:linear-gradient(90deg,transparent,rgba(84,197,248,0.7),transparent);z-index:3;opacity:0.6;transition:opacity .3s}
+.pcard::after{content:'';position:absolute;top:-40%;left:-30%;width:180%;height:100%;background:radial-gradient(ellipse at 35% 0%,rgba(84,197,248,0.11) 0%,transparent 55%);pointer-events:none;z-index:1;transition:opacity .3s}
+.pcard:hover{border-color:rgba(84,197,248,0.55);transform:translateY(-7px) scale(1.018);box-shadow:0 24px 55px rgba(0,0,0,0.6),0 0 0 1px rgba(84,197,248,0.22),0 0 40px rgba(84,197,248,0.18)}
+.pcard:hover::before{opacity:1}
+.pcard:hover::after{opacity:1.5}
 .pcard-phone-area{background:#060609;padding:14px 14px 10px;display:flex;flex-direction:column;align-items:center;position:relative;border-bottom:1px solid var(--border);z-index:2}
 .pcard-phone{width:100%;max-width:130px;background:#0c0c14;border-radius:22px;border:1.5px solid rgba(255,255,255,0.12);box-shadow:0 0 0 4px rgba(0,0,0,0.4),0 12px 32px rgba(0,0,0,0.7);position:relative;overflow:hidden}
 .pcard-phone::before{content:'';position:absolute;top:7px;left:50%;transform:translateX(-50%);width:40px;height:4px;background:#060609;border-radius:6px;z-index:10}
@@ -144,11 +146,12 @@ h1.name .last{color:transparent;-webkit-text-stroke:1px rgba(84,197,248,0.5);dis
 .type-badge.iot{background:rgba(84,197,248,0.15);color:var(--flutter);border:1px solid rgba(84,197,248,0.2)}
 .ss-count{position:absolute;top:9px;right:9px;z-index:5;background:rgba(5,5,7,0.85);border:1px solid var(--border2);border-radius:20px;padding:3px 7px;font-family:var(--mono);font-size:8px;color:var(--muted);backdrop-filter:blur(6px)}
 .pcard-info{padding:12px 14px 14px;flex:1;display:flex;flex-direction:column;position:relative;z-index:2}
-.pcard-num{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--dim);margin-bottom:4px}
-.pcard h3{font-size:13px;font-weight:600;margin-bottom:5px;line-height:1.3;letter-spacing:-.2px}
-.pcard p{font-size:11.5px;line-height:1.65;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1}
-.pcard-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:9px}
-.pcard-chip{font-family:var(--mono);padding:2px 7px;border-radius:3px;border:1px solid rgba(255,255,255,0.07);font-size:9px;color:rgba(232,232,240,0.3)}
+.pcard-num{font-family:var(--mono);font-size:8px;letter-spacing:4px;color:rgba(84,197,248,0.5);margin-bottom:6px;text-transform:uppercase}
+.pcard h3{font-size:14px;font-weight:700;margin-bottom:6px;line-height:1.3;letter-spacing:-.3px;color:var(--text)}
+.pcard p{font-size:11.5px;line-height:1.7;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1}
+.pcard-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.pcard-chip{font-family:var(--mono);padding:3px 9px;border-radius:20px;border:1px solid rgba(84,197,248,0.22);font-size:9px;color:rgba(84,197,248,0.7);background:rgba(84,197,248,0.06);letter-spacing:.3px;transition:all .2s}
+.pcard:hover .pcard-chip{border-color:rgba(84,197,248,0.45);color:var(--flutter);background:rgba(84,197,248,0.12);box-shadow:0 0 8px rgba(84,197,248,0.12)}
 
 /* BOTTOM */
 .achievements-section{margin-bottom:48px;animation:fadeUp .6s ease .42s both}
@@ -545,10 +548,49 @@ window.addEventListener('load',function(){var last=document.querySelector('h1.na
   var hb=new THREE.Mesh(new THREE.BoxGeometry(0.55,0.035,0.005),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.25}));
   hb.position.set(0,-1.82,0.12);phoneGroup.add(hb);
 
-  /* back camera bump */
-  var bcam=new THREE.Mesh(new THREE.BoxGeometry(0.45,0.45,0.06),new THREE.MeshPhongMaterial({color:0x0d0d16,shininess:200,specular:new THREE.Color(0x54c5f8).multiplyScalar(0.6)}));
-  bcam.position.set(-0.45,1.32,-0.13);phoneGroup.add(bcam);
-  [{x:-0.1,y:0.1},{x:0.1,y:0.1},{x:0,y:-0.1}].forEach(function(p){var lens=new THREE.Mesh(new THREE.CircleGeometry(0.09,16),new THREE.MeshPhongMaterial({color:0x060610,shininess:400,specular:new THREE.Color(0x54c5f8).multiplyScalar(1)}));lens.position.set(-0.45+p.x,1.32+p.y,-0.1);phoneGroup.add(lens);});
+  /* ── SHIKHAR BAJPAI text on phone back ── */
+  (function(){
+    var tc=document.createElement('canvas');
+    tc.width=512;tc.height=256;
+    var ctx=tc.getContext('2d');
+    ctx.clearRect(0,0,512,256);
+
+    /* subtle background glow */
+    var grd=ctx.createRadialGradient(256,128,10,256,128,160);
+    grd.addColorStop(0,'rgba(84,197,248,0.08)');
+    grd.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=grd;ctx.fillRect(0,0,512,256);
+
+    /* thin divider lines */
+    ctx.strokeStyle='rgba(84,197,248,0.18)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(60,92);ctx.lineTo(452,92);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(60,164);ctx.lineTo(452,164);ctx.stroke();
+
+    /* SHIKHAR — main name, white with cyan glow */
+    ctx.font='bold 68px "Space Grotesk",sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.shadowColor='#54c5f8';
+    ctx.shadowBlur=18;
+    ctx.fillStyle='rgba(255,255,255,0.92)';
+    ctx.fillText('SHIKHAR',256,105);
+    ctx.shadowBlur=0;
+
+    /* BAJPAI — last name, cyan with glow */
+    ctx.font='bold 68px "Space Grotesk",sans-serif';
+    ctx.fillStyle='#54c5f8';
+    ctx.shadowColor='#54c5f8';
+    ctx.shadowBlur=18;
+    ctx.fillText('BAJPAI',256,155);
+    ctx.shadowBlur=0;
+
+    var tex=new THREE.CanvasTexture(tc);
+    var mat=new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide});
+    var geo=new THREE.PlaneGeometry(1.6,0.8);
+    var mesh=new THREE.Mesh(geo,mat);
+    mesh.position.set(0,0.1,-0.11);
+    mesh.rotation.y=Math.PI;
+    phoneGroup.add(mesh);
+  })();
 
   /* ── CSS-like SCREEN plane: we draw on it with a canvas texture ── */
   /* Build a texture from the interactive phone homescreen rendered in a hidden div */
@@ -570,13 +612,147 @@ window.addEventListener('load',function(){var last=document.querySelector('h1.na
   var r3=new THREE.Mesh(rg3,rm3);r3.rotation.x=-Math.PI/2;r3.position.y=-2.05;scene.add(r3);
 
   /* floating shapes */
-  var floatData=[
-    {g:new THREE.OctahedronGeometry(0.2),c:0x54c5f8,p:[2.6,1.0,0.4],sp:0.4,off:0},
-    {g:new THREE.TetrahedronGeometry(0.18),c:0x3aa8e0,p:[-2.5,0.5,0.3],sp:0.5,off:1.2},
-    {g:new THREE.BoxGeometry(0.2,0.2,0.2),c:0x7dd8fb,p:[2.2,-1.0,0.2],sp:0.35,off:2.4},
-    {g:new THREE.OctahedronGeometry(0.14),c:0x3aa8e0,p:[-2.1,-1.3,0.5],sp:0.45,off:3.6}
+  /* ── LOGO SPRITES using Canvas Textures (pixel-perfect) ── */
+
+  function makeLogoCanvas(type){
+    var c=document.createElement('canvas');
+    c.width=128;c.height=128;
+    var ctx=c.getContext('2d');
+    ctx.clearRect(0,0,128,128);
+
+    if(type==='flutter'){
+      /* Flutter logo — 4 parallelogram shapes, exact proportions */
+      ctx.save();
+      ctx.translate(64,64);
+      var sc=54;
+
+      /* Top-left to right diagonal — light blue large bar */
+      ctx.beginPath();
+      ctx.moveTo(-0.92*sc, -0.92*sc);
+      ctx.lineTo( 0.18*sc, -0.92*sc);
+      ctx.lineTo(-0.38*sc,  0.0*sc);
+      ctx.lineTo(-1.0*sc,   0.0*sc);
+      ctx.closePath();
+      ctx.fillStyle='#54c5f8';
+      ctx.fill();
+
+      /* Second bar — slightly lighter */
+      ctx.beginPath();
+      ctx.moveTo(-1.0*sc,  0.0*sc);
+      ctx.lineTo(-0.38*sc, 0.0*sc);
+      ctx.lineTo( 0.18*sc, 0.55*sc);
+      ctx.lineTo(-0.42*sc, 0.55*sc);
+      ctx.closePath();
+      ctx.fillStyle='#54c5f8';
+      ctx.fill();
+
+      /* Bottom-right fold light */
+      ctx.beginPath();
+      ctx.moveTo(-0.42*sc, 0.55*sc);
+      ctx.lineTo( 0.18*sc, 0.55*sc);
+      ctx.lineTo( 0.18*sc, 0.92*sc);
+      ctx.lineTo(-0.18*sc, 0.92*sc);
+      ctx.closePath();
+      ctx.fillStyle='#29b6f6';
+      ctx.fill();
+
+      /* Bottom-right fold dark — navy */
+      ctx.beginPath();
+      ctx.moveTo(-0.18*sc, 0.92*sc);
+      ctx.lineTo( 0.18*sc, 0.92*sc);
+      ctx.lineTo( 0.18*sc, 0.55*sc);
+      ctx.closePath();
+      ctx.fillStyle='#0d47a1';
+      ctx.fill();
+
+      /* Overlap accent — slightly darker strip in middle */
+      ctx.beginPath();
+      ctx.moveTo(-0.42*sc, 0.55*sc);
+      ctx.lineTo( 0.18*sc, 0.55*sc);
+      ctx.lineTo(-0.05*sc, 0.28*sc);
+      ctx.lineTo(-0.62*sc, 0.28*sc);
+      ctx.closePath();
+      ctx.fillStyle='rgba(21,101,192,0.35)';
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    if(type==='firebase'){
+      /* Firebase logo — 3 layered flame shapes */
+      ctx.save();
+      ctx.translate(64,68);
+      var sc=50;
+
+      /* Left outer flame — dark amber */
+      ctx.beginPath();
+      ctx.moveTo(-0.55*sc,  0.9*sc);
+      ctx.lineTo(-0.55*sc, -0.3*sc);
+      ctx.lineTo( 0.0*sc,  -0.9*sc);
+      ctx.lineTo( 0.0*sc,   0.9*sc);
+      ctx.closePath();
+      ctx.fillStyle='#f57c00';
+      ctx.fill();
+
+      /* Middle flame — amber */
+      ctx.beginPath();
+      ctx.moveTo( 0.0*sc,   0.9*sc);
+      ctx.lineTo( 0.0*sc,  -0.9*sc);
+      ctx.lineTo( 0.55*sc,  0.1*sc);
+      ctx.lineTo( 0.55*sc,  0.9*sc);
+      ctx.closePath();
+      ctx.fillStyle='#ffa000';
+      ctx.fill();
+
+      /* Right small flame tip — bright yellow */
+      ctx.beginPath();
+      ctx.moveTo( 0.0*sc,  -0.9*sc);
+      ctx.lineTo( 0.55*sc,  0.1*sc);
+      ctx.lineTo( 0.0*sc,   0.1*sc);
+      ctx.closePath();
+      ctx.fillStyle='#ffca28';
+      ctx.fill();
+
+      /* Left top curve — brighter overlay */
+      ctx.beginPath();
+      ctx.moveTo(-0.55*sc, -0.3*sc);
+      ctx.lineTo( 0.0*sc,  -0.9*sc);
+      ctx.lineTo( 0.0*sc,   0.1*sc);
+      ctx.lineTo(-0.55*sc,  0.5*sc);
+      ctx.closePath();
+      ctx.fillStyle='rgba(255,202,40,0.25)';
+      ctx.fill();
+
+      ctx.restore();
+    }
+    return c;
+  }
+
+  function makeSprite(canvasEl, width){
+    var tex=new THREE.CanvasTexture(canvasEl);
+    var mat=new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false});
+    var sprite=new THREE.Sprite(mat);
+    sprite.scale.set(width,width,1);
+    return sprite;
+  }
+
+  /* Create 2 Flutter + 2 Firebase sprites */
+  var flutterCanvas=makeLogoCanvas('flutter');
+  var firebaseCanvas=makeLogoCanvas('firebase');
+
+  var fl1=makeSprite(flutterCanvas, 0.7);
+  var fl2=makeSprite(flutterCanvas, 0.55);
+  var fb1=makeSprite(firebaseCanvas, 0.65);
+  var fb2=makeSprite(firebaseCanvas, 0.50);
+  scene.add(fl1);scene.add(fl2);scene.add(fb1);scene.add(fb2);
+
+  /* orbit config */
+  var orbiters=[
+    {mesh:fl1,  angle:0,            radius:2.5, baseY:0.7,  speed:0.38, bob:0.18},
+    {mesh:fb1,  angle:Math.PI,      radius:2.5, baseY:0.7,  speed:0.38, bob:0.18},
+    {mesh:fl2,  angle:Math.PI/2,    radius:2.1, baseY:-0.4, speed:0.50, bob:0.22},
+    {mesh:fb2,  angle:Math.PI*1.5,  radius:2.1, baseY:-0.4, speed:0.50, bob:0.22},
   ];
-  var floaters=floatData.map(function(d){var m=new THREE.Mesh(d.g,new THREE.MeshPhongMaterial({color:d.c,transparent:true,opacity:0.8,shininess:150}));m.position.set(d.p[0],d.p[1],d.p[2]);scene.add(m);return{mesh:m,sp:d.sp,off:d.off,baseY:d.p[1]};});
 
   /* lights */
   scene.add(new THREE.AmbientLight(0x111133,2.5));
@@ -793,7 +969,13 @@ window.addEventListener('load',function(){var last=document.querySelector('h1.na
     phoneGroup.rotation.x=rotX;
     phoneGroup.position.y=Math.sin(t*0.7)*0.1;
 
-    floaters.forEach(function(f){f.mesh.rotation.x+=0.011;f.mesh.rotation.y+=0.016;f.mesh.position.y=f.baseY+Math.sin(t*f.sp+f.off)*0.3;});
+    /* orbit logos around phone */
+    orbiters.forEach(function(o,i){
+      o.angle += o.speed * 0.012;
+      o.mesh.position.x = Math.cos(o.angle) * o.radius;
+      o.mesh.position.z = Math.sin(o.angle) * o.radius;
+      o.mesh.position.y = o.baseY + Math.sin(t*0.6+i*1.5)*o.bob;
+    });
     ringM.rotation.z+=0.004;r2.rotation.z-=0.003;r3.rotation.z+=0.002;
     pl1.intensity=1.6+Math.sin(t)*0.3;
 
